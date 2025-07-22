@@ -3,7 +3,7 @@
 import { InputFile } from "node-appwrite/file";
 import { createAdminClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
-import { ID } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 
 interface UploadFilesParams {
   file: File;
@@ -39,10 +39,7 @@ export const uploadFiles = async ({
   try {
     const { storage, databases } = await createAdminClient();
 
-    const inputFile = InputFile.fromBuffer(
-      Buffer.from(await file.arrayBuffer()),
-      file.name
-    );
+    const inputFile = InputFile.fromBuffer(file, file.name);
 
     const bucketFile = await storage.createFile(
       appwriteConfig.bucketId,
@@ -53,22 +50,21 @@ export const uploadFiles = async ({
     const extension = getFileExtension(file.name);
     const fileType = getFileType(extension);
 
-    const fileUrl = await storage.getFileView(
-      appwriteConfig.bucketId,
-      bucketFile.$id
-    );
+    const fileUrl = `${appwriteConfig.endpointUrl}/storage/buckets/${appwriteConfig.bucketId}/files/${bucketFile.$id}/view?project=${appwriteConfig.projectId}`;
 
     const fileDocument = {
       name: file.name,
       url: fileUrl,
       type: fileType,
-      bucketId: bucketFile.$id,
+      bucketField: bucketFile.$id,
       accountId: accountId,
       owner: ownerId,
       extension: extension,
       size: file.size,
       users: [ownerId],
     };
+
+    console.log("Saving file document:", fileDocument);
 
     const saveFile = await databases.createDocument(
       appwriteConfig.databaseId,
@@ -84,5 +80,22 @@ export const uploadFiles = async ({
   } catch (error) {
     console.error("Error uploading file:", error);
     throw new Error(`Failed to upload file`);
+  }
+};
+
+export const getUserFiles = async (userId: string) => {
+  try {
+    const { databases } = await createAdminClient();
+
+    const files = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      [Query.equal("owner", userId), Query.orderDesc("$createdAt")]
+    );
+
+    return files.documents;
+  } catch (error) {
+    console.error("Error fetching files", error);
+    return [];
   }
 };
