@@ -4,6 +4,7 @@ import { InputFile } from "node-appwrite/file";
 import { createAdminClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { ID, Query } from "node-appwrite";
+import { getFileType } from "../utils";
 
 interface UploadFilesParams {
   file: File;
@@ -13,22 +14,6 @@ interface UploadFilesParams {
 
 const getFileExtension = (filename: string): string => {
   return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
-};
-
-const getFileType = (extension: string): string => {
-  const imageExist = ["jpg", "jpeg", "png", "gif"];
-  const videoExist = ["mp4", "avi", "mov", "mwv", "flv", "webm"];
-  const audioExist = ["mp3", "wav", "ogg"];
-  const docExist = ["pdf", "doc", "docx", "txt", "xls", "xlsx", "rtf"];
-
-  const ext = extension.toLowerCase();
-
-  if (imageExist.includes(ext)) return "image";
-  if (videoExist.includes(ext)) return "video";
-  if (audioExist.includes(ext)) return "audio";
-  if (docExist.includes(ext)) return "document";
-
-  return "other";
 };
 
 export const uploadFiles = async ({
@@ -97,5 +82,24 @@ export const getUserFiles = async (userId: string) => {
   } catch (error) {
     console.error("Error fetching files", error);
     return [];
+  }
+};
+
+export const deleteFile = async (fileId: string, bucketField: string) => {
+  try {
+    const { storage, databases } = await createAdminClient();
+
+    await storage.deleteFile(appwriteConfig.bucketId, bucketField);
+
+    await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      fileId
+    );
+
+    return { succes: true };
+  } catch (error: any) {
+    console.error("Failed to delete file", error.message);
+    return { success: false, error: error.message };
   }
 };

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import React from "react";
+import FileCard from "@/components/FileCard";
 
 export default function Home() {
   // Use States
@@ -134,24 +135,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 ">
             {files.map((file) => (
-              <div
-                key={file.$id}
-                className="border rounded p-4 shadow-sm hover:shadow-md transition"
-              >
-                {file.type === "image" ? (
-                  <Image
-                    src={file.url}
-                    alt={file.name}
-                    height={40}
-                    width={40}
-                  />
-                ) : (
-                  <div>{file.extension.toUpperCase()}</div>
-                )}
-
-                <div>{file.name}</div>
-                <div>{(file.size / 1024).toFixed(1)} KB</div>
-              </div>
+              <FileCard key={file.$id} file={file} />
             ))}
           </div>
         </div>
