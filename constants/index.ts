@@ -1,11 +1,23 @@
-import { Box } from "lucide-react";
+import {
+  Home,
+  Folder,
+  CloudUpload,
+  FolderKanban,
+  Globe,
+  Users,
+  Settings,
+  LogOut,
+} from "lucide-react";
 
-export const navItems = [
-  {
-    title: "Drive",
-    url: "/",
-    icon: Box,
-  },
+const sidebarItems = [
+  { id: "dashboard", label: "Dashboard", icon: Home, href: "/" },
+  { id: "my-files", label: "My Files", icon: Folder, href: "#" },
+  { id: "upload", label: "Upload", icon: CloudUpload, href: "/#" },
+  { id: "projects", label: "Projects", icon: FolderKanban, href: "#" },
+  { id: "showcase", label: "Showcase", icon: Globe, href: "#" },
+  { id: "clients", label: "Clients", icon: Users, href: "#" },
+  { id: "settings", label: "Settings", icon: Settings, href: "#" },
+  { id: "logout", label: "Logout", icon: LogOut, href: "#" },
 ];
 
 export const avatarPlaceHolder =

@@ -3,13 +3,11 @@
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
   InputOTP,
@@ -50,9 +48,9 @@ const OtpModal = ({
 
   return (
     <AlertDialog open={open} onOpenChange={setIsOpen}>
-      <AlertDialogContent>
+      <AlertDialogContent className="bg-white/10 border border-white/20 backdrop-blur-lg shadow-xl rounded-2xl px-6 py-8 transition-all duration-500 ease-in-out">
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center justify-center">
+          <AlertDialogTitle className="flex items-center justify-center text-white text-2xl font-semibold">
             Enter your OTP
             <Image
               src="/assets/icons/close.png"
@@ -60,34 +58,46 @@ const OtpModal = ({
               width={25}
               height={25}
               onClick={() => setIsOpen(false)}
-              className="top-4 right-4 absolute cursor-pointer"
+              className="absolute top-4 right-4 cursor-pointer hover:scale-110 transition-transform duration-300"
             />
           </AlertDialogTitle>
-          <AlertDialogDescription className="flex items-center justify-center">
-            We&apos;ve sent a code to <span>{email}</span>
+          <AlertDialogDescription className="text-center text-white/80 mt-2">
+            We&apos;ve sent a code to{" "}
+            <span className="font-medium text-white">{email}</span>
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <div className="flex items-center justify-center">
+
+        <div className="flex justify-center mt-6">
           <InputOTP maxLength={6} value={password} onChange={setPassword}>
             <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
+              {[0, 1, 2].map((i) => (
+                <InputOTPSlot
+                  key={i}
+                  index={i}
+                  className="w-12 h-12 text-xl text-white bg-white/20 border-white/30 rounded-xl mx-1 focus:ring-2 focus:ring-white/60 transition-all duration-300 ease-in-out hover:scale-105"
+                />
+              ))}
             </InputOTPGroup>
             <InputOTPSeparator />
             <InputOTPGroup>
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
+              {[3, 4, 5].map((i) => (
+                <InputOTPSlot
+                  key={i}
+                  index={i}
+                  className="w-12 h-12 text-xl text-white bg-white/20 border-white/30 rounded-xl mx-1 focus:ring-2 focus:ring-white/60 transition-all duration-300 ease-in-out hover:scale-105"
+                />
+              ))}
             </InputOTPGroup>
           </InputOTP>
         </div>
-        <AlertDialogFooter>
-          <div className="flex items-center justify-center w-full">
-            <AlertDialogAction onClick={handleSubmit} className="w-full">
-              Continue
-            </AlertDialogAction>
-          </div>
+
+        <AlertDialogFooter className="mt-6">
+          <AlertDialogAction
+            onClick={handleSubmit}
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 rounded-xl transition-all duration-500 hover:opacity-90 hover:shadow-lg"
+          >
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
