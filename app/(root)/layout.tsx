@@ -1,27 +1,23 @@
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { getCurrentUser } from "@/lib/actions/user.action";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 const layout = async ({ children }: { children: ReactNode }) => {
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
-  const currentUser = await getCurrentUser();
+  const currentUser = await getCurrentUser(); // Getting current user
 
-  if (!currentUser) return redirect("/sign-in");
+  if (!currentUser) return redirect("/sign-in"); // If no user redirect to sign in page
 
   return (
     <div className="flex">
-      <SidebarProvider defaultOpen={defaultOpen}>
-        <AppSidebar />
-        <main className="w-full">
-          <Navbar />
-          <div className="p-4">{children}</div>
-        </main>
-      </SidebarProvider>
+      {/** App sidebar component */}
+      <AppSidebar {...currentUser} />
+      <main className="w-full">
+        {/** Navbar component */}
+        <Navbar {...currentUser} />
+        <div className="p-4">{children}</div>
+      </main>
     </div>
   );
 };

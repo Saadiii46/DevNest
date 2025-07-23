@@ -120,3 +120,67 @@
     @apply bg-background text-foreground;
   }
 }
+
+.network-icon {
+  @apply w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center;
+}
+
+.user-icon {
+  @apply w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center;
+}
+
+.user-icon-two {
+  @apply w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center;
+}
+
+.auth-main {
+  @apply min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4;
+}
+
+.auth-blur-one {
+  @apply absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl;
+}
+
+.auth-blur-two {
+  @apply absolute bottom-1/4 right-1/4 w-64 h-64 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl;
+}
+
+.header-main {
+  @apply relative z-10 bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md border border-gray-200/60 backdrop-blur-sm;
+}
+
+.auth-network-icon {
+  @apply w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/25;
+}
+
+.auth-input {
+  @apply pl-12 px-4 py-3 bg-gray-50 border-2 rounded-xl transition-all duration-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white placeholder:text-gray-400 border-gray-200 hover:border-gray-300;
+}
+
+.auth-form-label {
+  @apply text-sm font-semibold text-gray-700 flex items-center gap-2;
+}
+
+.auth-submit-btn {
+  @apply w-full py-4 rounded-xl font-semibold text-white transition-all duration-300 transform bg-gradient-to-r from-blue-500 to-purple-600 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2;
+}
+
+.alert-dialogue-content {
+  @apply bg-white/10 border border-white/20 backdrop-blur-lg shadow-xl rounded-2xl px-6 py-8 transition-all duration-500 ease-in-out;
+}
+
+.alert-dialogue-title {
+  @apply flex items-center justify-center text-white text-2xl font-semibold;
+}
+
+.otp-close {
+  @apply absolute top-4 right-4 cursor-pointer hover:scale-110 transition-transform duration-300;
+}
+
+.input-otp {
+  @apply w-12 h-12 text-xl text-white bg-white/20 border-white/30 rounded-xl mx-1 focus:ring-2 focus:ring-white/60 transition-all duration-300 ease-in-out hover:scale-105;
+}
+
+.otp-submit {
+  @apply w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 rounded-xl transition-all duration-500 hover:opacity-90 hover:shadow-lg;
+}

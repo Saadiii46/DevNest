@@ -75,17 +75,17 @@ const AuthForm = ({ type }: { type: FormType }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4">
+    <div className="auth-main">
       {/* Soft blurry gradient circles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"></div>
+        <div className="auth-blur-one"></div>
+        <div className="auth-blur-two"></div>
       </div>
 
-      <div className="relative z-10 bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md border border-gray-200/60 backdrop-blur-sm">
+      <div className="header-main">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/25">
+          <div className="auth-network-icon">
             <Network size={28} className="text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -107,7 +107,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
                 name="fullName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <FormLabel className="auth-form-label">
                       <User size={16} className="text-gray-500" />
                       Full Name <span className="text-red-500">*</span>
                     </FormLabel>
@@ -116,7 +116,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
                         <Input
                           {...field}
                           placeholder="Enter your full name"
-                          className="pl-12 px-4 py-3 bg-gray-50 border-2 rounded-xl transition-all duration-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white placeholder:text-gray-400 border-gray-200 hover:border-gray-300"
+                          className="auth-input"
                         />
                       </div>
                     </FormControl>
@@ -131,7 +131,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <FormLabel className="auth-form-label">
                     <Mail size={16} className="text-gray-500" />
                     Email Address <span className="text-red-500">*</span>
                   </FormLabel>
@@ -140,7 +140,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
                       <Input
                         {...field}
                         placeholder="Enter your email"
-                        className="pl-12 px-4 py-3 bg-gray-50 border-2 rounded-xl transition-all duration-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white placeholder:text-gray-400 border-gray-200 hover:border-gray-300"
+                        className="auth-input"
                       />
                     </div>
                   </FormControl>
@@ -149,10 +149,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
             />
 
             {/* Submit Button */}
-            <Button
-              type="submit"
-              className="w-full py-4 rounded-xl font-semibold text-white transition-all duration-300 transform bg-gradient-to-r from-blue-500 to-purple-600 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
-            >
+            <Button type="submit" className="auth-submit-btn">
               {type === "sign-up" ? "Create Account" : "Sign In"}
               <ArrowRight size={18} />
             </Button>

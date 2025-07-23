@@ -4,7 +4,7 @@ import Image from "next/image";
 
 interface FileType {
   file: {
-    $id: string; // Appwrite document ID
+    $id: string;
     name: string;
     url: string;
     type: string;

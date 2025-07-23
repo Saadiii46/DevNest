@@ -1,14 +1,14 @@
-import { LogOut } from "lucide-react";
-import { SidebarTrigger } from "./ui/sidebar";
 import { signOutUser } from "@/lib/actions/user.action";
-import { Button } from "./ui/button";
+import MobileNavigation from "./MobileNavigation";
 
-const Navbar = () => {
+interface Prop {
+  fullName: string;
+  email: string;
+}
+
+const Navbar = ({ fullName, email }: Prop) => {
   return (
-    <nav className="flex items-center justify-between p-4">
-      {/** Left Side */}
-      <SidebarTrigger />
-
+    <nav className="flex items-end justify-end p-4">
       {/** Right Side */}
       <div>
         <form
@@ -17,9 +17,7 @@ const Navbar = () => {
             await signOutUser();
           }}
         >
-          <Button type="submit" variant="signOut">
-            <LogOut className="" />
-          </Button>
+          <MobileNavigation fullName={fullName} email={email} />
         </form>
       </div>
     </nav>

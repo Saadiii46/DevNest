@@ -1,28 +1,17 @@
-import {
-  Home,
-  Folder,
-  CloudUpload,
-  FolderKanban,
-  Globe,
-  Users,
-  Settings,
-  LogOut,
-} from "lucide-react";
+import { Home, Folder, Users, MessageSquare, FileText } from "lucide-react";
 
-const sidebarItems = [
-  { id: "dashboard", label: "Dashboard", icon: Home, href: "/" },
-  { id: "my-files", label: "My Files", icon: Folder, href: "#" },
-  { id: "upload", label: "Upload", icon: CloudUpload, href: "/#" },
-  { id: "projects", label: "Projects", icon: FolderKanban, href: "#" },
-  { id: "showcase", label: "Showcase", icon: Globe, href: "#" },
-  { id: "clients", label: "Clients", icon: Users, href: "#" },
-  { id: "settings", label: "Settings", icon: Settings, href: "#" },
-  { id: "logout", label: "Logout", icon: LogOut, href: "#" },
+export const menuItems = [
+  { id: "dashboard", icon: Home, label: "Dashboard", badge: null },
+  { id: "projects", icon: Folder, label: "Projects", badge: null },
+  { id: "messages", icon: MessageSquare, label: "Feedback", badge: null },
+  { id: "team", icon: Users, label: "Clients", badge: null },
+  { id: "documents", icon: FileText, label: "My Files", badge: null },
 ];
 
 export const avatarPlaceHolder =
   "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png";
 
+// User files size
 export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return "0 bytes";
   const k = 1024;

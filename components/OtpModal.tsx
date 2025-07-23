@@ -48,9 +48,9 @@ const OtpModal = ({
 
   return (
     <AlertDialog open={open} onOpenChange={setIsOpen}>
-      <AlertDialogContent className="bg-white/10 border border-white/20 backdrop-blur-lg shadow-xl rounded-2xl px-6 py-8 transition-all duration-500 ease-in-out">
+      <AlertDialogContent className="alert-dialogue-content">
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center justify-center text-white text-2xl font-semibold">
+          <AlertDialogTitle className="alert-dialogue-title">
             Enter your OTP
             <Image
               src="/assets/icons/close.png"
@@ -58,7 +58,7 @@ const OtpModal = ({
               width={25}
               height={25}
               onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 cursor-pointer hover:scale-110 transition-transform duration-300"
+              className="otp-close"
             />
           </AlertDialogTitle>
           <AlertDialogDescription className="text-center text-white/80 mt-2">
@@ -71,31 +71,20 @@ const OtpModal = ({
           <InputOTP maxLength={6} value={password} onChange={setPassword}>
             <InputOTPGroup>
               {[0, 1, 2].map((i) => (
-                <InputOTPSlot
-                  key={i}
-                  index={i}
-                  className="w-12 h-12 text-xl text-white bg-white/20 border-white/30 rounded-xl mx-1 focus:ring-2 focus:ring-white/60 transition-all duration-300 ease-in-out hover:scale-105"
-                />
+                <InputOTPSlot key={i} index={i} className="-input-otp" />
               ))}
             </InputOTPGroup>
             <InputOTPSeparator />
             <InputOTPGroup>
               {[3, 4, 5].map((i) => (
-                <InputOTPSlot
-                  key={i}
-                  index={i}
-                  className="w-12 h-12 text-xl text-white bg-white/20 border-white/30 rounded-xl mx-1 focus:ring-2 focus:ring-white/60 transition-all duration-300 ease-in-out hover:scale-105"
-                />
+                <InputOTPSlot key={i} index={i} className="input-otp" />
               ))}
             </InputOTPGroup>
           </InputOTP>
         </div>
 
         <AlertDialogFooter className="mt-6">
-          <AlertDialogAction
-            onClick={handleSubmit}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 rounded-xl transition-all duration-500 hover:opacity-90 hover:shadow-lg"
-          >
+          <AlertDialogAction onClick={handleSubmit} className="otp-submit">
             Continue
           </AlertDialogAction>
         </AlertDialogFooter>

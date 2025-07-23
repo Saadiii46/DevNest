@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { getUserFiles, uploadFiles } from "@/lib/actions/file.action";
 import { getCurrentUser } from "@/lib/actions/user.action";
-import Image from "next/image";
 import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import React from "react";
@@ -20,7 +19,7 @@ export default function Home() {
   // Use Call Back
 
   const onDrop = useCallback((acceptFiles: File[]) => {
-    const file = acceptFiles[0];
+    const file = acceptFiles[0]; // Accept 0th index of file
 
     if (file) {
       setSelectedFile(file); // store the file in state
@@ -32,7 +31,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchFiles = async () => {
-      const currentUser = await getCurrentUser();
+      const currentUser = await getCurrentUser(); // Getting current user
 
       if (!currentUser) return;
 
