@@ -1,144 +1,110 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { getUserFiles, uploadFiles } from "@/lib/actions/file.action";
+import InfoCard from "@/components/InfoCard";
+import { formatFileSize, formatTimeAgo, stats } from "@/constants";
+import { getUserFiles } from "@/lib/actions/file.action";
 import { getCurrentUser } from "@/lib/actions/user.action";
-import { useState, useCallback, useEffect } from "react";
-import { useDropzone } from "react-dropzone";
+import { useState, useEffect } from "react";
 import React from "react";
-import FileCard from "@/components/FileCard";
+import { File, HardDrive, Clock, Search } from "lucide-react";
+import SearchAndFiles from "@/components/SearchAndFiles";
+import FileUploader from "@/components/FileUploader";
 
 export default function Home() {
   // Use States
 
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [message, setMessage] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
   const [files, setFiles] = useState<any[]>([]);
+  const [username, setUsername] = useState("");
+  const [totalFiles, setTotalFiles] = useState<number>(0);
+  const [totalStorage, setTotalStorage] = useState<string>("0");
+  const [lastUplaod, setLastUpload] = useState("");
 
-  // Use Call Back
+  // Fetching User Files
 
-  const onDrop = useCallback((acceptFiles: File[]) => {
-    const file = acceptFiles[0]; // Accept 0th index of file
+  const fetchFiles = async () => {
+    const currentUser = await getCurrentUser(); // Getting current user
 
-    if (file) {
-      setSelectedFile(file); // store the file in state
-      setMessage(`Selected file: ${file.name} (${file.size} bytes)`);
+    if (!currentUser) return;
+    if (currentUser) setUsername(currentUser.fullName);
+
+    const userFiles = await getUserFiles(currentUser.$id);
+
+    setFiles(userFiles);
+    setTotalFiles(userFiles.length);
+
+    const totalSize = files.reduce((acc, file) => acc + (file.size || 0), 0);
+    setTotalStorage(formatFileSize(totalSize));
+
+    const recentUpload = userFiles[0]?.$createdAt;
+
+    if (recentUpload) {
+      setLastUpload(formatTimeAgo(recentUpload));
     }
-  }, []);
+  };
 
   // Use Effect
 
   useEffect(() => {
-    const fetchFiles = async () => {
-      const currentUser = await getCurrentUser(); // Getting current user
-
-      if (!currentUser) return;
-
-      const userFiles = await getUserFiles(currentUser.$id);
-      setFiles(userFiles);
-    };
-
     fetchFiles();
   }, []);
-
-  // Use Drop Zone
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    multiple: false,
-  });
-
-  // Handle Upload
-
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      setMessage("Please select a file first.");
-      return;
-    }
-
-    try {
-      setIsUploading(true);
-
-      const currentUser = await getCurrentUser();
-
-      if (!currentUser) throw new Error("User not Authenticated");
-
-      await uploadFiles({
-        file: selectedFile,
-        ownerId: currentUser.$id,
-        accountId: currentUser.accountId,
-      });
-
-      setMessage("File uploaded succesfully");
-      setSelectedFile(null);
-    } catch (error) {
-      console.error("Failed to upload file", error);
-      setMessage("Upload Failed");
-    } finally {
-      setIsUploading(false);
-    }
-  };
 
   // Frontend
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Upload Your Work</h1>
-
-      {/* Dropzone area */}
-      <div
-        {...getRootProps()}
-        className={`border-2 border-dashed rounded p-6 cursor-pointer transition 
-          ${
-            isDragActive
-              ? "border-blue-500 bg-blue-50"
-              : "border-gray-300 bg-white"
-          }`}
-      >
-        {/* Hidden input under the hood */}
-        <input {...getInputProps()} />
-
-        <p className="text-center text-gray-500">
-          {isDragActive
-            ? "Drop the file here..."
-            : "Drag & drop your file here, or click to select"}
+    <div className="main-header">
+      {/** Gradiant Color */}
+      <div className="gradiant-main">
+        <div className="gradiant-color"></div>
+      </div>
+      {/** Header */}
+      <div className="header">
+        <h1>Welcome Back, {username}</h1>
+        <p className="text-slate-600 text-sm font-light">
+          Today is {new Date().toLocaleDateString()}
         </p>
       </div>
 
-      {/* Display selected file info */}
-      {selectedFile && (
-        <div className="mt-4 text-sm text-gray-700">
-          <strong>{selectedFile.name}</strong> ({selectedFile.size} bytes)
-        </div>
-      )}
+      {/** Grid Section */}
 
-      <Button
-        onClick={handleUpload}
-        disabled={!selectedFile || isUploading}
-        className={`mt-4 px-4 py-2 rounded text-white transition duration-200 ${
-          !selectedFile || isUploading
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-500 hover:bg-blue-600"
-        }`}
-      >
-        {isUploading ? "Uploading..." : "Upload File"}
-      </Button>
-
-      {/* Show message */}
-      {message && <p className="mt-4 text-sm text-gray-600">{message}</p>}
-
-      {files && (
-        <div className="mt-10">
-          <h2 className="text-xl font-semibold mb-4">Your Files</h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 ">
-            {files.map((file) => (
-              <FileCard key={file.$id} file={file} />
-            ))}
+      <div className="grid-main">
+        {/* Left Column */}
+        <div className="col-span-12 lg:col-span-4 p-4 flex flex-col gap-4">
+          <div className="gap-16 flex flex-col">
+            <div className="flex flex-col gap-4">
+              <InfoCard
+                label="Total Files"
+                count={totalFiles}
+                className="bg-blue-50 p-2 rounded-lg text-slate-700"
+                icon={<File />}
+              />
+              <InfoCard
+                label="Storage Used"
+                count={totalStorage}
+                className="bg-purple-50 p-2 rounded-lg text-slate-700"
+                icon={<HardDrive />}
+              />
+              <InfoCard
+                label="Last Uploaded"
+                count={lastUplaod}
+                className="bg-emerald-50 p-2 rounded-lg text-slate-700"
+                icon={<Clock />}
+              />
+            </div>
+            <div>
+              <FileUploader refreshFiles={fetchFiles} />
+            </div>
           </div>
         </div>
-      )}
+
+        {/* Right Column */}
+        <div className="col-span-12 lg:col-span-8 p-4 max-h-screen overflow-y-auto">
+          {/* Right panel content */}
+          <div className="flex flex-col">
+            {/** search and filter */}
+            <SearchAndFiles />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

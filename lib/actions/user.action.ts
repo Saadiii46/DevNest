@@ -113,6 +113,8 @@ export const getCurrentUser = async () => {
 export const signOutUser = async () => {
   const { account } = await createSessionClient();
 
+  if (!account) throw new Error("Account not found");
+
   try {
     await account.deleteSession("current");
     (await cookies()).delete("appwrite-session");

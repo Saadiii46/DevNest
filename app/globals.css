@@ -184,3 +184,35 @@
 .otp-submit {
   @apply w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 rounded-xl transition-all duration-500 hover:opacity-90 hover:shadow-lg;
 }
+
+.gradiant-main {
+  @apply fixed inset-0 overflow-hidden pointer-events-none max-sm:hidden;
+}
+
+.gradiant-color {
+  @apply absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse;
+}
+
+.header {
+  @apply text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent gap-2;
+}
+
+.upload-area-icon {
+  @apply w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-3;
+}
+
+.upload-area-btn {
+  @apply mt-4 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm font-medium;
+}
+
+.main-header {
+  @apply p-4 h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 overflow-hidden max-md:overflow-y-auto;
+}
+
+.grid-main {
+  @apply flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 max-h-screen mt-4 px-4;
+}
+
+.info-card-main {
+  @apply flex justify-between items-center rounded-lg bg-white p-4 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105;
+}

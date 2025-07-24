@@ -49,7 +49,7 @@ export const uploadFiles = async ({
       users: [ownerId],
     };
 
-    console.log("Saving file document:", fileDocument);
+    console.log("File size:", file.size);
 
     const saveFile = await databases.createDocument(
       appwriteConfig.databaseId,

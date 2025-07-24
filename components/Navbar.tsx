@@ -8,7 +8,7 @@ interface Prop {
 
 const Navbar = ({ fullName, email }: Prop) => {
   return (
-    <nav className="flex items-end justify-end p-4">
+    <nav className="flex items-end justify-end">
       {/** Right Side */}
       <div>
         <form
