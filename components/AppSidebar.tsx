@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import { ChevronLeft, ChevronRight, User, Network } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, User, Network, LogOut } from "lucide-react";
 import { menuItems } from "@/constants";
 
 interface Prop {
   fullName: string;
   email: string;
-  avatar: string;
+  avatar?: any;
 }
 
 export default function ModernSidebar({ fullName, email }: Prop) {
@@ -115,23 +115,6 @@ export default function ModernSidebar({ fullName, email }: Prop) {
               )}
             </button>
           </div>
-
-          {/* Search */}
-          {/* {!isCollapsed && (
-          <div className="p-4">
-            <div className="relative">
-              <Search
-                size={18}
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-              />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 text-sm"
-              />
-            </div>
-          </div>
-        )} */}
 
           {/* Navigation */}
           <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">

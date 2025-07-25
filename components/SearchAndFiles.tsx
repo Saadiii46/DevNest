@@ -1,10 +1,7 @@
 "use client";
 
-import { files } from "@/constants";
 import {
   Download,
-  Eye,
-  File,
   Grid3X3,
   List,
   MoreHorizontal,
@@ -12,12 +9,35 @@ import {
   Share2,
   Trash2,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Skeleton } from "./ui/skeleton";
+import { getFileIcon } from "@/constants/GetFileIcon";
+import { getFileColor } from "@/constants";
 
-const SearchAndFiles = () => {
-  const [viewMode, setViewMode] = useState("grid");
-  const [bottomBar, setBottomBar] = useState(false);
+interface FileProp {
+  file: any[];
+  isLoading: boolean;
+}
+
+const SearchAndFiles = ({ file, isLoading }: FileProp) => {
+  const [viewMode, setViewMode] = useState<"grid" | "list" | null>(null);
+
+  const toggleView = (mode: "grid" | "list") => {
+    setViewMode(mode);
+    localStorage.setItem("viewMode", mode);
+  };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("viewMode") as "grid" | "list";
+      if (saved === "list" || saved === "grid") {
+        setViewMode(saved);
+      }
+    }
+  }, []);
+
+  if (!viewMode) return null;
 
   return (
     <div>
@@ -33,7 +53,7 @@ const SearchAndFiles = () => {
 
         <div className="flex bg-white/70 backdrop-blur-sm rounded-xl p-1 shadow-lg">
           <button
-            onClick={() => setViewMode("grid")}
+            onClick={() => toggleView("grid")}
             className={`p-2 rounded-lg transition-all duration-300 ${
               viewMode === "grid"
                 ? "bg-blue-500 text-white shadow-md"
@@ -43,7 +63,7 @@ const SearchAndFiles = () => {
             <Grid3X3 className="w-4 h-4" />
           </button>
           <button
-            onClick={() => setViewMode("list")}
+            onClick={() => toggleView("list")}
             className={`p-2 rounded-lg transition-all duration-300 max-sm:hidden max-md:hidden ${
               viewMode === "list"
                 ? "bg-blue-500 text-white shadow-md"
@@ -63,94 +83,113 @@ const SearchAndFiles = () => {
         <ScrollArea className="max-h-[calc(100vh-200px)] overflow-auto">
           <div className="space-y-2 px-4 py-2">
             {viewMode === "grid" ? (
-              <div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 p-4 h-full">
-                  {files.map((file, index) => (
-                    <div
-                      key={file.id}
-                      onClick={() => setBottomBar(true)}
-                      className="group bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer"
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <div
-                          className={`w-10 h-10 ${file.color} rounded-lg flex items-center justify-center`}
-                        >
-                          <File className="w-5 h-5 text-white" />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 p-4 h-full">
+                {isLoading
+                  ? [...Array(6)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="group bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-md"
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <Skeleton className="w-10 h-10 rounded-lg loader" />
+                          <Skeleton className="w-4 h-4 rounded loader" />
                         </div>
-                        <button className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <MoreHorizontal className="w-4 h-4 text-slate-400" />
-                        </button>
+                        <Skeleton className="h-4 mb-2 w-3/4 loader" />
+                        <div className="flex justify-between">
+                          <Skeleton className="h-3 w-12 loader" />
+                          <Skeleton className="h-3 w-20 loader" />
+                        </div>
                       </div>
-                      <h4 className="font-semibold text-slate-800 text-sm mb-2 truncate">
-                        {file.name}
-                      </h4>
-                      <div className="flex items-center justify-between text-xs text-slate-500">
-                        <span>{file.size}</span>
-                        <span>{file.modified}</span>
+                    ))
+                  : file.map((item) => (
+                      <div
+                        key={item.$id}
+                        className="group bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer"
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <div
+                            className={`w-10 h-10 ${getFileColor(
+                              item.type
+                            )} rounded-lg flex items-center justify-center`}
+                          >
+                            {getFileIcon(item.type)}
+                          </div>
+                          <button className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <MoreHorizontal className="w-4 h-4 text-slate-400" />
+                          </button>
+                        </div>
+                        <h4 className="font-semibold text-slate-800 text-sm mb-2 truncate">
+                          {item.name}
+                        </h4>
+                        <div className="flex items-center justify-between text-xs text-slate-500">
+                          <span>{item.size}</span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
               </div>
             ) : (
               <div className="h-full overflow-y-auto">
-                {files.map((file, index) => (
-                  <div
-                    key={file.id}
-                    className="flex items-center justify-between p-4 border-b border-slate-200/50 last:border-b-0 hover:bg-slate-50/50 transition-colors duration-300 cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3">
+                {isLoading
+                  ? [...Array(6)].map((_, i) => (
                       <div
-                        className={`w-8 h-8 ${file.color} rounded-lg flex items-center justify-center`}
+                        key={i}
+                        className="flex items-center justify-between p-4 bg-white/70 backdrop-blur rounded-lg"
                       >
-                        <File className="w-4 h-4 text-white" />
+                        <div className="flex items-center gap-3">
+                          <Skeleton className="w-8 h-8 rounded-lg loader" />
+                          <div>
+                            <Skeleton className="h-4 w-24 mb-1 loader" />
+                            <Skeleton className="h-3 w-32 loader" />
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Skeleton className="w-6 h-6 rounded loader" />
+                          <Skeleton className="w-6 h-6 rounded loader" />
+                          <Skeleton className="w-6 h-6 rounded loader" />
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-slate-800 text-sm">
-                          {file.name}
-                        </h4>
-                        <p className="text-xs text-slate-500">
-                          {file.size} • {file.modified}
-                        </p>
+                    ))
+                  : file.map((item) => (
+                      <div
+                        key={item.$id}
+                        className="flex items-center justify-between p-4 border-b border-slate-200/50 last:border-b-0 hover:bg-slate-50/50 transition-colors duration-300 cursor-pointer"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-8 h-8 ${getFileColor(
+                              item.type
+                            )} rounded-lg flex items-center justify-center`}
+                          >
+                            {getFileIcon(item.type)}
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-slate-800 text-sm">
+                              {item.name}
+                            </h4>
+                            <p className="text-xs text-slate-500">
+                              {item.size} • {item.modified}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <button className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200">
+                            <Download className="w-3.5 h-3.5 text-slate-500" />
+                          </button>
+                          <button className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200">
+                            <Share2 className="w-3.5 h-3.5 text-slate-500" />
+                          </button>
+                          <button className="p-1.5 hover:bg-red-100 rounded-lg transition-colors duration-200">
+                            <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1">
-                        <button className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200">
-                          <Download className="w-3.5 h-3.5 text-slate-500" />
-                        </button>
-                        <button className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200">
-                          <Share2 className="w-3.5 h-3.5 text-slate-500" />
-                        </button>
-                        <button className="p-1.5 hover:bg-red-100 rounded-lg transition-colors duration-200">
-                          <Trash2 className="w-3.5 h-3.5 text-red-500" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                    ))}
               </div>
             )}
           </div>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
-      {bottomBar && (
-        <div className="mt-4 bg-slate-800 text-white px-4 py-3 rounded-xl shadow-xl flex items-center justify-between animate-slide-up">
-          <span className="font-medium text-sm">files selected</span>
-          <div className="flex items-center gap-2">
-            <button className="p-2 hover:bg-slate-700 rounded-lg transition-colors duration-200">
-              <Download className="w-4 h-4" />
-            </button>
-            <button className="p-2 hover:bg-slate-700 rounded-lg transition-colors duration-200">
-              <Share2 className="w-4 h-4" />
-            </button>
-            <button className="p-2 hover:bg-red-600 rounded-lg transition-colors duration-200">
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

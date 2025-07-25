@@ -204,9 +204,12 @@
 .upload-area-btn {
   @apply mt-4 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm font-medium;
 }
+.upload-area-cancel {
+  @apply mt-4 px-4 py-2 text-black rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm font-medium;
+}
 
 .main-header {
-  @apply p-4 h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 overflow-hidden max-md:overflow-y-auto;
+  @apply p-4 h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 overflow-hidden max-md:overflow-y-auto max-lg:overflow-y-auto;
 }
 
 .grid-main {
@@ -215,4 +218,8 @@
 
 .info-card-main {
   @apply flex justify-between items-center rounded-lg bg-white p-4 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105;
+}
+
+.loader {
+  @apply bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-600 shadow-lg shadow-blue-500/25;
 }

@@ -7,14 +7,13 @@ import { useDropzone } from "react-dropzone";
 import { Upload } from "lucide-react";
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 interface UploadFileProp {
   refreshFiles: () => Promise<void>;
@@ -33,6 +32,7 @@ const FileUploader = ({ refreshFiles }: UploadFileProp) => {
 
     if (file) {
       setSelectedFile(file); // store the file in state
+      const preview = URL.createObjectURL(file);
     }
   }, []);
 
@@ -74,7 +74,9 @@ const FileUploader = ({ refreshFiles }: UploadFileProp) => {
         accountId: currentUser.accountId,
       });
 
-      setMessage("File uploaded succesfully");
+      toast("File Uploaded successfully", {
+        position: "top-center",
+      });
       setSelectedFile(null);
 
       await refreshFiles();
@@ -113,16 +115,19 @@ const FileUploader = ({ refreshFiles }: UploadFileProp) => {
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>
-                Are you sure you want to upload? {selectedFile?.name}
+                Do you want to upload? {selectedFile?.name}
               </AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction>Continue</AlertDialogAction>
+              <button
+                className="upload-area-cancel"
+                onClick={() => setShowDialogue(false)}
+              >
+                Cancel
+              </button>
+              <button onClick={handleUpload} className="upload-area-btn">
+                Upload File
+              </button>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

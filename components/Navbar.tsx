@@ -10,16 +10,8 @@ const Navbar = ({ fullName, email }: Prop) => {
   return (
     <nav className="flex items-end justify-end">
       {/** Right Side */}
-      <div>
-        <form
-          action={async () => {
-            "use server";
-            await signOutUser();
-          }}
-        >
-          <MobileNavigation fullName={fullName} email={email} />
-        </form>
-      </div>
+
+      <MobileNavigation fullName={fullName} email={email} />
     </nav>
   );
 };

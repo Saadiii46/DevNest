@@ -1,13 +1,4 @@
-import {
-  Home,
-  Folder,
-  Users,
-  MessageSquare,
-  FileText,
-  HardDrive,
-  Clock,
-  File,
-} from "lucide-react";
+import { Home, Folder, Users, MessageSquare, FileText } from "lucide-react";
 
 export const menuItems = [
   { id: "dashboard", icon: Home, label: "Dashboard", badge: null },
@@ -29,96 +20,96 @@ export const formatFileSize = (bytes: number): string => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 };
 
-export const stats = [
-  {
-    label: "Total Files",
-    value: "2",
-    icon: File,
-    color: "from-blue-500 to-cyan-500",
-    bgColor: "bg-blue-50",
-  },
-  {
-    label: "Storage Used",
-    value: "0 bytes",
-    icon: HardDrive,
-    color: "from-purple-500 to-pink-500",
-    bgColor: "bg-purple-50",
-  },
-  {
-    label: "Last Upload",
-    value: "2 hours ago",
-    icon: Clock,
-    color: "from-emerald-500 to-teal-500",
-    bgColor: "bg-emerald-50",
-  },
-];
+// export const stats = [
+//   {
+//     label: "Total Files",
+//     value: "2",
+//     icon: File,
+//     color: "from-blue-500 to-cyan-500",
+//     bgColor: "bg-blue-50",
+//   },
+//   {
+//     label: "Storage Used",
+//     value: "0 bytes",
+//     icon: HardDrive,
+//     color: "from-purple-500 to-pink-500",
+//     bgColor: "bg-purple-50",
+//   },
+//   {
+//     label: "Last Upload",
+//     value: "2 hours ago",
+//     icon: Clock,
+//     color: "from-emerald-500 to-teal-500",
+//     bgColor: "bg-emerald-50",
+//   },
+// ];
 
-export const files = [
-  {
-    id: 1,
-    name: "Project Proposal.pdf",
-    size: "2.4 MB",
-    type: "PDF",
-    modified: "2h ago",
-    color: "bg-red-500",
-  },
-  {
-    id: 2,
-    name: "Design Assets.zip",
-    size: "15.2 MB",
-    type: "ZIP",
-    modified: "1d ago",
-    color: "bg-yellow-500",
-  },
-  {
-    id: 3,
-    name: "Meeting Notes.docx",
-    size: "1.1 MB",
-    type: "DOC",
-    modified: "3d ago",
-    color: "bg-blue-500",
-  },
-  {
-    id: 4,
-    name: "Analytics Report.xlsx",
-    size: "3.7 MB",
-    type: "XLS",
-    modified: "1w ago",
-    color: "bg-green-500",
-  },
-  {
-    id: 5,
-    name: "Analytics Report.xlsx",
-    size: "3.7 MB",
-    type: "XLS",
-    modified: "1w ago",
-    color: "bg-green-500",
-  },
-  {
-    id: 6,
-    name: "Analytics Report.xlsx",
-    size: "3.7 MB",
-    type: "XLS",
-    modified: "1w ago",
-    color: "bg-green-500",
-  },
-  {
-    id: 7,
-    name: "Analytics Report.xlsx",
-    size: "3.7 MB",
-    type: "XLS",
-    modified: "1w ago",
-    color: "bg-green-500",
-  },
-  {
-    id: 8,
-    name: "Analytics Report.xlsx",
-    size: "3.7 MB",
-    type: "XLS",
-    modified: "1w ago",
-    color: "bg-green-500",
-  },
-];
+// export const files = [
+//   {
+//     id: 1,
+//     name: "Project Proposal.pdf",
+//     size: "2.4 MB",
+//     type: "PDF",
+//     modified: "2h ago",
+//     color: "bg-red-500",
+//   },
+//   {
+//     id: 2,
+//     name: "Design Assets.zip",
+//     size: "15.2 MB",
+//     type: "ZIP",
+//     modified: "1d ago",
+//     color: "bg-yellow-500",
+//   },
+//   {
+//     id: 3,
+//     name: "Meeting Notes.docx",
+//     size: "1.1 MB",
+//     type: "DOC",
+//     modified: "3d ago",
+//     color: "bg-blue-500",
+//   },
+//   {
+//     id: 4,
+//     name: "Analytics Report.xlsx",
+//     size: "3.7 MB",
+//     type: "XLS",
+//     modified: "1w ago",
+//     color: "bg-green-500",
+//   },
+//   {
+//     id: 5,
+//     name: "Analytics Report.xlsx",
+//     size: "3.7 MB",
+//     type: "XLS",
+//     modified: "1w ago",
+//     color: "bg-green-500",
+//   },
+//   {
+//     id: 6,
+//     name: "Analytics Report.xlsx",
+//     size: "3.7 MB",
+//     type: "XLS",
+//     modified: "1w ago",
+//     color: "bg-green-500",
+//   },
+//   {
+//     id: 7,
+//     name: "Analytics Report.xlsx",
+//     size: "3.7 MB",
+//     type: "XLS",
+//     modified: "1w ago",
+//     color: "bg-green-500",
+//   },
+//   {
+//     id: 8,
+//     name: "Analytics Report.xlsx",
+//     size: "3.7 MB",
+//     type: "XLS",
+//     modified: "1w ago",
+//     color: "bg-green-500",
+//   },
+// ];
 
 export const formatTimeAgo = (isoDate: string) => {
   const date = new Date(isoDate);
@@ -129,4 +120,22 @@ export const formatTimeAgo = (isoDate: string) => {
   if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
   if (diff < 86400) return `${Math.floor(diff / 3600)} hours ago`;
   return `${Math.floor(diff / 86400)} days ago`;
+};
+
+// utils/getFileColor.ts
+
+export const getFileColor = (type: string): string => {
+  switch (type) {
+    case "image":
+      return "bg-blue-500";
+    case "video":
+      return "bg-red-500";
+    case "audio":
+      return "bg-yellow-500";
+    case "document":
+      return "bg-green-500";
+    case "other":
+    default:
+      return "bg-gray-500";
+  }
 };
