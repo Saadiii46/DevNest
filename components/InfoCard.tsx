@@ -1,14 +1,18 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
 
 interface Prop {
-  label: string;
+  label?: string;
   count?: number | string;
-  icon?: string;
+  icon?: React.ReactNode;
   className?: string;
-  isLoading?: boolean;
 }
 
-const InfoCard = ({ label, count, icon, className, isLoading }: Prop) => {
+const InfoCard = ({ label, count, icon, className }: Prop) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <div className="info-card-main">
       <div className="flex flex-col gap-1">

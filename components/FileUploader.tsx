@@ -13,18 +13,17 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-interface UploadFileProp {
-  refreshFiles: () => Promise<void>;
-}
-
-const FileUploader = ({ refreshFiles }: UploadFileProp) => {
+const FileUploader = () => {
   // Use States
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [message, setMessage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [showDialogue, setShowDialogue] = useState(false);
+
+  const router = useRouter();
 
   const onDrop = useCallback((acceptFiles: File[]) => {
     const file = acceptFiles[0]; // Accept 0th index of file
@@ -78,7 +77,7 @@ const FileUploader = ({ refreshFiles }: UploadFileProp) => {
       });
       setSelectedFile(null);
 
-      await refreshFiles();
+      router.refresh();
     } catch (error) {
       console.error("Failed to upload file", error);
       setMessage("Upload Failed");

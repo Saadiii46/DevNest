@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "./ui/skeleton";
 import { getFileIcon } from "@/constants/GetFileIcon";
-import { FileType, getFileColor } from "@/constants";
+import { Files, FileType, getFileColor } from "@/constants";
 import { deleteFile, enableFileSharing } from "@/lib/actions/file.action";
 import { toast } from "sonner";
 import { storage } from "@/lib/appwrite/AppwriteClientUsage";
@@ -21,8 +21,8 @@ import {
 
 interface FileProp {
   file: FileType[];
-  isLoading: boolean;
-  refreshFiles: () => Promise<void>;
+  isLoading?: boolean;
+  refreshFiles: Files[];
   lastUpload?: string;
 }
 
@@ -48,7 +48,7 @@ const SearchAndFiles = ({
           position: "top-center",
         });
 
-        refreshFiles();
+        refreshFiles;
       }
     } catch (error) {
       toast("Failed to delete file", {

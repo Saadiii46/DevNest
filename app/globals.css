@@ -194,7 +194,7 @@
 }
 
 .header {
-  @apply text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent gap-2;
+  @apply text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent gap-3;
 }
 
 .upload-area-icon {
