@@ -8,7 +8,7 @@ import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const getUserByEmail = async (email: string) => {
+export const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient();
 
   const result = await databases.listDocuments(
@@ -20,12 +20,12 @@ const getUserByEmail = async (email: string) => {
   return result.total > 0 ? result.documents[0] : null;
 };
 
-const handleError = (error: unknown, message: string) => {
+export const handleError = async (error: unknown, message: string) => {
   console.log(error, message);
   throw error;
 };
 
-const sendEmailOTP = async ({ email }: { email: string }) => {
+export const sendEmailOTP = async ({ email }: { email: string }) => {
   const { account } = await createAdminClient();
 
   try {

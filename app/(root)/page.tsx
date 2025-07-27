@@ -1,22 +1,23 @@
 "use client";
 
 import InfoCard from "@/components/InfoCard";
-import { formatFileSize, formatTimeAgo } from "@/constants";
+import { Files, formatFileSize, formatTimeAgo } from "@/constants";
 import { getUserFiles } from "@/lib/actions/file.action";
 import { getCurrentUser, signOutUser } from "@/lib/actions/user.action";
 import { useState, useEffect } from "react";
 import React from "react";
-import { File, HardDrive, Clock, Search } from "lucide-react";
+import { HardDrive } from "lucide-react";
 import SearchAndFiles from "@/components/SearchAndFiles";
 import FileUploader from "@/components/FileUploader";
 import { Skeleton } from "@/components/ui/skeleton";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { File } from "lucide-react";
 
 export default function Home() {
   // Use States
 
-  const [files, setFiles] = useState<any[]>([]);
+  const [files, setFiles] = useState<Files[]>([]);
   const [username, setUsername] = useState("");
   const [totalFiles, setTotalFiles] = useState<number>(0);
   const [totalStorage, setTotalStorage] = useState<string>("0");
@@ -37,7 +38,7 @@ export default function Home() {
     }
   };
 
-  // Fetching User Files
+  // Fetching user name
 
   const fetchUsername = async () => {
     const userNameCookie = Cookies.get("user_fullName");
@@ -48,12 +49,12 @@ export default function Home() {
     }
 
     const user = await getCurrentUser();
-
     if (!user) return;
-
     setUsername(user.fullName);
     Cookies.set("user_fullName", user.fullName, { expires: 1 });
   };
+
+  // Fetching user files
 
   const fetchFiles = async () => {
     try {
@@ -65,23 +66,22 @@ export default function Home() {
       }
 
       const userFiles = await getUserFiles(currentUser.$id);
-
-      setFiles(userFiles);
+      setFiles(userFiles as Files[]);
       setTotalFiles(userFiles.length);
 
       const totalSize = userFiles.reduce(
         (acc, file) => acc + (file.size || 0),
         0
       );
-      setTotalStorage(formatFileSize(totalSize));
 
+      setTotalStorage(formatFileSize(totalSize));
       const recentUpload = userFiles[0]?.$createdAt;
 
       if (recentUpload) {
         setLastUpload(formatTimeAgo(recentUpload));
       }
     } catch (error) {
-      console.error("Failed yo fetch user");
+      console.error("Failed yo fetch user", error);
     } finally {
       setIsLoading(false);
     }
@@ -147,13 +147,13 @@ export default function Home() {
                 icon={<HardDrive />}
                 isLoading={isLoading}
               />
-              <InfoCard
+              {/* <InfoCard
                 label="Last Uploaded"
-                count={lastUplaod}
+                lastUpload={lastUplaod}
                 className="bg-emerald-50 p-2 rounded-lg text-slate-700"
                 icon={<Clock />}
                 isLoading={isLoading}
-              />
+              /> */}
             </div>
             <div>
               <FileUploader refreshFiles={fetchFiles} />
@@ -166,7 +166,12 @@ export default function Home() {
           {/* Right panel content */}
           <div className="flex flex-col">
             {/** search and filter */}
-            <SearchAndFiles file={files} isLoading={isLoading} />
+            <SearchAndFiles
+              file={files}
+              isLoading={isLoading}
+              refreshFiles={fetchFiles}
+              lastUpload={lastUplaod}
+            />
           </div>
         </div>
       </div>

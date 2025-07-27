@@ -9,13 +9,20 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { menuItems } from "@/constants";
-import { Menu, Network, User } from "lucide-react";
+import { LucideIcon, Menu, Network, User } from "lucide-react";
 import { useState } from "react";
 
 interface Prop {
   fullName: string;
   email: string;
 }
+
+type SidebarItem = {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  badge?: null;
+};
 
 const MobileNavigation = ({ fullName, email }: Prop) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -26,9 +33,9 @@ const MobileNavigation = ({ fullName, email }: Prop) => {
     isActive,
     onClick,
   }: {
-    item: any;
-    isActive: any;
-    onClick: any;
+    item: SidebarItem;
+    isActive: boolean;
+    onClick: (id: string) => void;
   }) => {
     const Icon = item.icon;
 

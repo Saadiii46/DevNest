@@ -1,26 +1,121 @@
 "use client";
 
-import {
-  Download,
-  Grid3X3,
-  List,
-  MoreHorizontal,
-  Search,
-  Share2,
-  Trash2,
-} from "lucide-react";
+import { Download, Grid3X3, List, Search, Share2, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "./ui/skeleton";
 import { getFileIcon } from "@/constants/GetFileIcon";
 import { getFileColor } from "@/constants";
+import { deleteFile, enableFileSharing } from "@/lib/actions/file.action";
+import { toast } from "sonner";
+
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "./ui/alert-dialog";
+
+import { Models } from "node-appwrite";
+import { storage } from "@/lib/appwrite/AppwriteClientUsage";
+import { appwriteConfig } from "@/lib/appwrite/config";
+
+export type FileType = Models.Document & {
+  $id: string;
+  name: string;
+  url: string;
+  type: string;
+  extension: string;
+  size: number;
+  owner: string;
+  accountId: string;
+  bucketField: string;
+  users: string[];
+};
 
 interface FileProp {
-  file: any[];
+  file: FileType[];
   isLoading: boolean;
+  refreshFiles: () => Promise<void>;
+  lastUpload?: string;
 }
 
-const SearchAndFiles = ({ file, isLoading }: FileProp) => {
+const SearchAndFiles = ({
+  file,
+  isLoading,
+  refreshFiles,
+  lastUpload,
+}: FileProp) => {
+  // Use states
+
+  const [showDialogue, setShowDialogue] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<FileType | null>(null);
+
+  // Delete user files
+
+  const handleDelete = async (file: FileType) => {
+    try {
+      const result = await deleteFile(file.$id, file.bucketField);
+
+      if (result.succes) {
+        toast("File deleted successfully", {
+          position: "top-center",
+        });
+
+        refreshFiles();
+      }
+    } catch (error) {
+      toast("Failed to delete file", {
+        position: "top-center",
+      });
+    }
+  };
+
+  // Share user files
+
+  const handleShare = async (file: FileType) => {
+    try {
+      const result = await enableFileSharing(file.$id);
+
+      const publicUrl = `${(window.location, origin)}/share/${result.shareId}`;
+
+      toast("Public link created", {
+        position: "top-center",
+      });
+
+      navigator.clipboard.writeText(publicUrl);
+    } catch (error) {
+      toast("Failed to share id", {
+        position: "top-center",
+      });
+    }
+  };
+
+  // Download user files
+
+  const handleDownload = async (file: FileType) => {
+    try {
+      const downloadUrl = storage.getFileDownload(
+        appwriteConfig.bucketId,
+        file.bucketField
+      );
+
+      const link = document.createElement("a");
+
+      (link.href = downloadUrl.toString()), (link.download = file.name);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      console.log("File Info:", file);
+    } catch (error) {
+      toast("Failed to download file", {
+        position: "top-center",
+      });
+    }
+  };
+
   const [viewMode, setViewMode] = useState<"grid" | "list" | null>(null);
 
   const toggleView = (mode: "grid" | "list") => {
@@ -76,7 +171,10 @@ const SearchAndFiles = ({ file, isLoading }: FileProp) => {
       </div>
       <div className="flex-1 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden flex flex-col">
         <div className="p-4 border-b border-slate-200/50">
-          <h3 className="text-xl font-bold text-slate-800">Your Files</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold text-slate-800">Your Files</h3>
+            <p className="text-sm text-slate-800">Last Upload: {lastUpload}</p>
+          </div>
         </div>
 
         {/** Files */}
@@ -114,9 +212,29 @@ const SearchAndFiles = ({ file, isLoading }: FileProp) => {
                           >
                             {getFileIcon(item.type)}
                           </div>
-                          <button className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <MoreHorizontal className="w-4 h-4 text-slate-400" />
-                          </button>
+                          <div>
+                            <button
+                              onClick={() => handleDownload(item)}
+                              className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+                            >
+                              <Download className="w-3.5 h-3.5 text-slate-500" />
+                            </button>
+                            <button
+                              onClick={() => handleShare(item)}
+                              className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+                            >
+                              <Share2 className="w-3.5 h-3.5 text-slate-500" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setSelectedFile(item);
+                                setShowDialogue(true);
+                              }}
+                              className="p-1.5 hover:bg-red-100 rounded-lg transition-colors duration-200"
+                            >
+                              <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                            </button>
+                          </div>
                         </div>
                         <h4 className="font-semibold text-slate-800 text-sm mb-2 truncate">
                           {item.name}
@@ -172,13 +290,25 @@ const SearchAndFiles = ({ file, isLoading }: FileProp) => {
                           </div>
                         </div>
                         <div className="flex items-center gap-1">
-                          <button className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200">
+                          <button
+                            onClick={() => handleDownload(item)}
+                            className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+                          >
                             <Download className="w-3.5 h-3.5 text-slate-500" />
                           </button>
-                          <button className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200">
+                          <button
+                            onClick={() => handleShare(item)}
+                            className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+                          >
                             <Share2 className="w-3.5 h-3.5 text-slate-500" />
                           </button>
-                          <button className="p-1.5 hover:bg-red-100 rounded-lg transition-colors duration-200">
+                          <button
+                            onClick={() => {
+                              setSelectedFile(item);
+                              setShowDialogue(true);
+                            }}
+                            className="p-1.5 hover:bg-red-100 rounded-lg transition-colors duration-200"
+                          >
                             <Trash2 className="w-3.5 h-3.5 text-red-500" />
                           </button>
                         </div>
@@ -190,6 +320,37 @@ const SearchAndFiles = ({ file, isLoading }: FileProp) => {
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
+
+      {showDialogue && (
+        <AlertDialog open={showDialogue} onOpenChange={setShowDialogue}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Do you want to delete? {selectedFile?.name}
+              </AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <button
+                className="upload-area-cancel"
+                onClick={() => setShowDialogue(false)}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  if (selectedFile) {
+                    await handleDelete(selectedFile);
+                    setShowDialogue(false);
+                  }
+                }}
+                className="upload-area-btn"
+              >
+                Delete file
+              </button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </div>
   );
 };

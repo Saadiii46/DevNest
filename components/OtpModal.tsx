@@ -1,5 +1,6 @@
 "use client";
 
+import { verifyUserSecret } from "@/app/server-actions/users";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,7 +16,6 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { verifySecret } from "@/lib/actions/user.action";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -35,7 +35,7 @@ const OtpModal = ({
     e.preventDefault();
 
     try {
-      const sessionId = await verifySecret({
+      const sessionId = await verifyUserSecret({
         accountId,
         password,
       });
@@ -71,7 +71,7 @@ const OtpModal = ({
           <InputOTP maxLength={6} value={password} onChange={setPassword}>
             <InputOTPGroup>
               {[0, 1, 2].map((i) => (
-                <InputOTPSlot key={i} index={i} className="-input-otp" />
+                <InputOTPSlot key={i} index={i} className="input-otp" />
               ))}
             </InputOTPGroup>
             <InputOTPSeparator />

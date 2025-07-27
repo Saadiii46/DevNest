@@ -2,9 +2,9 @@ import { Skeleton } from "./ui/skeleton";
 
 interface Prop {
   label: string;
-  count: any;
-  icon?: any;
-  className?: any;
+  count?: number | string;
+  icon?: string;
+  className?: string;
   isLoading?: boolean;
 }
 

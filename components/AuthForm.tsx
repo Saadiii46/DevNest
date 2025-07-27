@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createAccount, signInUser } from "@/lib/actions/user.action";
 import OtpModal from "./OtpModal";
 import { Mail, User, ArrowRight, Network } from "lucide-react";
+import { createUserAccount, signInUsers } from "@/app/server-actions/users";
 
 // Form Type
 
@@ -60,16 +60,17 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
       const user =
         type === "sign-up"
-          ? await createAccount({
+          ? await createUserAccount({
               fullName: values.fullName || "",
               email: values.email,
             })
-          : await signInUser({
+          : await signInUsers({
               email: values.email,
             });
 
       setAccountId(user.accountId);
     } catch (error) {
+      console.log("Failed to create account", error);
       throw new Error("Failed to create account");
     }
   };

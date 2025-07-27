@@ -1,10 +1,11 @@
 "use server";
 
 import { InputFile } from "node-appwrite/file";
-import { createAdminClient } from "../appwrite";
+import { createAdminClient, createSessionClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
-import { ID, Query } from "node-appwrite";
+import { ID, Query, Role } from "node-appwrite";
 import { getFileType } from "../utils";
+import { Files } from "@/constants";
 
 interface UploadFilesParams {
   file: File;
@@ -23,8 +24,9 @@ export const uploadFiles = async ({
 }: UploadFilesParams) => {
   try {
     const { storage, databases } = await createAdminClient();
-
-    const inputFile = InputFile.fromBuffer(file, file.name);
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const inputFile = InputFile.fromBuffer(buffer, file.name);
 
     const bucketFile = await storage.createFile(
       appwriteConfig.bucketId,
@@ -34,7 +36,6 @@ export const uploadFiles = async ({
 
     const extension = getFileExtension(file.name);
     const fileType = getFileType(extension);
-
     const fileUrl = `${appwriteConfig.endpointUrl}/storage/buckets/${appwriteConfig.bucketId}/files/${bucketFile.$id}/view?project=${appwriteConfig.projectId}`;
 
     const fileDocument = {
@@ -68,14 +69,14 @@ export const uploadFiles = async ({
   }
 };
 
-export const getUserFiles = async (userId: string) => {
+export const getUserFiles = async (ownerId: string): Promise<Files[]> => {
   try {
     const { databases } = await createAdminClient();
 
-    const files = await databases.listDocuments(
+    const files = await databases.listDocuments<Files>(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollectionId,
-      [Query.equal("owner", userId), Query.orderDesc("$createdAt")]
+      [Query.equal("owner", ownerId), Query.orderDesc("$createdAt")]
     );
 
     return files.documents;
@@ -88,7 +89,6 @@ export const getUserFiles = async (userId: string) => {
 export const deleteFile = async (fileId: string, bucketField: string) => {
   try {
     const { storage, databases } = await createAdminClient();
-
     await storage.deleteFile(appwriteConfig.bucketId, bucketField);
 
     await databases.deleteDocument(
@@ -98,8 +98,37 @@ export const deleteFile = async (fileId: string, bucketField: string) => {
     );
 
     return { succes: true };
-  } catch (error: any) {
-    console.error("Failed to delete file", error.message);
-    return { success: false, error: error.message };
+  } catch (error) {
+    console.error("Failed to delete file", error);
+    throw new Error("Failed to delete file");
   }
+};
+
+export const enableFileSharing = async (fileId: string) => {
+  const { databases } = await createAdminClient();
+  const shareId = ID.unique();
+
+  const result = await databases.updateDocument(
+    appwriteConfig.databaseId,
+    appwriteConfig.filesCollectionId,
+    fileId,
+    {
+      isPublic: true,
+      shareId: shareId,
+    }
+  );
+
+  return result;
+};
+
+export const getSharedFile = async (shareId: string) => {
+  const { databases } = await createAdminClient();
+
+  const res = await databases.listDocuments(
+    appwriteConfig.databaseId,
+    appwriteConfig.filesCollectionId,
+    [Query.equal("shareId", [shareId])]
+  );
+
+  return res.total > 0 ? res.documents[0] : null;
 };

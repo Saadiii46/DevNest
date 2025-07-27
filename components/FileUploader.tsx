@@ -8,7 +8,6 @@ import { Upload } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -132,6 +131,8 @@ const FileUploader = ({ refreshFiles }: UploadFileProp) => {
           </AlertDialogContent>
         </AlertDialog>
       )}
+
+      {isUploading && <div className="absolute z-10">Loading...</div>}
     </div>
   );
 };

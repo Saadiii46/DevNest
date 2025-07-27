@@ -1,14 +1,26 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, User, Network, LogOut } from "lucide-react";
+import React, { useState } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  User,
+  Network,
+  LucideIcon,
+} from "lucide-react";
 import { menuItems } from "@/constants";
 
 interface Prop {
   fullName: string;
   email: string;
-  avatar?: any;
 }
+
+type SidebarItem = {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  badge?: null;
+};
 
 export default function ModernSidebar({ fullName, email }: Prop) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -19,9 +31,9 @@ export default function ModernSidebar({ fullName, email }: Prop) {
     isActive,
     onClick,
   }: {
-    item: any;
-    isActive: any;
-    onClick: any;
+    item: SidebarItem;
+    isActive: boolean;
+    onClick: (id: string) => void;
   }) => {
     const Icon = item.icon;
 
@@ -134,33 +146,6 @@ export default function ModernSidebar({ fullName, email }: Prop) {
                 onClick={setActiveItem}
               />
             ))}
-
-            {/* {!isCollapsed && (
-            <>
-              <div className="px-3 mt-8 mb-4">
-                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Workspace
-                  </h3>
-                  </div>
-                  
-                  <div className="mx-2 p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border border-purple-100">
-                  <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-                  <Plus size={16} className="text-white" />
-                  </div>
-                  <div className="flex-1">
-                  <h4 className="font-semibold text-gray-900 text-sm">
-                  Upgrade Plan
-                  </h4>
-                  <p className="text-xs text-gray-600">Get more features</p>
-                  </div>
-                  </div>
-                  <button className="w-full py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs font-semibold rounded-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-200">
-                  Upgrade Now
-                  </button>
-                  </div>
-                  </>
-                  )} */}
           </nav>
 
           {/* User Profile */}
