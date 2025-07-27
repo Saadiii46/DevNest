@@ -9,10 +9,13 @@ import {
   File,
 } from "lucide-react";
 
-import { getSharedFile } from "@/lib/actions/file.action";
+import { getSharedFile, trackFileViews } from "@/lib/actions/file.action";
 import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/actions/user.action";
 import { getFileIcon } from "@/constants/GetFileIcon";
+import { storage } from "@/lib/appwrite/AppwriteClientUsage";
+import { appwriteConfig } from "@/lib/appwrite/config";
+import DownloadButton from "@/components/public-page/DownloadButton";
 
 type ShareParamProps = {
   params: {
@@ -32,11 +35,26 @@ export default async function MyDrivePublicPage({ params }: ShareParamProps) {
     notFound();
   }
 
+  // Formate date
+
   const formateDate = new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   }).format(new Date(file.$createdAt));
+
+  if (file.expiresAt) {
+    const now = new Date();
+    const expires = new Date(file.expiresAt);
+
+    if (now > expires) {
+      notFound();
+    }
+  }
+
+  // Track file views
+
+  await trackFileViews(file.$id, file.views);
 
   // const isImage = file.extension.match(/(jpg | jpeg | png | gif | webp)/i);
   // // const isVideo = file.extenison.match(/(mp4 | mkv)/i);
@@ -140,10 +158,19 @@ export default async function MyDrivePublicPage({ params }: ShareParamProps) {
                     <Eye className="w-4 h-4" />
                     Preview
                   </button>
-                  <button className="px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl text-white hover:from-purple-600 hover:to-blue-600 transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105">
-                    <Download className="w-4 h-4" />
-                    Download
-                  </button>
+                  <a
+                    href={storage.getFileDownload(
+                      appwriteConfig.bucketId,
+                      file.bucketField
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <DownloadButton
+                      fileId={file.$id}
+                      currentCount={file.downloads}
+                    />
+                  </a>
                 </div>
               </div>
 
@@ -151,13 +178,13 @@ export default async function MyDrivePublicPage({ params }: ShareParamProps) {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-gray-100 rounded-xl p-4 text-center border border-gray-200">
                   <div className="text-2xl font-bold text-gray-900">
-                    {fileData.views.toLocaleString()}
+                    {file.views.toLocaleString()}
                   </div>
                   <div className="text-gray-600 text-sm">Views</div>
                 </div>
                 <div className="bg-gray-100 rounded-xl p-4 text-center border border-gray-200">
                   <div className="text-2xl font-bold text-gray-900">
-                    {fileData.downloads.toLocaleString()}
+                    {file.downloads.toLocaleString()}
                   </div>
                   <div className="text-gray-600 text-sm">Downloads</div>
                 </div>

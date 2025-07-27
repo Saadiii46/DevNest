@@ -107,6 +107,11 @@ export const deleteFile = async (fileId: string, bucketField: string) => {
 export const enableFileSharing = async (fileId: string) => {
   const { databases } = await createAdminClient();
   const shareId = ID.unique();
+  const now = new Date();
+
+  const expireLink = new Date(
+    now.getTime() + 24 * 60 * 60 * 1000
+  ).toISOString();
 
   const result = await databases.updateDocument(
     appwriteConfig.databaseId,
@@ -115,6 +120,7 @@ export const enableFileSharing = async (fileId: string) => {
     {
       isPublic: true,
       shareId: shareId,
+      expiresAt: expireLink,
     }
   );
 
@@ -131,4 +137,34 @@ export const getSharedFile = async (shareId: string) => {
   );
 
   return res.total > 0 ? res.documents[0] : null;
+};
+
+export const trackFileViews = async (fileId: string, currentViews: number) => {
+  const { databases } = await createAdminClient();
+
+  const updated = await databases.updateDocument(
+    appwriteConfig.databaseId,
+    appwriteConfig.filesCollectionId,
+    fileId,
+    {
+      views: currentViews + 1,
+    }
+  );
+
+  return updated;
+};
+
+export const trackDownloads = async (fileId: string, currentCount: number) => {
+  const { databases } = await createAdminClient();
+
+  const downloadCount = await databases.updateDocument(
+    appwriteConfig.databaseId,
+    appwriteConfig.filesCollectionId,
+    fileId,
+    {
+      downloads: currentCount + 1,
+    }
+  );
+
+  return downloadCount;
 };

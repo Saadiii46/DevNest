@@ -1,5 +1,3 @@
-"use client";
-
 import InfoCard from "@/components/InfoCard";
 import { Files, formatFileSize, formatTimeAgo } from "@/constants";
 import { getUserFiles } from "@/lib/actions/file.action";
@@ -13,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { File } from "lucide-react";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 export default function Home() {
   // Use States
@@ -120,9 +119,7 @@ export default function Home() {
           </p>
         </div>
         <div>
-          <button onClick={handleLogout} className="upload-area-btn">
-            Logout
-          </button>
+          <DashboardHeader logOut={handleLogout} />
         </div>
       </div>
 
@@ -147,13 +144,6 @@ export default function Home() {
                 icon={<HardDrive />}
                 isLoading={isLoading}
               />
-              {/* <InfoCard
-                label="Last Uploaded"
-                lastUpload={lastUplaod}
-                className="bg-emerald-50 p-2 rounded-lg text-slate-700"
-                icon={<Clock />}
-                isLoading={isLoading}
-              /> */}
             </div>
             <div>
               <FileUploader refreshFiles={fetchFiles} />

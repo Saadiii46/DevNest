@@ -64,3 +64,16 @@ export type Files = Models.Document & {
   isPublic?: boolean;
   shareId?: string;
 };
+
+export type FileType = Models.Document & {
+  $id: string;
+  name: string;
+  url: string;
+  type: string;
+  extension: string;
+  size: number;
+  owner: string;
+  accountId: string;
+  bucketField: string;
+  users: string[];
+};

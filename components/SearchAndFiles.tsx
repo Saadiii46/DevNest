@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "./ui/skeleton";
 import { getFileIcon } from "@/constants/GetFileIcon";
-import { getFileColor } from "@/constants";
+import { FileType, getFileColor } from "@/constants";
 import { deleteFile, enableFileSharing } from "@/lib/actions/file.action";
 import { toast } from "sonner";
+import { storage } from "@/lib/appwrite/AppwriteClientUsage";
+import { appwriteConfig } from "@/lib/appwrite/config";
 
 import {
   AlertDialog,
@@ -16,23 +18,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
-
-import { Models } from "node-appwrite";
-import { storage } from "@/lib/appwrite/AppwriteClientUsage";
-import { appwriteConfig } from "@/lib/appwrite/config";
-
-export type FileType = Models.Document & {
-  $id: string;
-  name: string;
-  url: string;
-  type: string;
-  extension: string;
-  size: number;
-  owner: string;
-  accountId: string;
-  bucketField: string;
-  users: string[];
-};
 
 interface FileProp {
   file: FileType[];
