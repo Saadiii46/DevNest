@@ -69,14 +69,22 @@ export const uploadFiles = async ({
   }
 };
 
-export const getUserFiles = async (ownerId: string): Promise<Files[]> => {
+type Options = {
+  ownerId: string;
+};
+
+export const getUserFiles = async ({ ownerId }: Options): Promise<Files[]> => {
   try {
     const { databases } = await createAdminClient();
 
+    const queries = [
+      Query.equal("owner", ownerId), // Getting files by ownerId
+      Query.orderDesc("$createdAt"), // order files by createdAt
+    ];
     const files = await databases.listDocuments<Files>(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollectionId,
-      [Query.equal("owner", ownerId), Query.orderDesc("$createdAt")]
+      queries
     );
 
     return files.documents;

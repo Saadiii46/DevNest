@@ -18,6 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface FileProp {
   file: FileType[];
@@ -32,13 +33,22 @@ const SearchAndFiles = ({
   refreshFiles,
   lastUpload,
 }: FileProp) => {
-  // Use states
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
+  // Use states
   const [showDialogue, setShowDialogue] = useState(false);
   const [selectedFile, setSelectedFile] = useState<FileType | null>(null);
+  const [viewMode, setViewMode] = useState<"grid" | "list" | null>(null);
+  const [search, setSearch] = useState("");
+
+  // Filtered files
+
+  const filteredFiles = file.filter((item) =>
+    item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+  );
 
   // Delete user files
-
   const handleDelete = async (file: FileType) => {
     try {
       const result = await deleteFile(file.$id, file.bucketField);
@@ -58,7 +68,6 @@ const SearchAndFiles = ({
   };
 
   // Share user files
-
   const handleShare = async (file: FileType) => {
     try {
       const result = await enableFileSharing(file.$id);
@@ -78,7 +87,6 @@ const SearchAndFiles = ({
   };
 
   // Download user files
-
   const handleDownload = async (file: FileType) => {
     try {
       const downloadUrl = storage.getFileDownload(
@@ -100,8 +108,6 @@ const SearchAndFiles = ({
       });
     }
   };
-
-  const [viewMode, setViewMode] = useState<"grid" | "list" | null>(null);
 
   const toggleView = (mode: "grid" | "list") => {
     setViewMode(mode);
@@ -127,6 +133,7 @@ const SearchAndFiles = ({
           <input
             type="text"
             placeholder="Search..."
+            onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-3 bg-white/70 backdrop-blur-sm rounded-xl border-0 shadow-lg focus:shadow-xl focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-300 text-sm"
           />
         </div>
@@ -184,7 +191,7 @@ const SearchAndFiles = ({
                         </div>
                       </div>
                     ))
-                  : file.map((item) => (
+                  : filteredFiles.map((item) => (
                       <div
                         key={item.$id}
                         className="group bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer"
@@ -252,7 +259,7 @@ const SearchAndFiles = ({
                         </div>
                       </div>
                     ))
-                  : file.map((item) => (
+                  : filteredFiles.map((item) => (
                       <div
                         key={item.$id}
                         className="flex items-center justify-between p-4 border-b border-slate-200/50 last:border-b-0 hover:bg-slate-50/50 transition-colors duration-300 cursor-pointer"

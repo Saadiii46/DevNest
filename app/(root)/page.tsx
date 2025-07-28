@@ -10,10 +10,12 @@ import { File } from "lucide-react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 export default async function Home() {
-  // Use States
-
   const currentUser = await getCurrentUser();
-  const userFiles = await getUserFiles(currentUser.$id);
+
+  const userFiles = await getUserFiles({
+    ownerId: currentUser.$id,
+  });
+
   const totalUserFiles = userFiles.length;
   const totalSize = userFiles.reduce((acc, file) => acc + (file.size || 0), 0);
   const totalStorage = formatFileSize(totalSize);
