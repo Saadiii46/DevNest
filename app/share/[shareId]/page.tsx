@@ -1,13 +1,5 @@
 // import React, { useState, useRef } from "react";
-import {
-  Download,
-  Eye,
-  MessageCircle,
-  Send,
-  User,
-  Calendar,
-  File,
-} from "lucide-react";
+import { Eye, User, Calendar, File } from "lucide-react";
 
 import { getSharedFile, trackFileViews } from "@/lib/actions/file.action";
 import { notFound } from "next/navigation";
@@ -16,7 +8,11 @@ import { getFileIcon } from "@/constants/GetFileIcon";
 import { storage } from "@/lib/appwrite/AppwriteClientUsage";
 import { appwriteConfig } from "@/lib/appwrite/config";
 import DownloadButton from "@/components/public-page/DownloadButton";
+import CommentForm from "@/components/public-page/CommentForm";
+import CommentLists from "@/components/public-page/CommentLists";
+import { getPublicComments } from "@/lib/actions/comments.action";
 
+// Param type
 type ShareParamProps = {
   params: {
     shareId: string;
@@ -26,75 +22,36 @@ type ShareParamProps = {
 export const dynamic = "force-dynamic";
 
 export default async function MyDrivePublicPage({ params }: ShareParamProps) {
-  // Getting file from database
+  const file = await getSharedFile(params.shareId); // Calling server action getting shared files
 
-  const file = await getSharedFile(params.shareId);
-  const user = await getCurrentUser();
-
+  // If no fil then show not found page
   if (!file || !file.isPublic) {
     notFound();
   }
 
-  // Formate date
+  const user = await getCurrentUser(); // Getting current user
+  const comments = await getPublicComments(file.$id); // Calling server action getting public comments
+  const totalComments = comments.length; // Total length of public comments
 
+  // Formate date
   const formateDate = new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   }).format(new Date(file.$createdAt));
 
+  // Setting that file will be expire after 24 hours
   if (file.expiresAt) {
     const now = new Date();
     const expires = new Date(file.expiresAt);
 
+    // If file expired then show not found page
     if (now > expires) {
       notFound();
     }
   }
 
-  // Track file views
-
-  await trackFileViews(file.$id, file.views);
-
-  // const isImage = file.extension.match(/(jpg | jpeg | png | gif | webp)/i);
-  // // const isVideo = file.extenison.match(/(mp4 | mkv)/i);
-  // const isPdf = file.extension === "pdf";
-
-  // const [comments, setComments] = useState([
-  //   { id: 1, name: "Anonymous", text: "Great work!", time: "2 hours ago" },
-  //   {
-  //     id: 2,
-  //     name: "John",
-  //     text: "Can you update this part?",
-  //     time: "1 hour ago",
-  //   },
-  // ]);
-  // const [newComment, setNewComment] = useState({ name: "", text: "" });
-  // const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  // const fileInputRef = useRef(null);
-
-  // const handleSubmitComment = () => {
-  //   if (newComment.name.trim() && newComment.text.trim()) {
-  //     const comment = {
-  //       id: Date.now(),
-  //       name: newComment.name,
-  //       text: newComment.text,
-  //       time: "Just now",
-  //     };
-  //     setComments([...comments, comment]);
-  //     setNewComment({ name: "", text: "" });
-  //   }
-  // };
-
-  // Sample file data
-  const fileData = {
-    name: "Project_Presentation.pdf",
-    size: "2.4 MB",
-    uploadedBy: "Sarah Wilson",
-    uploadDate: "March 15, 2024",
-    downloads: 1247,
-    views: 3891,
-  };
+  await trackFileViews(file.$id, file.views); // Calling server action to track total file views
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
@@ -190,7 +147,7 @@ export default async function MyDrivePublicPage({ params }: ShareParamProps) {
                 </div>
                 <div className="bg-gray-100 rounded-xl p-4 text-center border border-gray-200">
                   <div className="text-2xl font-bold text-gray-900">
-                    {/* {comments.length} */}
+                    {totalComments}
                   </div>
                   <div className="text-gray-600 text-sm">Comments</div>
                 </div>
@@ -221,71 +178,8 @@ export default async function MyDrivePublicPage({ params }: ShareParamProps) {
             </div>
 
             {/* Comments Section */}
-            <div className="p-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
-                <MessageCircle className="w-5 h-5" />
-                Comments
-              </h3>
-
-              {/* Add Comment Form */}
-              <div className="mb-8">
-                <div className="bg-gray-100 rounded-xl p-6 border border-gray-200">
-                  <h4 className="text-gray-900 font-medium mb-4">
-                    Leave a Comment
-                  </h4>
-                  <div className="space-y-4">
-                    <input
-                      type="text"
-                      placeholder="Your name"
-                      // value={newComment.name}
-                      // onChange={(e) =>
-                      //   setNewComment({ ...newComment, name: e.target.value })
-                      // }
-                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
-                    />
-                    <textarea
-                      placeholder="Write your comment here..."
-                      // value={newComment.text}
-                      // onChange={(e) =>
-                      //   // setNewComment({ ...newComment, text: e.target.value })
-                      // }
-                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none"
-                    />
-                    <button className="px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl text-white hover:from-purple-600 hover:to-blue-600 transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105">
-                      <Send className="w-4 h-4" />
-                      Submit Comment
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Comments List */}
-              {/* <div className="space-y-4">
-                {comments.map((comment) => (
-                  <div
-                    key={comment.id}
-                    className="bg-gray-100 rounded-xl p-6 border border-gray-200 hover:bg-gray-200 transition-all duration-200"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-                        <User className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h5 className="font-medium text-gray-900">
-                            {comment.name}
-                          </h5>
-                          <span className="text-gray-500 text-sm">
-                            {comment.time}
-                          </span>
-                        </div>
-                        <p className="text-gray-700">{comment.text}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div> */}
-            </div>
+            <CommentForm fileId={file.$id} />
+            <CommentLists fileId={file.$id} />
           </div>
         </div>
 

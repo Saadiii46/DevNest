@@ -3,7 +3,7 @@
 import { InputFile } from "node-appwrite/file";
 import { createAdminClient, createSessionClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
-import { ID, Query, Role } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 import { getFileType } from "../utils";
 import { Files } from "@/constants";
 
