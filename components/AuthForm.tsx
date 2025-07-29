@@ -1,11 +1,11 @@
 "use client";
 
-// Imports
-
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { FormMessage } from "@/components/ui/form";
+
 import {
   Form,
   FormControl,
@@ -13,36 +13,46 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import OtpModal from "./OtpModal";
 import { Mail, User, ArrowRight, Network } from "lucide-react";
 import { createUserAccount, signInUsers } from "@/app/server-actions/users";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { AlertDialogue } from "@/components/auth-form/AlertDialogue";
 
-// Form Type
+// ------ Form Type ------ //
 
 type FormType = "sign-up" | "sign-in";
 
-// Define schema based on type
+// ------ Define schema based on type ------ //
 
 const authFormSchema = (formType: FormType) => {
   return z.object({
     email: z
       .string()
+      .min(1, "Email is required")
       .nonempty()
       .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"),
     fullName:
       formType === "sign-up"
-        ? z.string().min(2).max(50)
+        ? z.string().min(1, "Full name is required").max(50)
         : z.string().optional(),
   });
 };
 
-// Auth Form Function
+// ------ Auth Form Function ------ //
 
 const AuthForm = ({ type }: { type: FormType }) => {
-  const formSchema = authFormSchema(type);
-  const [accountId, setAccountId] = useState<string | null>(null);
+  const formSchema = authFormSchema(type); // Setting the type of form
+
+  // Use states
+
+  const [accountId, setAccountId] = useState<string | null>(null); // Use state to handle user's account Id
+  const [errorDialogue, setErrorDialogue] = useState(false);
+  const [email, setEmail] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,7 +62,11 @@ const AuthForm = ({ type }: { type: FormType }) => {
     },
   });
 
-  // On Submit Handler
+  // ------ Use Router ------ //
+
+  const router = useRouter();
+
+  // ------ On Submit Handler ------ //
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -68,10 +82,14 @@ const AuthForm = ({ type }: { type: FormType }) => {
               email: values.email,
             });
 
-      setAccountId(user.accountId);
+      if (!user?.accountId) {
+        setErrorDialogue(true);
+        setEmail(values.email);
+      }
+
+      setAccountId(user.accountId); // Setting account id with actual user id
     } catch (error) {
-      console.log("Failed to create account", error);
-      throw new Error("Failed to create account");
+      console.log("Failed to sign in or create account", error);
     }
   };
 
@@ -121,6 +139,11 @@ const AuthForm = ({ type }: { type: FormType }) => {
                         />
                       </div>
                     </FormControl>
+                    {form.formState.errors.fullName && (
+                      <FormMessage>
+                        {form.formState.errors.fullName.message as string}
+                      </FormMessage>
+                    )}
                   </FormItem>
                 )}
               />
@@ -145,6 +168,11 @@ const AuthForm = ({ type }: { type: FormType }) => {
                       />
                     </div>
                   </FormControl>
+                  {form.formState.errors.email && (
+                    <FormMessage>
+                      {form.formState.errors.email.message as string}
+                    </FormMessage>
+                  )}
                 </FormItem>
               )}
             />
@@ -156,6 +184,31 @@ const AuthForm = ({ type }: { type: FormType }) => {
             </Button>
           </form>
         </Form>
+
+        <div>
+          {type === "sign-up" ? (
+            <div className="text-center mt-2 text-gray-600 text-md max-sm:text-sm">
+              {" "}
+              Already have an account?{" "}
+              <Link
+                href="/sign-in"
+                className="text-blue-500 font-semibold max-sm:text-sm"
+              >
+                Sign in
+              </Link>
+            </div>
+          ) : (
+            <div className="text-center mt-2 text-gray-600 text-md max-sm:text-sm">
+              Don&apos;t have an account?{" "}
+              <Link
+                href="/sign-up"
+                className="text-blue-500 font-semibold max-sm:text-sm"
+              >
+                Sign up
+              </Link>
+            </div>
+          )}
+        </div>
 
         {/* Trust Badges */}
         <div className="mt-6 flex items-center justify-center gap-4 text-xs text-gray-500">
@@ -180,6 +233,14 @@ const AuthForm = ({ type }: { type: FormType }) => {
       {accountId && (
         <OtpModal email={form.getValues("email")} accountId={accountId} />
       )}
+
+      <div>
+        <AlertDialogue
+          errorDialogue={errorDialogue}
+          setErrorDialogue={setErrorDialogue}
+          userEmail={email}
+        />
+      </div>
     </div>
   );
 };

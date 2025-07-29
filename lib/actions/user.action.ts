@@ -130,12 +130,10 @@ export const signInUser = async ({ email }: { email: string }) => {
   try {
     const exisitingUser = await getUserByEmail(email);
 
-    if (exisitingUser) {
-      await sendEmailOTP({ email });
-      return parseStringify({ accountId: exisitingUser.accountId });
-    }
+    if (!exisitingUser) throw new Error("User not found please sign up");
 
-    return parseStringify({ accountId: null, error: "User not found" });
+    await sendEmailOTP({ email });
+    return parseStringify({ accountId: exisitingUser.accountId });
   } catch (error) {
     handleError(error, "Failed to sign in user");
   }
