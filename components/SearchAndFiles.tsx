@@ -5,11 +5,16 @@ import { useEffect, useState } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "./ui/skeleton";
 import { getFileIcon } from "@/constants/GetFileIcon";
-import { Files, FileType, getFileColor } from "@/constants";
-import { deleteFile, enableFileSharing } from "@/lib/actions/file.action";
+import { FileType, getFileColor } from "@/constants";
+import {
+  deleteFile,
+  enableFileSharing,
+  getUserFiles,
+} from "@/lib/actions/file.action";
 import { toast } from "sonner";
 import { storage } from "@/lib/appwrite/AppwriteClientUsage";
 import { appwriteConfig } from "@/lib/appwrite/config";
+import { useQuery } from "@tanstack/react-query";
 
 import {
   AlertDialog,
@@ -18,29 +23,29 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
-import { useRouter, useSearchParams } from "next/navigation";
 
 interface FileProp {
-  file: FileType[];
-  isLoading?: boolean;
-  refreshFiles: Files[];
   lastUpload?: string;
+  ownerId: string;
 }
 
-const SearchAndFiles = ({
-  file,
-  isLoading,
-  refreshFiles,
-  lastUpload,
-}: FileProp) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
+const SearchAndFiles = ({ lastUpload, ownerId }: FileProp) => {
   // Use states
   const [showDialogue, setShowDialogue] = useState(false);
   const [selectedFile, setSelectedFile] = useState<FileType | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list" | null>(null);
   const [search, setSearch] = useState("");
+  const {
+    data: file = [],
+    isLoading,
+    refetch,
+    isError,
+  } = useQuery<FileType[]>({
+    queryKey: ["user-files"],
+    queryFn: () => getUserFiles({ ownerId }),
+    staleTime: 1000 * 60 * 2,
+    gcTime: 1000 * 60 * 5,
+  });
 
   // Filtered files
 
@@ -57,9 +62,9 @@ const SearchAndFiles = ({
         toast("File deleted successfully", {
           position: "top-center",
         });
-
-        refreshFiles;
       }
+
+      refetch;
     } catch (error) {
       toast("Failed to delete file", {
         position: "top-center",

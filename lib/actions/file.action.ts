@@ -1,7 +1,7 @@
 "use server";
 
 import { InputFile } from "node-appwrite/file";
-import { createAdminClient, createSessionClient } from "../appwrite";
+import { createSessionClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { ID, Query } from "node-appwrite";
 import { getFileType } from "../utils";
@@ -23,7 +23,7 @@ export const uploadFiles = async ({
   accountId,
 }: UploadFilesParams) => {
   try {
-    const { storage, databases } = await createAdminClient();
+    const { storage, databases } = await createSessionClient();
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const inputFile = InputFile.fromBuffer(buffer, file.name);
