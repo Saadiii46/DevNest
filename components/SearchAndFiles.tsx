@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "./ui/skeleton";
 import { getFileIcon } from "@/constants/GetFileIcon";
-import { FileType, getFileColor } from "@/constants";
+import { FileType, formatTimeAgo, getFileColor } from "@/constants";
 import {
   deleteFile,
   enableFileSharing,
@@ -25,11 +25,10 @@ import {
 } from "./ui/alert-dialog";
 
 interface FileProp {
-  lastUpload?: string;
   ownerId: string;
 }
 
-const SearchAndFiles = ({ lastUpload, ownerId }: FileProp) => {
+const SearchAndFiles = ({ ownerId }: FileProp) => {
   // Use states
   const [showDialogue, setShowDialogue] = useState(false);
   const [selectedFile, setSelectedFile] = useState<FileType | null>(null);
@@ -46,6 +45,9 @@ const SearchAndFiles = ({ lastUpload, ownerId }: FileProp) => {
     staleTime: 1000 * 60 * 2,
     gcTime: 1000 * 60 * 5,
   });
+
+  const recentUpload = file[0]?.$createdAt;
+  const lastUpload = formatTimeAgo(recentUpload);
 
   // Filtered files
 
