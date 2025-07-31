@@ -7,28 +7,27 @@ import { avatarPlaceHolder } from "@/constants";
 import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { handleError } from "../handleError";
 
 export const getUserByEmail = async (email: string) => {
-  const { databases } = await createAdminClient();
+  try {
+    const { databases } = await createAdminClient();
 
-  const result = await databases.listDocuments(
-    appwriteConfig.databaseId,
-    appwriteConfig.usersCollectionId,
-    [Query.equal("email", [email])]
-  );
+    const result = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.usersCollectionId,
+      [Query.equal("email", [email])]
+    );
 
-  return result.total > 0 ? result.documents[0] : null;
-};
-
-export const handleError = async (error: unknown, message: string) => {
-  console.log(error, message);
-  throw error;
+    return result.total > 0 ? result.documents[0] : null;
+  } catch (error) {
+    handleError(error, "Failed to fetch user email");
+  }
 };
 
 export const sendEmailOTP = async ({ email }: { email: string }) => {
-  const { account } = await createAdminClient();
-
   try {
+    const { account } = await createAdminClient();
     const session = await account.createEmailToken(ID.unique(), email);
 
     return session.userId;
@@ -44,29 +43,33 @@ export const createAccount = async ({
   fullName: string;
   email: string;
 }) => {
-  const exisitingUser = await getUserByEmail(email);
+  try {
+    const exisitingUser = await getUserByEmail(email);
 
-  const accountId = await sendEmailOTP({ email });
+    const accountId = await sendEmailOTP({ email });
 
-  if (!accountId) throw new Error("Failed to send email OTP");
+    if (!accountId) throw new Error("Failed to send email OTP");
 
-  if (!exisitingUser) {
-    const { databases } = await createAdminClient();
+    if (!exisitingUser) {
+      const { databases } = await createAdminClient();
 
-    await databases.createDocument(
-      appwriteConfig.databaseId,
-      appwriteConfig.usersCollectionId,
-      ID.unique(),
-      {
-        fullName,
-        email,
-        avatar: avatarPlaceHolder,
-        accountId,
-      }
-    );
+      await databases.createDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.usersCollectionId,
+        ID.unique(),
+        {
+          fullName,
+          email,
+          avatar: avatarPlaceHolder,
+          accountId,
+        }
+      );
+    }
+
+    return parseStringify({ accountId });
+  } catch (error) {
+    handleError(error, "Failed to create account");
   }
-
-  return parseStringify({ accountId });
 };
 
 export const verifySecret = async ({
@@ -95,30 +98,33 @@ export const verifySecret = async ({
 };
 
 export const getCurrentUser = async () => {
-  const { databases, account } = await createSessionClient();
+  try {
+    const { databases, account } = await createSessionClient();
 
-  const result = await account.get();
+    const result = await account.get();
 
-  const user = await databases.listDocuments(
-    appwriteConfig.databaseId,
-    appwriteConfig.usersCollectionId,
-    [Query.equal("accountId", [result.$id])]
-  );
+    const user = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.usersCollectionId,
+      [Query.equal("accountId", [result.$id])]
+    );
 
-  if (user.total <= 0) return null;
+    if (user.total <= 0) return null;
 
-  return parseStringify(user.documents[0]);
+    return parseStringify(user.documents[0]);
+  } catch (error) {
+    handleError(error, "Failed to get current user");
+  }
 };
 
 export const signOutUser = async () => {
-  const { account } = await createSessionClient();
-
-  if (!account) {
-    console.error("Account not found");
-    redirect("/sign-in");
-  }
-
   try {
+    const { account } = await createSessionClient();
+
+    if (!account) {
+      console.error("Account not found");
+      redirect("/sign-in");
+    }
     await account.deleteSession("current");
     (await cookies()).delete("appwrite-session");
   } catch (error) {

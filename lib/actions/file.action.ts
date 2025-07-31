@@ -6,6 +6,7 @@ import { appwriteConfig } from "../appwrite/config";
 import { ID, Query } from "node-appwrite";
 import { getFileType } from "../utils";
 import { Files } from "@/constants";
+import { handleError } from "../handleError";
 
 interface UploadFilesParams {
   file: File;
@@ -50,8 +51,6 @@ export const uploadFiles = async ({
       users: [ownerId],
     };
 
-    console.log("File size:", file.size);
-
     const saveFile = await databases.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollectionId,
@@ -64,8 +63,7 @@ export const uploadFiles = async ({
       url: fileUrl,
     };
   } catch (error) {
-    console.error("Error uploading file:", error);
-    throw new Error(`Failed to upload file`);
+    handleError(error, "Failed to upload file");
   }
 };
 
@@ -89,7 +87,7 @@ export const getUserFiles = async ({ ownerId }: Options): Promise<Files[]> => {
 
     return files.documents;
   } catch (error) {
-    console.error("Error fetching files", error);
+    handleError(error, "Failed to get user files");
     return [];
   }
 };
@@ -107,72 +105,87 @@ export const deleteFile = async (fileId: string, bucketField: string) => {
 
     return { succes: true };
   } catch (error) {
-    console.error("Failed to delete file", error);
-    throw new Error("Failed to delete file");
+    handleError(error, "Failed to delete file");
   }
 };
 
 export const enableFileSharing = async (fileId: string) => {
-  const { databases } = await createSessionClient();
-  const shareId = ID.unique();
-  const now = new Date();
+  try {
+    const { databases } = await createSessionClient();
+    const shareId = ID.unique();
+    const now = new Date();
 
-  const expireLink = new Date(
-    now.getTime() + 24 * 60 * 60 * 1000
-  ).toISOString();
+    const expireLink = new Date(
+      now.getTime() + 24 * 60 * 60 * 1000
+    ).toISOString();
 
-  const result = await databases.updateDocument(
-    appwriteConfig.databaseId,
-    appwriteConfig.filesCollectionId,
-    fileId,
-    {
-      isPublic: true,
-      shareId: shareId,
-      expiresAt: expireLink,
-    }
-  );
+    const result = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      fileId,
+      {
+        isPublic: true,
+        shareId: shareId,
+        expiresAt: expireLink,
+      }
+    );
 
-  return result;
+    return result;
+  } catch (error) {
+    handleError(error, "Failed to enable file sharing");
+  }
 };
 
 export const getSharedFile = async (shareId: string) => {
-  const { databases } = await createSessionClient();
+  try {
+    const { databases } = await createSessionClient();
 
-  const res = await databases.listDocuments(
-    appwriteConfig.databaseId,
-    appwriteConfig.filesCollectionId,
-    [Query.equal("shareId", [shareId])]
-  );
+    const res = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      [Query.equal("shareId", [shareId])]
+    );
 
-  return res.total > 0 ? res.documents[0] : null;
+    return res.total > 0 ? res.documents[0] : null;
+  } catch (error) {
+    handleError(error, "Failed to get shared files");
+  }
 };
 
 export const trackFileViews = async (fileId: string, currentViews: number) => {
-  const { databases } = await createSessionClient();
+  try {
+    const { databases } = await createSessionClient();
 
-  const updated = await databases.updateDocument(
-    appwriteConfig.databaseId,
-    appwriteConfig.filesCollectionId,
-    fileId,
-    {
-      views: currentViews + 1,
-    }
-  );
+    const updated = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      fileId,
+      {
+        views: currentViews + 1,
+      }
+    );
 
-  return updated;
+    return updated;
+  } catch (error) {
+    handleError(error, "Failed to track file view");
+  }
 };
 
 export const trackDownloads = async (fileId: string, currentCount: number) => {
-  const { databases } = await createSessionClient();
+  try {
+    const { databases } = await createSessionClient();
 
-  const downloadCount = await databases.updateDocument(
-    appwriteConfig.databaseId,
-    appwriteConfig.filesCollectionId,
-    fileId,
-    {
-      downloads: currentCount + 1,
-    }
-  );
+    const downloadCount = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollectionId,
+      fileId,
+      {
+        downloads: currentCount + 1,
+      }
+    );
 
-  return downloadCount;
+    return downloadCount;
+  } catch (error) {
+    handleError(error, "Failed to track downloads");
+  }
 };
