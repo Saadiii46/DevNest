@@ -75,7 +75,7 @@ type Options = {
 
 export const getUserFiles = async ({ ownerId }: Options): Promise<Files[]> => {
   try {
-    const { databases } = await createAdminClient();
+    const { databases } = await createSessionClient();
 
     const queries = [
       Query.equal("owner", ownerId), // Getting files by ownerId
@@ -96,7 +96,7 @@ export const getUserFiles = async ({ ownerId }: Options): Promise<Files[]> => {
 
 export const deleteFile = async (fileId: string, bucketField: string) => {
   try {
-    const { storage, databases } = await createAdminClient();
+    const { storage, databases } = await createSessionClient();
     await storage.deleteFile(appwriteConfig.bucketId, bucketField);
 
     await databases.deleteDocument(
@@ -113,7 +113,7 @@ export const deleteFile = async (fileId: string, bucketField: string) => {
 };
 
 export const enableFileSharing = async (fileId: string) => {
-  const { databases } = await createAdminClient();
+  const { databases } = await createSessionClient();
   const shareId = ID.unique();
   const now = new Date();
 
@@ -136,7 +136,7 @@ export const enableFileSharing = async (fileId: string) => {
 };
 
 export const getSharedFile = async (shareId: string) => {
-  const { databases } = await createAdminClient();
+  const { databases } = await createSessionClient();
 
   const res = await databases.listDocuments(
     appwriteConfig.databaseId,
@@ -148,7 +148,7 @@ export const getSharedFile = async (shareId: string) => {
 };
 
 export const trackFileViews = async (fileId: string, currentViews: number) => {
-  const { databases } = await createAdminClient();
+  const { databases } = await createSessionClient();
 
   const updated = await databases.updateDocument(
     appwriteConfig.databaseId,
@@ -163,7 +163,7 @@ export const trackFileViews = async (fileId: string, currentViews: number) => {
 };
 
 export const trackDownloads = async (fileId: string, currentCount: number) => {
-  const { databases } = await createAdminClient();
+  const { databases } = await createSessionClient();
 
   const downloadCount = await databases.updateDocument(
     appwriteConfig.databaseId,
