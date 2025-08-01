@@ -302,7 +302,7 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
                               {item.name}
                             </h4>
                             <p className="text-xs text-slate-500">
-                              {item.size} • {item.modified}
+                              {item.size} • {item.$createdAt}
                             </p>
                           </div>
                         </div>
