@@ -17,6 +17,12 @@ import { useRouter } from "next/navigation";
 import { handleClientError } from "@/lib/handleClientError";
 import { Loader } from "./Loader";
 
+// Styles
+const styles = {
+  uploadBtn:
+    "mt-4 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm font-medium max-[1078]:text-[13px] max-[1061]:text-[12px] max-[1044]:text-[11px] max-[1027]:text-[10px] max-lg:text-sm",
+};
+
 const FileUploader = () => {
   // Use States
 
@@ -50,6 +56,8 @@ const FileUploader = () => {
       setShowDialogue(true);
     }
   }, [selectedFile]);
+
+  // For mobile
 
   // Handle Upload
 
@@ -86,8 +94,7 @@ const FileUploader = () => {
   };
 
   return (
-    <div>
-      {/* Dropzone area */}
+    <div className="max-md:hidden">
       <div {...getRootProps()}>
         {/* Hidden input under the hood */}
         <input {...getInputProps()} />
@@ -96,11 +103,20 @@ const FileUploader = () => {
             <div className="upload-area-icon">
               <Upload className="w-6 h-6 text-white" />
             </div>
-            <h4 className="text-lg font-semibold text-slate-700 mb-2">
+            <h4
+              className="text-lg font-semibold text-slate-700 mb-2 max-[1105]:text-[17px] 
+            max-[1085]:text-[16px] max-[1065]:text-[15px] max-[1044]:text-[14px] 
+            max-[1025]:text-[13px] max-lg:text-lg"
+            >
               Drop files here
             </h4>
-            <p className="text-sm text-slate-500">or click to browse</p>
-            <button onClick={open} className="upload-area-btn">
+            <p
+              className="text-sm text-slate-500 max-[1073]:text-[13px]
+             max-[1049]:text-[12px] max-[1025]:text-[11px] max-lg:text-sm"
+            >
+              or click to browse
+            </p>
+            <button onClick={open} className={styles.uploadBtn}>
               Choose Files
             </button>
           </div>
@@ -122,7 +138,7 @@ const FileUploader = () => {
               >
                 Cancel
               </button>
-              <button onClick={handleUpload} className="upload-area-btn">
+              <button onClick={handleUpload} className={styles.uploadBtn}>
                 Upload File
               </button>
             </AlertDialogFooter>

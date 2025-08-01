@@ -95,76 +95,78 @@ const MobileNavigation = ({ fullName, email }: Prop) => {
   };
 
   return (
-    <div className="min-sm:hidden ">
-      <Sheet>
-        <SheetTrigger>
-          <Menu />
-        </SheetTrigger>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>
-              <div className="flex items-center justify-between p-4 border-b border-gray-200/60">
+    <>
+      <div className="min-md:hidden mt-4 mr-4">
+        <Sheet>
+          <SheetTrigger>
+            <Menu />
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>
+                <div className="flex items-center justify-between p-4 border-b border-gray-200/60">
+                  {!isCollapsed && (
+                    <div className="flex items-center gap-3">
+                      <div className="network-icon">
+                        <Network size={20} className="text-white" />
+                      </div>
+                      <div>
+                        <h1 className="font-bold text-gray-900 text-lg">
+                          DevNest
+                        </h1>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </SheetTitle>
+              <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
                 {!isCollapsed && (
+                  <div className="px-3 mb-4">
+                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      Main Menu
+                    </h3>
+                  </div>
+                )}
+
+                {menuItems.map((item) => (
+                  <MenuItem
+                    key={item.id}
+                    item={item}
+                    isActive={activeItem === item.id}
+                    onClick={setActiveItem}
+                  />
+                ))}
+              </nav>
+            </SheetHeader>
+
+            <SheetFooter>
+              <div className="p-4 border-t border-gray-200/60">
+                {isCollapsed ? (
+                  <div className="flex justify-center">
+                    <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
+                      <User size={16} className="text-white" />
+                    </div>
+                  </div>
+                ) : (
                   <div className="flex items-center gap-3">
-                    <div className="network-icon">
-                      <Network size={20} className="text-white" />
+                    <div className="user-icon">
+                      <User size={18} className="text-white" />
                     </div>
-                    <div>
-                      <h1 className="font-bold text-gray-900 text-lg">
-                        DevNest
-                      </h1>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-900 text-sm truncate">
+                        {fullName}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">{email}</p>
                     </div>
+                    <div className="flex gap-1"></div>
                   </div>
                 )}
               </div>
-            </SheetTitle>
-            <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
-              {!isCollapsed && (
-                <div className="px-3 mb-4">
-                  <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Main Menu
-                  </h3>
-                </div>
-              )}
-
-              {menuItems.map((item) => (
-                <MenuItem
-                  key={item.id}
-                  item={item}
-                  isActive={activeItem === item.id}
-                  onClick={setActiveItem}
-                />
-              ))}
-            </nav>
-          </SheetHeader>
-
-          <SheetFooter>
-            <div className="p-4 border-t border-gray-200/60">
-              {isCollapsed ? (
-                <div className="flex justify-center">
-                  <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
-                    <User size={16} className="text-white" />
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center gap-3">
-                  <div className="user-icon">
-                    <User size={18} className="text-white" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900 text-sm truncate">
-                      {fullName}
-                    </p>
-                    <p className="text-xs text-gray-500 truncate">{email}</p>
-                  </div>
-                  <div className="flex gap-1"></div>
-                </div>
-              )}
-            </div>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-    </div>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </>
   );
 };
 

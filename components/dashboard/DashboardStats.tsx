@@ -28,14 +28,18 @@ const DashboardStats = ({ ownerId }: Props) => {
         label="Total Files"
         count={totalUserFiles}
         className="bg-blue-50 p-2 rounded-lg text-slate-700"
-        icon={<File />}
+        icon={
+          <File className="max-[1032]:w-4 max-[1032]:h-4 max-[1024]:w-6 max-[1024]:h-6" />
+        }
         isLoading={isLoading}
       />
       <InfoCard
         label="Storage Used"
         count={totalStorage}
         className="bg-purple-50 p-2 rounded-lg text-slate-700"
-        icon={<HardDrive />}
+        icon={
+          <HardDrive className="max-[1032]:w-4 max-[1032]:h-4 max-[1024]:w-6 max-[1024]:h-6" />
+        }
         isLoading={isLoading}
       />
     </div>

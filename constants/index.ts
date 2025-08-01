@@ -1,5 +1,12 @@
 import { Models } from "appwrite";
-import { Home, Folder, Users, MessageSquare, FileText } from "lucide-react";
+import {
+  Home,
+  Folder,
+  Users,
+  MessageSquare,
+  FileText,
+  LogOut,
+} from "lucide-react";
 
 export const menuItems = [
   { id: "dashboard", icon: Home, label: "Dashboard", badge: null },
@@ -7,6 +14,7 @@ export const menuItems = [
   { id: "messages", icon: MessageSquare, label: "Feedback", badge: null },
   { id: "team", icon: Users, label: "Clients", badge: null },
   { id: "documents", icon: FileText, label: "My Files", badge: null },
+  { id: "logout", icon: LogOut, label: "Logout", badge: null },
 ];
 
 export const avatarPlaceHolder =

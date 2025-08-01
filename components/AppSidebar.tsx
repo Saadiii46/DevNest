@@ -94,7 +94,7 @@ export default function ModernSidebar({ fullName, email }: Prop) {
 
   return (
     <>
-      <div className="flex h-screen bg-gray-50 sticky max-sm:hidden">
+      <div className="flex h-screen bg-gray-50 sticky max-md:hidden">
         {/* Sidebar */}
         <div
           className={`

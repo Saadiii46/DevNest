@@ -156,14 +156,16 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
             type="text"
             placeholder="Search..."
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-white/70 backdrop-blur-sm rounded-xl border-0 shadow-lg focus:shadow-xl focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-300 text-sm"
+            className="w-full pl-10 pr-4 py-3 bg-white/70 backdrop-blur-sm rounded-xl 
+            border-0 shadow-lg focus:shadow-xl focus:ring-2
+             focus:ring-blue-500/20 focus:outline-none transition-all duration-300 text-sm"
           />
         </div>
 
         <div className="flex bg-white/70 backdrop-blur-sm rounded-xl p-1 shadow-lg">
           <button
             onClick={() => toggleView("grid")}
-            className={`p-2 rounded-lg transition-all duration-300 ${
+            className={`p-2 rounded-lg transition-all duration-300 max-md:hidden  ${
               viewMode === "grid"
                 ? "bg-blue-500 text-white shadow-md"
                 : "text-slate-600 hover:bg-slate-100"
@@ -173,7 +175,7 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
           </button>
           <button
             onClick={() => toggleView("list")}
-            className={`p-2 rounded-lg transition-all duration-300 max-sm:hidden max-md:hidden ${
+            className={`p-2 rounded-lg transition-all duration-300 max-sm:hidden ${
               viewMode === "list"
                 ? "bg-blue-500 text-white shadow-md"
                 : "text-slate-600 hover:bg-slate-100"
@@ -216,7 +218,8 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
                   : filteredFiles.map((item) => (
                       <div
                         key={item.$id}
-                        className="group bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer"
+                        className="group bg-white/70 backdrop-blur-sm rounded-xl p-4 
+                        shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer"
                       >
                         <div className="flex items-center justify-between mb-3">
                           <div
@@ -368,6 +371,7 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
 
       {/** Loader */}
       {Loading && <Loader isLoading={Loading} />}
+      {isLoading && <Loader isLoading={isLoading} />}
     </div>
   );
 };

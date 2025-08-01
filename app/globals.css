@@ -192,9 +192,6 @@
   @apply w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-3;
 }
 
-.upload-area-btn {
-  @apply mt-4 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm font-medium;
-}
 .upload-area-cancel {
   @apply mt-4 px-4 py-2 text-black rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm font-medium;
 }
