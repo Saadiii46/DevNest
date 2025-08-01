@@ -25,7 +25,7 @@ type SidebarItem = {
 };
 
 const MobileNavigation = ({ fullName, email }: Prop) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed] = useState(false);
   const [activeItem, setActiveItem] = useState("dashboard");
 
   const MenuItem = ({

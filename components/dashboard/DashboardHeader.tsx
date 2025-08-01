@@ -12,7 +12,7 @@ interface Props {
   user: string;
 }
 
-const dashboardHeader = ({ user }: Props) => {
+const DashboardHeader = ({ user }: Props) => {
   const isUsernameLoading = !user;
   const router = useRouter();
   const [isLoading, setIsloading] = useState(false);
@@ -51,9 +51,9 @@ const dashboardHeader = ({ user }: Props) => {
         Logout
       </button>
 
-      {isLoading && <Loader isVisible={isLoading} />}
+      {isLoading && <Loader isLoading={isLoading} />}
     </div>
   );
 };
 
-export default dashboardHeader;
+export default DashboardHeader;

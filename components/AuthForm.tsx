@@ -11,7 +11,6 @@ import OtpModal from "./OtpModal";
 import { Mail, User, ArrowRight, Network } from "lucide-react";
 import { createUserAccount, signInUsers } from "@/app/server-actions/users";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { AlertDialogue } from "@/components/auth-form/AlertDialogue";
 
 import {
@@ -21,6 +20,7 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import { Loader } from "./Loader";
 
 // ------ Form Type ------ //
 
@@ -52,6 +52,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const [accountId, setAccountId] = useState<string | null>(null); // Use state to handle user's account Id
   const [errorDialogue, setErrorDialogue] = useState(false);
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,6 +65,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
   // ------ On Submit Handler ------ //
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
     try {
       // Check If Type Is Sign Up Then Create Account Else Sign In User
 
@@ -85,6 +87,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
       setAccountId(user.accountId); // Setting account id with actual user id
     } catch (error) {
       console.log("Failed to sign in or create account", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -236,6 +240,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
           userEmail={email}
         />
       </div>
+      {/** Loader */}
+      {isLoading && <Loader isLoading={isLoading} />}
     </div>
   );
 };

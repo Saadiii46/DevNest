@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
 
 interface Prop {

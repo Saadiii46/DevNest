@@ -1,6 +1,5 @@
 "use client";
 
-import { appwriteConfig } from "@/lib/appwrite/config";
 import { Download } from "lucide-react";
 
 interface Props {

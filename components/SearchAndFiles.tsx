@@ -6,15 +6,15 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "./ui/skeleton";
 import { getFileIcon } from "@/constants/GetFileIcon";
 import { FileType, formatTimeAgo, getFileColor } from "@/constants";
+import { toast } from "sonner";
+import { storage } from "@/lib/appwrite/AppwriteClientUsage";
+import { appwriteConfig } from "@/lib/appwrite/config";
+import { useQuery } from "@tanstack/react-query";
 import {
   deleteFile,
   enableFileSharing,
   getUserFiles,
 } from "@/lib/actions/file.action";
-import { toast } from "sonner";
-import { storage } from "@/lib/appwrite/AppwriteClientUsage";
-import { appwriteConfig } from "@/lib/appwrite/config";
-import { useQuery } from "@tanstack/react-query";
 
 import {
   AlertDialog,
@@ -23,6 +23,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import { Loader } from "./Loader";
+import { handleClientError } from "@/lib/handleClientError";
 
 interface FileProp {
   ownerId: string;
@@ -34,11 +36,11 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
   const [selectedFile, setSelectedFile] = useState<FileType | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list" | null>(null);
   const [search, setSearch] = useState("");
+  const [Loading, setLoading] = useState(false);
   const {
     data: file = [],
     isLoading,
     refetch,
-    isError,
   } = useQuery<FileType[]>({
     queryKey: ["user-files"],
     queryFn: () => getUserFiles({ ownerId }),
@@ -57,29 +59,34 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
 
   // Delete user files
   const handleDelete = async (file: FileType) => {
+    setLoading(true);
     try {
       const result = await deleteFile(file.$id, file.bucketField);
 
-      if (result.succes) {
+      if (result?.succes) {
         toast("File deleted successfully", {
           position: "top-center",
         });
       }
 
-      refetch;
+      refetch();
     } catch (error) {
       toast("Failed to delete file", {
         position: "top-center",
       });
+      handleClientError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Share user files
   const handleShare = async (file: FileType) => {
+    setLoading(true);
     try {
       const result = await enableFileSharing(file.$id);
 
-      const publicUrl = `${(window.location, origin)}/share/${result.shareId}`;
+      const publicUrl = `${(window.location, origin)}/share/${result?.shareId}`;
 
       toast("Public link created", {
         position: "top-center",
@@ -90,11 +97,15 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
       toast("Failed to share id", {
         position: "top-center",
       });
+      handleClientError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Download user files
   const handleDownload = async (file: FileType) => {
+    setLoading(true);
     try {
       const downloadUrl = storage.getFileDownload(
         appwriteConfig.bucketId,
@@ -103,7 +114,8 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
 
       const link = document.createElement("a");
 
-      (link.href = downloadUrl.toString()), (link.download = file.name);
+      link.href = downloadUrl.toString();
+      link.download = file.name;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -113,6 +125,9 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
       toast("Failed to download file", {
         position: "top-center",
       });
+      handleClientError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -350,6 +365,9 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
           </AlertDialogContent>
         </AlertDialog>
       )}
+
+      {/** Loader */}
+      {Loading && <Loader isLoading={Loading} />}
     </div>
   );
 };

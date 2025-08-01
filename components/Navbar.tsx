@@ -1,4 +1,3 @@
-import { signOutUser } from "@/lib/actions/user.action";
 import MobileNavigation from "./MobileNavigation";
 
 interface Prop {

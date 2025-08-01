@@ -1,8 +1,3 @@
-type ClientError = {
-  message: string;
-  code?: string;
-};
-
 export const handleClientError = (
   error: unknown,
   fallbackMessage = "Something went wrong"

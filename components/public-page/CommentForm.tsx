@@ -1,10 +1,10 @@
 "use client";
 
 import { submitPublicComments } from "@/lib/actions/comments.action";
-import { MessageCircle, Send, Target } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { MessageCircle, Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Loader } from "../Loader";
 
 const CommentForm = ({ fileId }: { fileId: string }) => {
   // Use states
@@ -12,8 +12,6 @@ const CommentForm = ({ fileId }: { fileId: string }) => {
   const [isSubmitting, setIsSubmitting] = useState(false); // Loading state of the submit form
   const [name, setName] = useState(""); // setting name of the commenter
   const [comment, setComment] = useState(""); // setting actual comment
-
-  const router = useRouter();
 
   // Handle submit
 
@@ -29,6 +27,7 @@ const CommentForm = ({ fileId }: { fileId: string }) => {
       setComment("");
     } catch (error) {
       toast.error("Failed to submit comment");
+      console.log(error);
     } finally {
       setIsSubmitting(false); // Setting the loading state = false
     }
@@ -70,6 +69,7 @@ const CommentForm = ({ fileId }: { fileId: string }) => {
           </form>
         </div>
       </div>
+      {isSubmitting && <Loader isLoading={isSubmitting} />}
     </div>
   );
 };

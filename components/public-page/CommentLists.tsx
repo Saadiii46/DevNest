@@ -1,4 +1,3 @@
-import { formatTimeAgo } from "@/constants";
 import { getPublicComments } from "@/lib/actions/comments.action";
 import { User } from "lucide-react";
 

@@ -14,12 +14,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { handleClientError } from "@/lib/handleClientError";
+import { Loader } from "./Loader";
 
 const FileUploader = () => {
   // Use States
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [message, setMessage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [showDialogue, setShowDialogue] = useState(false);
 
@@ -30,7 +31,6 @@ const FileUploader = () => {
 
     if (file) {
       setSelectedFile(file); // store the file in state
-      const preview = URL.createObjectURL(file);
     }
   }, []);
 
@@ -55,7 +55,6 @@ const FileUploader = () => {
 
   const handleUpload = async () => {
     if (!selectedFile) {
-      setMessage("Please select a file first.");
       return;
     }
 
@@ -79,8 +78,8 @@ const FileUploader = () => {
 
       router.refresh();
     } catch (error) {
-      console.error("Failed to upload file", error);
-      setMessage("Upload Failed");
+      const { message } = handleClientError(error);
+      console.log(message);
     } finally {
       setIsUploading(false);
     }
@@ -131,7 +130,7 @@ const FileUploader = () => {
         </AlertDialog>
       )}
 
-      {isUploading && <div className="absolute z-10">Loading...</div>}
+      {isUploading && <Loader isLoading={isUploading} />}
     </div>
   );
 };
