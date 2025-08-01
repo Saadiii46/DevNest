@@ -11,12 +11,7 @@ interface Props {
 }
 
 const DashboardStats = ({ ownerId }: Props) => {
-  const {
-    data: files = [],
-    isLoading,
-    refetch,
-    isError,
-  } = useQuery<FileType[]>({
+  const { data: files = [], isLoading } = useQuery<FileType[]>({
     queryKey: ["user-files"],
     queryFn: () => getUserFiles({ ownerId }),
     staleTime: 1000 * 60 * 2,
@@ -34,12 +29,14 @@ const DashboardStats = ({ ownerId }: Props) => {
         count={totalUserFiles}
         className="bg-blue-50 p-2 rounded-lg text-slate-700"
         icon={<File />}
+        isLoading={isLoading}
       />
       <InfoCard
         label="Storage Used"
         count={totalStorage}
         className="bg-purple-50 p-2 rounded-lg text-slate-700"
         icon={<HardDrive />}
+        isLoading={isLoading}
       />
     </div>
   );

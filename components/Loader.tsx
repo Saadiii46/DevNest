@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 // Universal Loader Component - Fixed Version
 export const Loader = ({ isVisible = false }) => {
@@ -11,24 +11,32 @@ export const Loader = ({ isVisible = false }) => {
         {/* Mind-blowing Multi-layered Spinner - Blue to Purple Theme */}
         <div className="relative">
           {/* Outer rotating ring with blue to purple gradient */}
-          <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 p-1 animate-spin">
-            <div className="w-full h-full bg-black rounded-full"></div>
+          <div
+            className="w-24 h-24 rounded-full bg-gradient-to-r
+           from-blue-500 via-indigo-500 to-purple-500 p-1 animate-spin"
+          >
+            <div className="w-full h-full rounded-full"></div>
           </div>
 
           {/* Middle spinning ring */}
           <div
-            className="absolute top-2 left-2 w-20 h-20 border-4 border-transparent border-t-blue-400 border-r-purple-500 rounded-full animate-spin"
+            className="absolute top-2 left-2 w-20 h-20 border-4 border-transparent
+             border-t-blue-400 border-r-purple-500 rounded-full animate-spin"
             style={{ animationDuration: "0.8s" }}
           ></div>
 
           {/* Inner counter-rotating ring */}
           <div
-            className="absolute top-4 left-4 w-16 h-16 border-4 border-transparent border-t-indigo-400 border-l-violet-500 rounded-full animate-spin"
+            className="absolute top-4 left-4 w-16 h-16 border-4 border-transparent
+             border-t-indigo-400 border-l-violet-500 rounded-full animate-spin"
             style={{ animationDuration: "1.2s", animationDirection: "reverse" }}
           ></div>
 
           {/* Core pulsing circle */}
-          <div className="absolute top-6 left-6 w-12 h-12 bg-gradient-to-r from-cyan-300 to-purple-300 rounded-full animate-pulse"></div>
+          <div
+            className="absolute top-6 left-6 w-12 h-12 bg-gradient-to-r
+           from-cyan-300 to-purple-300 rounded-full animate-pulse"
+          ></div>
 
           {/* Orbiting dots - Blue to Purple theme */}
           <div className="absolute top-1/2 left-1/2 w-20 h-20 -translate-x-1/2 -translate-y-1/2">

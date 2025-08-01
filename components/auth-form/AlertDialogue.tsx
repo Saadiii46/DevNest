@@ -56,7 +56,7 @@ export const AlertDialogue = ({
 
           {/* Subtitle */}
           <p className="text-gray-600 mb-8">
-            We couldn't find an account with that email address
+            We couldn&apos;t find an account with that email address
           </p>
 
           {/* Email input (readonly/display) */}

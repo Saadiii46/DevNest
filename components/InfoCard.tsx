@@ -8,11 +8,10 @@ interface Prop {
   count?: number | string;
   icon?: React.ReactNode;
   className?: string;
+  isLoading?: boolean;
 }
 
-const InfoCard = ({ label, count, icon, className }: Prop) => {
-  const [isLoading, setIsLoading] = useState(false);
-
+const InfoCard = ({ label, count, icon, className, isLoading }: Prop) => {
   return (
     <div className="info-card-main">
       <div className="flex flex-col gap-1">

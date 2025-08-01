@@ -5,15 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { FormMessage } from "@/components/ui/form";
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import OtpModal from "./OtpModal";
@@ -22,6 +13,14 @@ import { createUserAccount, signInUsers } from "@/app/server-actions/users";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AlertDialogue } from "@/components/auth-form/AlertDialogue";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 
 // ------ Form Type ------ //
 
@@ -61,10 +60,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
       email: "",
     },
   });
-
-  // ------ Use Router ------ //
-
-  const router = useRouter();
 
   // ------ On Submit Handler ------ //
 

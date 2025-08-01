@@ -3,6 +3,10 @@
 import { signOutUser } from "@/lib/actions/user.action";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
+import { handleClientError } from "@/lib/handleClientError";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Loader } from "../Loader";
 
 interface Props {
   user: string;
@@ -11,16 +15,20 @@ interface Props {
 const dashboardHeader = ({ user }: Props) => {
   const isUsernameLoading = !user;
   const router = useRouter();
+  const [isLoading, setIsloading] = useState(false);
 
   // Logout user
 
   const handleLogout = async () => {
+    setIsloading(true);
     try {
       await signOutUser();
       router.push("/sign-in");
     } catch (error) {
-      console.error("Logout Failed:", error);
-      throw new Error("Logout Failed");
+      const { message } = handleClientError(error);
+      toast.error(message);
+    } finally {
+      setIsloading(false);
     }
   };
 
@@ -42,6 +50,8 @@ const dashboardHeader = ({ user }: Props) => {
       <button onClick={handleLogout} className="upload-area-btn">
         Logout
       </button>
+
+      {isLoading && <Loader isVisible={isLoading} />}
     </div>
   );
 };

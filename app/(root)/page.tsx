@@ -8,6 +8,8 @@ import DashboardStats from "@/components/dashboard/DashboardStats";
 export default async function Home() {
   const currentUser = await getCurrentUser();
 
+  if (!currentUser) return null;
+
   // Frontend
 
   return (
