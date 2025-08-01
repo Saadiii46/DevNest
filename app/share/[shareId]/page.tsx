@@ -13,15 +13,13 @@ import CommentLists from "@/components/public-page/CommentLists";
 import { getPublicComments } from "@/lib/actions/comments.action";
 
 // Param type
-type ShareParamProps = {
-  params: {
-    shareId: string;
-  };
+type SharePageProps = {
+  params: { shareId: string };
 };
 
 export const dynamic = "force-dynamic";
 
-export default async function MyDrivePublicPage({ params }: ShareParamProps) {
+export default async function MyDrivePublicPage({ params }: SharePageProps) {
   const file = await getSharedFile(params.shareId); // Calling server action getting shared files
 
   // If no fil then show not found page
