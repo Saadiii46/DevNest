@@ -94,7 +94,7 @@ const FileUploader = () => {
   };
 
   return (
-    <div className="max-md:hidden">
+    <div className="">
       <div {...getRootProps()}>
         {/* Hidden input under the hood */}
         <input {...getInputProps()} />

@@ -14,6 +14,13 @@ export const menuItems = [
   { id: "messages", icon: MessageSquare, label: "Feedback", badge: null },
   { id: "team", icon: Users, label: "Clients", badge: null },
   { id: "documents", icon: FileText, label: "My Files", badge: null },
+];
+export const MobileMenuItems = [
+  { id: "dashboard", icon: Home, label: "Dashboard", badge: null },
+  { id: "projects", icon: Folder, label: "Projects", badge: null },
+  { id: "messages", icon: MessageSquare, label: "Feedback", badge: null },
+  { id: "team", icon: Users, label: "Clients", badge: null },
+  { id: "documents", icon: FileText, label: "My Files", badge: null },
   { id: "logout", icon: LogOut, label: "Logout", badge: null },
 ];
 

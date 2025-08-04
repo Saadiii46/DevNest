@@ -1,7 +1,15 @@
 "use client";
 
-import { Download, Grid3X3, List, Search, Share2, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  Download,
+  Grid3X3,
+  List,
+  MoreVerticalIcon,
+  Search,
+  Share2,
+  Trash2,
+} from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "./ui/skeleton";
 import { getFileIcon } from "@/constants/GetFileIcon";
@@ -25,6 +33,7 @@ import {
 } from "./ui/alert-dialog";
 import { Loader } from "./Loader";
 import { handleClientError } from "@/lib/handleClientError";
+import MobileDrawer from "./MobileDrawer";
 
 interface FileProp {
   ownerId: string;
@@ -33,6 +42,7 @@ interface FileProp {
 const SearchAndFiles = ({ ownerId }: FileProp) => {
   // Use states
   const [showDialogue, setShowDialogue] = useState(false);
+  const [mobileDrawer, setMobileDrawer] = useState(false);
   const [selectedFile, setSelectedFile] = useState<FileType | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list" | null>(null);
   const [search, setSearch] = useState("");
@@ -58,7 +68,7 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
   );
 
   // Delete user files
-  const handleDelete = async (file: FileType) => {
+  const handleDelete = useCallback(async (file: FileType) => {
     setLoading(true);
     try {
       const result = await deleteFile(file.$id, file.bucketField);
@@ -78,10 +88,10 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   // Share user files
-  const handleShare = async (file: FileType) => {
+  const handleShare = useCallback(async (file: FileType) => {
     setLoading(true);
     try {
       const result = await enableFileSharing(file.$id);
@@ -101,10 +111,10 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   // Download user files
-  const handleDownload = async (file: FileType) => {
+  const handleDownload = useCallback(async (file: FileType) => {
     setLoading(true);
     try {
       const downloadUrl = storage.getFileDownload(
@@ -129,7 +139,7 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const toggleView = (mode: "grid" | "list") => {
     setViewMode(mode);
@@ -158,7 +168,8 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-3 bg-white/70 backdrop-blur-sm rounded-xl 
             border-0 shadow-lg focus:shadow-xl focus:ring-2
-             focus:ring-blue-500/20 focus:outline-none transition-all duration-300 text-sm"
+             focus:ring-blue-500/20 focus:outline-none transition-all duration-300 text-sm
+             "
           />
         </div>
 
@@ -175,7 +186,7 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
           </button>
           <button
             onClick={() => toggleView("list")}
-            className={`p-2 rounded-lg transition-all duration-300 max-sm:hidden ${
+            className={`p-2 rounded-lg transition-all duration-300  ${
               viewMode === "list"
                 ? "bg-blue-500 text-white shadow-md"
                 : "text-slate-600 hover:bg-slate-100"
@@ -188,8 +199,12 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
       <div className="flex-1 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden flex flex-col">
         <div className="p-4 border-b border-slate-200/50">
           <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-slate-800">Your Files</h3>
-            <p className="text-sm text-slate-800">Last Upload: {lastUpload}</p>
+            <h3 className="text-xl font-bold text-slate-800 max-[483]:text-[18px] max-[357]:text-[16px]">
+              Your Files
+            </h3>
+            <p className="text-sm text-slate-800 max-[483]:text-[12px] max-[357]:text-[10px]">
+              Last Upload: {lastUpload}
+            </p>
           </div>
         </div>
 
@@ -232,7 +247,7 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
                           <div>
                             <button
                               onClick={() => handleDownload(item)}
-                              className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+                              className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200 max-sm:hidden"
                             >
                               <Download className="w-3.5 h-3.5 text-slate-500" />
                             </button>
@@ -302,20 +317,20 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
                               {item.name}
                             </h4>
                             <p className="text-xs text-slate-500">
-                              {item.size} • {item.$createdAt}
+                              {item.size}
                             </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-1">
                           <button
                             onClick={() => handleDownload(item)}
-                            className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+                            className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200 max-md:hidden"
                           >
                             <Download className="w-3.5 h-3.5 text-slate-500" />
                           </button>
                           <button
                             onClick={() => handleShare(item)}
-                            className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+                            className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors duration-200 max-md:hidden"
                           >
                             <Share2 className="w-3.5 h-3.5 text-slate-500" />
                           </button>
@@ -324,9 +339,18 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
                               setSelectedFile(item);
                               setShowDialogue(true);
                             }}
-                            className="p-1.5 hover:bg-red-100 rounded-lg transition-colors duration-200"
+                            className="p-1.5 hover:bg-red-100 rounded-lg transition-colors duration-200 max-md:hidden"
                           >
                             <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedFile(item);
+                              setMobileDrawer(true);
+                            }}
+                            className="min-md:hidden"
+                          >
+                            <MoreVerticalIcon className="w-4 h-4 text-slate-500" />
                           </button>
                         </div>
                       </div>
@@ -367,6 +391,21 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+      )}
+
+      {/** Mobile Drawer */}
+
+      {mobileDrawer && (
+        <div>
+          <MobileDrawer
+            openDrawer={mobileDrawer}
+            setOpenDrawer={setMobileDrawer}
+            handleDelete={handleDelete}
+            selectedFile={selectedFile}
+            handleShare={handleShare}
+            handleDownload={handleDownload}
+          />
+        </div>
       )}
 
       {/** Loader */}
