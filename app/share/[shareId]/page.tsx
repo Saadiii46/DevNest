@@ -1,6 +1,5 @@
 // import React, { useState, useRef } from "react";
 import { Eye, User, Calendar, File } from "lucide-react";
-
 import { getSharedFile, trackFileViews } from "@/lib/actions/file.action";
 import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/actions/user.action";
@@ -57,7 +56,10 @@ export default async function MyDrivePublicPage({ params }: PageProps) {
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse delay-1000"></div>
+        <div
+          className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-100 
+        rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse delay-1000"
+        ></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-indigo-100 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-500"></div>
       </div>
 
@@ -65,7 +67,10 @@ export default async function MyDrivePublicPage({ params }: PageProps) {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+            <div
+              className="w-12 h-12 bg-gradient-to-r from-purple-500
+             to-blue-500 rounded-xl flex items-center justify-center shadow-lg"
+            >
               <File className="w-6 h-6 text-white" />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
