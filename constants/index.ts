@@ -4,23 +4,23 @@ import {
   Folder,
   Users,
   MessageSquare,
-  FileText,
   LogOut,
+  Upload,
 } from "lucide-react";
 
 export const menuItems = [
   { id: "dashboard", icon: Home, label: "Dashboard", badge: null },
-  { id: "projects", icon: Folder, label: "Projects", badge: null },
+  { id: "portfolio", icon: Folder, label: "Portfolio", badge: null },
   { id: "messages", icon: MessageSquare, label: "Feedback", badge: null },
   { id: "team", icon: Users, label: "Clients", badge: null },
-  { id: "documents", icon: FileText, label: "My Files", badge: null },
+  { id: "uplaods", icon: Upload, label: "Uploads", badge: null },
 ];
 export const MobileMenuItems = [
   { id: "dashboard", icon: Home, label: "Dashboard", badge: null },
   { id: "projects", icon: Folder, label: "Projects", badge: null },
   { id: "messages", icon: MessageSquare, label: "Feedback", badge: null },
   { id: "team", icon: Users, label: "Clients", badge: null },
-  { id: "documents", icon: FileText, label: "My Files", badge: null },
+  { id: "uploads", icon: Upload, label: "Uploads", badge: null },
   { id: "logout", icon: LogOut, label: "Logout", badge: null },
 ];
 
