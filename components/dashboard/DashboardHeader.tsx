@@ -13,7 +13,7 @@ import { LogOut } from "lucide-react";
 
 const styles = {
   logoutBtn:
-    "mt-4 px-4 py-2 bg-gradient-to-r from-red-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm font-medium flex items-center justify-center gap-2 max-md:hidden",
+    "mt-4 px-4 py-2 bg-red-500 text-white rounded-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm font-medium flex items-center justify-center gap-2 max-md:hidden",
 };
 
 interface Props {

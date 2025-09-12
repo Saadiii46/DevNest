@@ -44,7 +44,7 @@ export default function ModernSidebar({ fullName, email }: Prop) {
           group relative flex items-center gap-3 px-3 py-2.5 mx-2 rounded-xl cursor-pointer transition-all duration-300 ease-out
           ${
             isActive
-              ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-600 shadow-lg shadow-blue-500/25"
+              ? "bg-blue-500/20 to-purple-500/20 text-blue-600 shadow-lg shadow-blue-500/25"
               : "text-gray-600 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:text-gray-900"
           }
           ${isCollapsed ? "justify-center" : ""}
@@ -55,7 +55,7 @@ export default function ModernSidebar({ fullName, email }: Prop) {
           flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-300
           ${
             isActive
-              ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg"
+              ? "bg-blue-500 text-white shadow-lg"
               : "text-gray-500 group-hover:text-gray-700"
           }
         `}

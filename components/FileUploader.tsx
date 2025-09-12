@@ -20,7 +20,7 @@ import { Loader } from "./Loader";
 // Styles
 const styles = {
   uploadBtn:
-    "mt-4 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm font-medium max-[1078]:text-[13px] max-[1061]:text-[12px] max-[1044]:text-[11px] max-[1027]:text-[10px] max-lg:text-sm",
+    "mt-4 px-4 py-2 bg-blue-500 text-white rounded-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm font-medium max-[1078]:text-[13px] max-[1061]:text-[12px] max-[1044]:text-[11px] max-[1027]:text-[10px] max-lg:text-sm",
 };
 
 const FileUploader = () => {
@@ -47,6 +47,9 @@ const FileUploader = () => {
     multiple: false,
     noClick: true,
     noKeyboard: true,
+    accept: {
+      "application/zip": [".zip", ".rar", ".7z"],
+    },
   });
 
   // Use Effect

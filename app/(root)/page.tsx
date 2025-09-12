@@ -14,10 +14,6 @@ export default async function Home() {
 
   return (
     <div className="main-header">
-      {/** Gradiant Color */}
-      <div className="gradiant-main">
-        <div className="gradiant-color"></div>
-      </div>
       {/** Header */}
       <div className="">
         <DashboardHeader user={currentUser.fullName} />

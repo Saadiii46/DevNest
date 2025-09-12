@@ -122,15 +122,15 @@
 }
 
 .network-icon {
-  @apply w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center;
+  @apply w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center;
 }
 
 .user-icon {
-  @apply w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center;
+  @apply w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center;
 }
 
 .user-icon-two {
-  @apply w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center;
+  @apply w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center;
 }
 
 .auth-main {
@@ -150,7 +150,7 @@
 }
 
 .auth-network-icon {
-  @apply w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/25;
+  @apply w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/25;
 }
 
 .auth-input {
@@ -162,7 +162,7 @@
 }
 
 .auth-submit-btn {
-  @apply w-full py-4 rounded-xl font-semibold text-white transition-all duration-300 transform bg-gradient-to-r from-blue-500 to-purple-600 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2;
+  @apply w-full py-4 rounded-xl font-semibold text-white transition-all duration-300 transform bg-blue-500 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2;
 }
 .alert-dialogue-title {
   @apply flex items-center justify-center text-white text-2xl font-semibold;
@@ -189,7 +189,7 @@
 }
 
 .upload-area-icon {
-  @apply w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-3;
+  @apply w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-3;
 }
 
 .upload-area-cancel {

@@ -44,7 +44,7 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
   const [showDialogue, setShowDialogue] = useState(false);
   const [mobileDrawer, setMobileDrawer] = useState(false);
   const [selectedFile, setSelectedFile] = useState<FileType | null>(null);
-  const [viewMode, setViewMode] = useState<"grid" | "list" | null>(null);
+  const [viewMode, setViewMode] = useState<"grid" | "list" | null>("grid");
   const [search, setSearch] = useState("");
   const [Loading, setLoading] = useState(false);
   const {
