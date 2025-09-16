@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { handleClientError } from "@/lib/handleClientError";
 import { Loader } from "./Loader";
+import { slugify } from "@/lib/utils";
 
 // Styles
 const styles = {
@@ -29,6 +30,7 @@ const FileUploader = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [showDialogue, setShowDialogue] = useState(false);
+  const [projectName, setProjectName] = useState("");
 
   const router = useRouter();
 
@@ -76,10 +78,13 @@ const FileUploader = () => {
 
       if (!currentUser) throw new Error("User not Authenticated");
 
+      const projectSlug = slugify(projectName);
+
       await uploadFiles({
         file: selectedFile,
         ownerId: currentUser.$id,
         accountId: currentUser.accountId,
+        projectSlug: projectSlug,
       });
 
       toast("File Uploaded successfully", {
@@ -131,7 +136,18 @@ const FileUploader = () => {
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>
-                Do you want to upload? {selectedFile?.name}
+                <div className="gap-2 flex flex-col">
+                  <p className="text-md text-gray-500">
+                    Enter your project name
+                  </p>
+                  <input
+                    type="text"
+                    className="auth-input"
+                    placeholder="Project Name"
+                    value={projectName}
+                    onChange={(e) => setProjectName(e.target.value)}
+                  />
+                </div>
               </AlertDialogTitle>
             </AlertDialogHeader>
             <AlertDialogFooter>

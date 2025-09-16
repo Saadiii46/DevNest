@@ -24,3 +24,11 @@ export const getFileType = (extension: string): string => {
 
   return "other";
 };
+
+export const slugify = (projectName: string): string => {
+  return projectName
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+};

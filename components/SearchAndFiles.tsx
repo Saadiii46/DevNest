@@ -68,27 +68,30 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
   );
 
   // Delete user files
-  const handleDelete = useCallback(async (file: FileType) => {
-    setLoading(true);
-    try {
-      const result = await deleteFile(file.$id, file.bucketField);
+  const handleDelete = useCallback(
+    async (file: FileType) => {
+      setLoading(true);
+      try {
+        const result = await deleteFile(file.$id, file.bucketField);
 
-      if (result?.succes) {
-        toast("File deleted successfully", {
+        if (result?.succes) {
+          toast("File deleted successfully", {
+            position: "top-center",
+          });
+        }
+
+        refetch();
+      } catch (error) {
+        toast("Failed to delete file", {
           position: "top-center",
         });
+        handleClientError(error);
+      } finally {
+        setLoading(false);
       }
-
-      refetch();
-    } catch (error) {
-      toast("Failed to delete file", {
-        position: "top-center",
-      });
-      handleClientError(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [refetch]
+  );
 
   // Share user files
   const handleShare = useCallback(async (file: FileType) => {

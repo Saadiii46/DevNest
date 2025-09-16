@@ -1,96 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  User,
-  Network,
-  LucideIcon,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, User, Network } from "lucide-react";
 import { menuItems } from "@/constants";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface Prop {
   fullName: string;
   email: string;
 }
 
-type SidebarItem = {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  badge?: null;
-};
-
 export default function ModernSidebar({ fullName, email }: Prop) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [activeItem, setActiveItem] = useState("dashboard");
-
-  const MenuItem = ({
-    item,
-    isActive,
-    onClick,
-  }: {
-    item: SidebarItem;
-    isActive: boolean;
-    onClick: (id: string) => void;
-  }) => {
-    const Icon = item.icon;
-
-    return (
-      <div
-        onClick={() => onClick(item.id)}
-        className={`
-          group relative flex items-center gap-3 px-3 py-2.5 mx-2 rounded-xl cursor-pointer transition-all duration-300 ease-out
-          ${
-            isActive
-              ? "bg-blue-500/20 to-purple-500/20 text-blue-600 shadow-lg shadow-blue-500/25"
-              : "text-gray-600 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:text-gray-900"
-          }
-          ${isCollapsed ? "justify-center" : ""}
-        `}
-      >
-        <div
-          className={`
-          flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-300
-          ${
-            isActive
-              ? "bg-blue-500 text-white shadow-lg"
-              : "text-gray-500 group-hover:text-gray-700"
-          }
-        `}
-        >
-          <Icon size={18} />
-        </div>
-
-        {!isCollapsed && (
-          <>
-            <span className="font-medium text-sm flex-1 truncate">
-              {item.label}
-            </span>
-            {item.badge && (
-              <span
-                className={`
-                px-2 py-0.5 text-xs font-semibold rounded-full
-                ${
-                  isActive
-                    ? "bg-blue-100 text-blue-700"
-                    : "bg-gray-200 text-gray-600 group-hover:bg-gray-300"
-                }
-              `}
-              >
-                {item.badge}
-              </span>
-            )}
-          </>
-        )}
-
-        {isActive && (
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 animate-pulse" />
-        )}
-      </div>
-    );
-  };
+  const pathName = usePathname();
 
   return (
     <>
@@ -138,14 +61,66 @@ export default function ModernSidebar({ fullName, email }: Prop) {
               </div>
             )}
 
-            {menuItems.map((item) => (
-              <MenuItem
-                key={item.id}
-                item={item}
-                isActive={activeItem === item.id}
-                onClick={setActiveItem}
-              />
-            ))}
+            {menuItems.map((item) => {
+              const isActive =
+                pathName === item.route ||
+                pathName.startsWith(`${item.route}/`);
+              const Icon = item.icon;
+              return (
+                <Link
+                  href={item.route}
+                  key={item.id}
+                  className={`
+                    group relative flex items-center gap-3 px-3 py-2.5 mx-2 rounded-xl cursor-pointer transition-all duration-300 ease-out
+                    ${
+                      isActive
+                        ? "bg-blue-500/20 to-purple-500/20 text-blue-600 shadow-lg shadow-blue-500/25"
+                        : "text-gray-600 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:text-gray-900"
+                    }
+                    ${isCollapsed ? "justify-center" : ""}
+                  `}
+                >
+                  <div
+                    className={`
+                      flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-300
+                      ${
+                        isActive
+                          ? "bg-blue-500 text-white shadow-lg"
+                          : "text-gray-500 group-hover:text-gray-700"
+                      }
+                    `}
+                  >
+                    <Icon size={18} />
+                  </div>
+
+                  {!isCollapsed && (
+                    <>
+                      <span className="font-medium text-sm flex-1 truncate">
+                        {item.label}
+                      </span>
+                      {item.badge && (
+                        <span
+                          className={`
+                            px-2 py-0.5 text-xs font-semibold rounded-full
+                            ${
+                              isActive
+                                ? "bg-blue-100 text-blue-700"
+                                : "bg-gray-200 text-gray-600 group-hover:bg-gray-300"
+                            }
+                          `}
+                        >
+                          {item.badge}
+                        </span>
+                      )}
+                    </>
+                  )}
+
+                  {isActive && (
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 animate-pulse" />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* User Profile */}

@@ -7,5 +7,6 @@ export const appwriteConfig = {
   commentsCollectionId:
     process.env.NEXT_PUBLIC_APPWRITE_COMMENTS_COLLECTION_ID!,
   bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
+  functionId: process.env.NEXT_PUBLIC_EXTRACT_FUNCTION_ID!,
   secretKey: process.env.APPWRITE_SECRET_KEY!,
 };

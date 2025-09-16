@@ -9,11 +9,29 @@ import {
 } from "lucide-react";
 
 export const menuItems = [
-  { id: "dashboard", icon: Home, label: "Dashboard", badge: null },
-  { id: "portfolio", icon: Folder, label: "Portfolio", badge: null },
-  { id: "messages", icon: MessageSquare, label: "Feedback", badge: null },
-  { id: "team", icon: Users, label: "Clients", badge: null },
-  { id: "uplaods", icon: Upload, label: "Uploads", badge: null },
+  { id: "dashboard", route: "/", icon: Home, label: "Dashboard", badge: null },
+  {
+    id: "portfolio",
+    route: "/portfolio",
+    icon: Folder,
+    label: "Portfolio",
+    badge: null,
+  },
+  {
+    id: "messages",
+    route: "/feedback",
+    icon: MessageSquare,
+    label: "Feedback",
+    badge: null,
+  },
+  { id: "team", route: "/clients", icon: Users, label: "Clients", badge: null },
+  {
+    id: "uplaods",
+    route: "/uploads",
+    icon: Upload,
+    label: "Uploads",
+    badge: null,
+  },
 ];
 export const MobileMenuItems = [
   { id: "dashboard", icon: Home, label: "Dashboard", badge: null },

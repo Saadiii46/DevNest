@@ -12,6 +12,7 @@ interface UploadFilesParams {
   file: File;
   ownerId: string;
   accountId: string;
+  projectSlug: string;
 }
 
 const getFileExtension = (filename: string): string => {
@@ -22,6 +23,7 @@ export const uploadFiles = async ({
   file,
   ownerId,
   accountId,
+  projectSlug,
 }: UploadFilesParams) => {
   try {
     const { storage, databases } = await createSessionClient();
@@ -48,6 +50,7 @@ export const uploadFiles = async ({
       owner: ownerId,
       extension: extension,
       size: file.size,
+      slug: projectSlug,
       users: [ownerId],
     };
 
@@ -57,6 +60,15 @@ export const uploadFiles = async ({
       ID.unique(),
       fileDocument
     );
+
+    // await functions.createExecution(
+    //   appwriteConfig.functionId,
+    //   JSON.stringify({
+    //     fileId: bucketFile.$id,
+    //     projectSlug: projectSlug,
+    //   }),
+    //   false
+    // );
 
     return {
       ...saveFile,
