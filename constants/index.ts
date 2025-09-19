@@ -91,6 +91,7 @@ export type Files = Models.Document & {
   url: string;
   extension: string;
   owner: string;
+  slug: string;
   accountId: string;
   bucketField: string;
   users: string[];
@@ -105,6 +106,7 @@ export type FileType = Models.Document & {
   type: string;
   extension: string;
   size: number;
+  slug: string;
   owner: string;
   accountId: string;
   bucketField: string;

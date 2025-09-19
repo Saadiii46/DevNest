@@ -1,36 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ProjectIcon } from "./ProjectIcon";
 import StatusBadge from "./StatusBadge";
 import ActionButtons from "./ActionButtons";
+import { FileType, formatTimeAgo } from "@/constants";
 
 interface ProjectCardProps {
-  project: Project;
+  project: FileType;
   index: number;
-  onHostProject: (project: Project) => void;
-  onViewProject: (project: Project) => void;
-  onManageProject: (project: Project) => void;
 }
 
-interface Project {
-  id: number;
-  name: string;
-  type: string;
-  size: string;
-  uploadDate: string;
-  status: "ready" | "hosted" | "processing";
-  files: number;
-  icon: string;
-}
+const ProjectCard = ({ index, project }: ProjectCardProps) => {
+  const [lastUpload, setlastUpload] = useState<string>("");
 
-const ProjectCard = ({
-  index,
-  project,
-  onHostProject,
-  onViewProject,
-  onManageProject,
-}: ProjectCardProps) => {
+  useEffect(() => {
+    setlastUpload(formatTimeAgo(project.$createdAt));
+  }, [project.$createdAt]);
+
   return (
     <div
       className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 border border-gray-100 transition-all duration-300"
@@ -41,7 +28,7 @@ const ProjectCard = ({
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <ProjectIcon path={project.icon} />
+              {/* <ProjectIcon path={project.icon} /> */}
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="font-semibold text-gray-800 truncate">
@@ -50,26 +37,26 @@ const ProjectCard = ({
               <p className="text-sm text-gray-500">{project.type}</p>
             </div>
           </div>
-          <StatusBadge status={project.status} />
+          {/* <StatusBadge status={project.status} /> */}
         </div>
 
         {/* Project Stats */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="text-center">
             <div className="text-lg font-bold text-gray-800">
-              {project.files}
+              {/* {project.files} */}
             </div>
             <div className="text-xs text-gray-500">Files</div>
           </div>
           <div className="text-center border-l border-r border-gray-200">
-            <div className="text-lg font-bold text-gray-800">
+            <div className="text-xs font-bold text-gray-800">
               {project.size}
             </div>
             <div className="text-xs text-gray-500">Size</div>
           </div>
           <div className="text-center">
             <div className="text-xs font-medium text-gray-600">
-              {project.uploadDate}
+              {lastUpload}
             </div>
             <div className="text-xs text-gray-500">Uploaded</div>
           </div>
@@ -78,9 +65,7 @@ const ProjectCard = ({
         {/* Action Button */}
         <ActionButtons
           project={project}
-          onHostProject={onHostProject}
-          onViewProject={onViewProject}
-          onManageProject={onManageProject}
+          onAction={() => alert(`File ID: ${project.$id}`)}
         />
       </div>
     </div>
