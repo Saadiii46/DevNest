@@ -4,8 +4,8 @@ import {
   Folder,
   Users,
   MessageSquare,
-  LogOut,
   Upload,
+  Bell,
 } from "lucide-react";
 
 export const menuItems = [
@@ -39,7 +39,7 @@ export const MobileMenuItems = [
   { id: "messages", icon: MessageSquare, label: "Feedback", badge: null },
   { id: "team", icon: Users, label: "Clients", badge: null },
   { id: "uploads", icon: Upload, label: "Uploads", badge: null },
-  { id: "logout", icon: LogOut, label: "Logout", badge: null },
+  { id: "notifications", icon: Bell, label: "Notifications", badge: null },
 ];
 
 export const avatarPlaceHolder =
