@@ -63,10 +63,7 @@ const ProjectCard = ({ index, project }: ProjectCardProps) => {
         </div>
 
         {/* Action Button */}
-        <ActionButtons
-          project={project}
-          onAction={() => alert(`File ID: ${project.$id}`)}
-        />
+        <ActionButtons project={project} />
       </div>
     </div>
   );

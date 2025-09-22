@@ -1,7 +1,7 @@
 "use server";
 
 import { InputFile } from "node-appwrite/file";
-import { createSessionClient } from "../appwrite";
+import { createApiSessionClient, createSessionClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { ID, Query } from "node-appwrite";
 import { getFileType } from "../utils";
@@ -12,6 +12,11 @@ interface UploadFilesParams {
   file: File;
   ownerId: string;
   accountId: string;
+  projectSlug: string;
+}
+
+interface HostProjectsProps {
+  fileId: string;
   projectSlug: string;
 }
 
@@ -199,5 +204,31 @@ export const trackDownloads = async (fileId: string, currentCount: number) => {
     return downloadCount;
   } catch (error) {
     handleError(error, "Failed to track downloads");
+  }
+};
+
+export const hostProject = async ({
+  fileId,
+  projectSlug,
+}: HostProjectsProps) => {
+  const { functions } = await createApiSessionClient();
+
+  const payload = { fileId, projectSlug };
+
+  try {
+    const response = functions.createExecution(
+      appwriteConfig.functionId,
+      JSON.stringify(payload),
+      false,
+      "/"
+    );
+
+    console.log(fileId, projectSlug);
+
+    console.log("Function response:", response);
+
+    return response;
+  } catch (error) {
+    handleError(error, "Failed to host project");
   }
 };

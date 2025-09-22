@@ -62,3 +62,19 @@ export const createAdminClient = async () => {
     },
   };
 };
+
+export const createApiSessionClient = async () => {
+  const client = new Client()
+    .setEndpoint(appwriteConfig.endpointUrl)
+    .setProject(appwriteConfig.projectId);
+
+  return {
+    get functions() {
+      return new Functions(client);
+    },
+
+    get storage() {
+      return new Storage(client);
+    },
+  };
+};
