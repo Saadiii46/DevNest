@@ -21,6 +21,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Loader } from "./Loader";
+import { signUpUsers } from "@/lib/firebase/user.actions";
 
 // ------ Form Type ------ //
 
@@ -35,6 +36,10 @@ const authFormSchema = (formType: FormType) => {
       .min(1, "Email is required")
       .nonempty()
       .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"),
+    password: z
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      .nonempty(),
     fullName:
       formType === "sign-up"
         ? z.string().min(1, "Full name is required").max(50)
@@ -59,6 +64,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
     defaultValues: {
       fullName: "",
       email: "",
+      password: "",
     },
   });
 
@@ -71,13 +77,16 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
       const user =
         type === "sign-up"
-          ? await createUserAccount({
+          ? await signUpUsers({
               fullName: values.fullName || "",
               email: values.email,
+              password: values.password,
             })
           : await signInUsers({
               email: values.email,
             });
+
+      console.log("Firebase user email:", user.email);
 
       if (!user?.accountId) {
         setErrorDialogue(true);
@@ -133,6 +142,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
                       <div className="relative">
                         <Input
                           {...field}
+                          type="text"
                           placeholder="Enter your full name"
                           className="auth-input"
                         />
@@ -162,6 +172,35 @@ const AuthForm = ({ type }: { type: FormType }) => {
                     <div className="relative">
                       <Input
                         {...field}
+                        type="email"
+                        placeholder="Enter your email"
+                        className="auth-input"
+                      />
+                    </div>
+                  </FormControl>
+                  {form.formState.errors.email && (
+                    <FormMessage>
+                      {form.formState.errors.email.message as string}
+                    </FormMessage>
+                  )}
+                </FormItem>
+              )}
+            />
+            {/** Password */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="auth-form-label">
+                    <Mail size={16} className="text-gray-500" />
+                    Email Address <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        type="password"
                         placeholder="Enter your email"
                         className="auth-input"
                       />
@@ -229,9 +268,9 @@ const AuthForm = ({ type }: { type: FormType }) => {
       </div>
 
       {/* OTP Modal */}
-      {accountId && (
+      {/* {accountId && (
         <OtpModal email={form.getValues("email")} accountId={accountId} />
-      )}
+      )} */}
 
       <div>
         <AlertDialogue
