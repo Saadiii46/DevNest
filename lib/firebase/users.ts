@@ -1,4 +1,4 @@
-"use server";
+"use client";
 
 import {
   createUserWithEmailAndPassword,
@@ -6,7 +6,6 @@ import {
 } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { handleError } from "../handleError";
 
 interface SignUpUserProps {
   fullName: string;
@@ -41,9 +40,13 @@ export const signUpUsers = async ({
       createdAt: serverTimestamp(),
     });
 
-    return { success: true, email: user.email };
+    return { success: true, email: user.email, fullName: user.displayName };
   } catch (error) {
-    handleError(error);
+    return {
+      success: false,
+      error: (error as { message: string }).message,
+      code: (error as { code: string }).code,
+    };
   }
 };
 
@@ -57,8 +60,21 @@ export const signInUsers = async ({ email, password }: SignInUserProps) => {
 
     const user = userCredential.user;
 
-    return { success: true, email: user.email };
+    return { success: true, email: user.email, fullName: user.displayName };
   } catch (error) {
-    handleError(error);
+    console.log("Error", error);
+    let message = "Something went wrong";
+
+    switch ((error as { code: string }).code) {
+      case "auth/invalid-credential":
+        message = "invalid email or password";
+        break;
+    }
+
+    return {
+      success: false,
+      error: message,
+      code: (error as { code: string }).code,
+    };
   }
 };

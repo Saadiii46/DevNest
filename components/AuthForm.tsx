@@ -1,6 +1,6 @@
 "use client";
 
-import { set, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import OtpModal from "./OtpModal";
-import { Mail, User, ArrowRight, Network } from "lucide-react";
+import { Mail, User, ArrowRight, Network, Lock } from "lucide-react";
 import { createUserAccount } from "@/app/server-actions/users";
 import Link from "next/link";
 import { AlertDialogue } from "@/components/auth-form/AlertDialogue";
@@ -25,6 +25,7 @@ import { Loader } from "./Loader";
 import { signUpUsers } from "@/lib/firebase/users";
 import { useRouter } from "next/navigation";
 import { createAccount, signInUser } from "@/lib/actions/user.action";
+import { auth } from "@/lib/firebase/firebase";
 
 // ------ Form Type ------ //
 
@@ -39,7 +40,10 @@ const authFormSchema = (formType: FormType) => {
       .min(1, "Email is required")
       .nonempty()
       .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"),
-
+    password: z
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      .nonempty(),
     fullName:
       formType === "sign-up"
         ? z.string().min(1, "Full name is required").max(50)
@@ -58,6 +62,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const [errorDialogue, setErrorDialogue] = useState(false);
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const router = useRouter();
 
@@ -66,6 +71,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
     defaultValues: {
       fullName: "",
       email: "",
+      password: "",
     },
   });
 
@@ -78,22 +84,28 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
       const user =
         type === "sign-up"
-          ? await createAccount({
+          ? await signUpUsers({
               fullName: values.fullName || "",
               email: values.email,
+              password: values.password,
             })
-          : await signInUser({
+          : await signInUsers({
               email: values.email,
+              password: values.password,
             });
 
-      console.log("Firebase user email:", user?.email);
-
-      if (!user?.accountId) {
-        setErrorDialogue(true);
-        setEmail(values.email);
+      if (!user.success) {
+        setErrorMessage(user.error || "");
       }
 
-      setAccountId(user.accountId); // Setting account id with actual user id
+      router.push("/");
+
+      // if (!user?.accountId) {
+      //   setErrorDialogue(true);
+      //   setEmail(values.email);
+      // }
+
+      // setAccountId(user.accountId); // Setting account id with actual user id
 
       // setAccountId(user.accountId);
     } catch (error) {
@@ -187,6 +199,34 @@ const AuthForm = ({ type }: { type: FormType }) => {
                 </FormItem>
               )}
             />
+            {/** Password */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="auth-form-label">
+                    <Lock size={16} className="text-gray-500" />
+                    Password <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="Enter your password"
+                        className="auth-input"
+                      />
+                    </div>
+                  </FormControl>
+                  {form.formState.errors.email && (
+                    <FormMessage>
+                      {form.formState.errors.email.message as string}
+                    </FormMessage>
+                  )}
+                </FormItem>
+              )}
+            />
 
             {/* Submit Button */}
             <Button type="submit" className="auth-submit-btn">
@@ -241,9 +281,9 @@ const AuthForm = ({ type }: { type: FormType }) => {
       </div>
 
       {/* OTP Modal */}
-      {accountId && (
+      {/* {accountId && (
         <OtpModal email={form.getValues("email")} accountId={accountId} />
-      )}
+      )} */}
 
       <div>
         <AlertDialogue
