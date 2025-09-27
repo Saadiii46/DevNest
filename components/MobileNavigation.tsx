@@ -37,7 +37,7 @@ const MobileNavigation = ({ fullName, email }: Prop) => {
   const handleLogout = async () => {
     setIsloading(true);
     try {
-      await signOutUser();
+      await signOutUser(); // Use Appwrite signOutUser
       router.push("/sign-in");
     } catch (error) {
       const { message } = handleClientError(error);

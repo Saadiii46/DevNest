@@ -1,4 +1,13 @@
 "use client";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,12 +16,10 @@ import { useState } from "react";
 import { FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import OtpModal from "./OtpModal";
 import { Mail, User, ArrowRight, Network, Lock } from "lucide-react";
-import { createUserAccount } from "@/app/server-actions/users";
 import Link from "next/link";
 import { AlertDialogue } from "@/components/auth-form/AlertDialogue";
-import { signInUsers } from "@/lib/firebase/users";
+import { signInUsers, signUpUsers } from "@/lib/firebase/users";
 
 import {
   Form,
@@ -22,10 +29,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Loader } from "./Loader";
-import { signUpUsers } from "@/lib/firebase/users";
 import { useRouter } from "next/navigation";
-import { createAccount, signInUser } from "@/lib/actions/user.action";
-import { auth } from "@/lib/firebase/firebase";
 
 // ------ Form Type ------ //
 
@@ -39,7 +43,7 @@ const authFormSchema = (formType: FormType) => {
       .string()
       .min(1, "Email is required")
       .nonempty()
-      .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"),
+      .regex(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, "Invalid email format"),
     password: z
       .string()
       .min(6, "Password must be at least 6 characters")
@@ -58,11 +62,9 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
   // Use states
 
-  const [accountId, setAccountId] = useState<string | null>(null); // Use state to handle user's account Id
   const [errorDialogue, setErrorDialogue] = useState(false);
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -80,8 +82,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      // Check If Type Is Sign Up Then Create Account Else Sign In User
-
       const user =
         type === "sign-up"
           ? await signUpUsers({
@@ -95,21 +95,15 @@ const AuthForm = ({ type }: { type: FormType }) => {
             });
 
       if (!user.success) {
-        setErrorMessage(user.error || "");
+        setErrorMessage(user.error || "Something went wrong");
+        setErrorDialogue(true);
+        return;
       }
 
       router.push("/");
-
-      // if (!user?.accountId) {
-      //   setErrorDialogue(true);
-      //   setEmail(values.email);
-      // }
-
-      // setAccountId(user.accountId); // Setting account id with actual user id
-
-      // setAccountId(user.accountId);
     } catch (error) {
-      console.log("Failed to sign in or create account", error);
+      setErrorMessage("Unexpected error occurred");
+      setErrorDialogue(true);
     } finally {
       setIsLoading(false);
     }
@@ -219,9 +213,9 @@ const AuthForm = ({ type }: { type: FormType }) => {
                       />
                     </div>
                   </FormControl>
-                  {form.formState.errors.email && (
+                  {form.formState.errors.password && (
                     <FormMessage>
-                      {form.formState.errors.email.message as string}
+                      {form.formState.errors.password.message as string}
                     </FormMessage>
                   )}
                 </FormItem>
@@ -280,20 +274,24 @@ const AuthForm = ({ type }: { type: FormType }) => {
         </div>
       </div>
 
-      {/* OTP Modal */}
-      {/* {accountId && (
-        <OtpModal email={form.getValues("email")} accountId={accountId} />
-      )} */}
-
-      <div>
-        <AlertDialogue
-          errorDialogue={errorDialogue}
-          setErrorDialogue={setErrorDialogue}
-          userEmail={email}
-        />
-      </div>
       {/** Loader */}
       {isLoading && <Loader isLoading={isLoading} />}
+
+      <AlertDialog open={errorDialogue} onOpenChange={setErrorDialogue}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Authentication Failed</AlertDialogTitle>
+            <AlertDialogDescription>
+              {errorMessage || "Something went wrong. Please try again."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setErrorDialogue(false)}>
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
