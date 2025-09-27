@@ -1,6 +1,6 @@
 "use client";
 
-import { z } from "zod";
+import { set, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -9,9 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import OtpModal from "./OtpModal";
 import { Mail, User, ArrowRight, Network } from "lucide-react";
-import { createUserAccount, signInUsers } from "@/app/server-actions/users";
+import { createUserAccount } from "@/app/server-actions/users";
 import Link from "next/link";
 import { AlertDialogue } from "@/components/auth-form/AlertDialogue";
+import { signInUsers } from "@/lib/firebase/users";
 
 import {
   Form,
@@ -21,6 +22,9 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Loader } from "./Loader";
+import { signUpUsers } from "@/lib/firebase/users";
+import { useRouter } from "next/navigation";
+import { createAccount, signInUser } from "@/lib/actions/user.action";
 
 // ------ Form Type ------ //
 
@@ -35,6 +39,7 @@ const authFormSchema = (formType: FormType) => {
       .min(1, "Email is required")
       .nonempty()
       .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"),
+
     fullName:
       formType === "sign-up"
         ? z.string().min(1, "Full name is required").max(50)
@@ -54,6 +59,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -71,13 +78,15 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
       const user =
         type === "sign-up"
-          ? await createUserAccount({
+          ? await createAccount({
               fullName: values.fullName || "",
               email: values.email,
             })
-          : await signInUsers({
+          : await signInUser({
               email: values.email,
             });
+
+      console.log("Firebase user email:", user?.email);
 
       if (!user?.accountId) {
         setErrorDialogue(true);
@@ -85,6 +94,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
       }
 
       setAccountId(user.accountId); // Setting account id with actual user id
+
+      // setAccountId(user.accountId);
     } catch (error) {
       console.log("Failed to sign in or create account", error);
     } finally {
@@ -162,6 +173,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
                     <div className="relative">
                       <Input
                         {...field}
+                        type="email"
                         placeholder="Enter your email"
                         className="auth-input"
                       />

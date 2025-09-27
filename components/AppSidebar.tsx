@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, User, Network } from "lucide-react";
 import { menuItems } from "@/constants";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { getCurrentUser } from "@/lib/actions/user.action";
 
 interface Prop {
   fullName: string;

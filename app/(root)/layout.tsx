@@ -1,13 +1,10 @@
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
 import { getCurrentUser } from "@/lib/actions/user.action";
-import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 const layout = async ({ children }: { children: ReactNode }) => {
   const currentUser = await getCurrentUser(); // Getting current user
-
-  if (!currentUser) return redirect("/sign-in"); // If no user redirect to sign in page
 
   return (
     <div className="flex">
