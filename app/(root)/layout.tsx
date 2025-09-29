@@ -2,7 +2,6 @@
 
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
-import { getCurrentUser } from "@/lib/actions/user.action";
 import { ReactNode, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebase";

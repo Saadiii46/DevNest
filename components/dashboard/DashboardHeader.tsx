@@ -1,6 +1,6 @@
 "use client";
 
-import { signOutUser } from "@/lib/actions/user.action";
+import { signOutUser } from "@/lib/firebase/users";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
 import { handleClientError } from "@/lib/handleClientError";
@@ -11,7 +11,6 @@ import { LogOut } from "lucide-react";
 import { Bell } from "lucide-react";
 import { auth } from "@/lib/firebase/firebase";
 import { getCurrentUser } from "@/lib/firebase/users";
-import { signOut } from "@firebase/auth";
 //Dummy Data
 const dummyData = [
   {
