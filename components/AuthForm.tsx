@@ -25,7 +25,6 @@ import { Loader } from "./Loader";
 import { signUpUsers } from "@/lib/firebase/users";
 import { useRouter } from "next/navigation";
 import { createAccount, signInUser } from "@/lib/actions/user.action";
-import { auth } from "@/lib/firebase/firebase";
 
 // ------ Form Type ------ //
 

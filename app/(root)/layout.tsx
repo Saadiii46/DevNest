@@ -13,13 +13,13 @@ const layout = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.push("/sign-in");
-      }
+      if (!user) router.push("/sign-in");
     });
-
     return () => unsubscribe();
-  });
+  }, [router]); 
+
+
+
 
   return (
     <div className="flex">

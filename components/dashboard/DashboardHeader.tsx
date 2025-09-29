@@ -1,5 +1,5 @@
 "use client";
-
+import Protected from "./Protected";
 import { signOutUser } from "@/lib/actions/user.action";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,9 @@ import { Bell } from "lucide-react";
 import { auth } from "@/lib/firebase/firebase";
 import { getCurrentUser } from "@/lib/firebase/users";
 import { signOut } from "@firebase/auth";
-//Dummy Data
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+
 const dummyData = [
   {
     id: 1,
@@ -73,7 +75,10 @@ const DashboardHeader = () => {
     setIsloading(true);
     try {
       await signOutUser();
-
+  
+      // for checking
+      console.log("After signOutUser, auth.currentUser =", auth.currentUser);
+  
       router.push("/sign-in");
     } catch (error) {
       const { message } = handleClientError(error);
@@ -82,9 +87,23 @@ const DashboardHeader = () => {
       setIsloading(false);
     }
   };
+  
   const unreadCount = dummyData.filter((item) => !item.isRead).length;
-
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(" User is logged in:", user.email);
+      } else {
+        console.log(" User is logged OUT");
+      }
+    });
+  
+    // cleanup on unmount
+    return () => unsub();
+  }, []);
+  
   return (
+    <Protected>
     <div className="flex justify-between">
       <div className="header">
         <h1 className="max-lg:text-[24px]">
@@ -238,6 +257,7 @@ const DashboardHeader = () => {
 
       {isLoading && <Loader isLoading={isLoading} />}
     </div>
+    </Protected>
   );
 };
 
