@@ -98,6 +98,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
         setErrorMessage(user.error || "");
       }
 
+      console.log("User:", user);
+
       router.push("/");
 
       // if (!user?.accountId) {

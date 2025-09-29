@@ -1,22 +1,17 @@
-import { getCurrentUser } from "@/lib/actions/user.action";
+import { getCurrentUser } from "@/lib/firebase/users";
 import React from "react";
 import SearchAndFiles from "@/components/SearchAndFiles";
 import FileUploader from "@/components/FileUploader";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardStats from "@/components/dashboard/DashboardStats";
+import { auth } from "@/lib/firebase/firebase";
 
 export default async function Home() {
-  const currentUser = await getCurrentUser();
-
-  if (!currentUser) return null;
-
-  // Frontend
-
   return (
     <div className="main-header">
       {/** Header */}
       <div className="">
-        <DashboardHeader user={currentUser.fullName} />
+        <DashboardHeader />
       </div>
 
       {/** Grid Section */}
@@ -26,7 +21,7 @@ export default async function Home() {
         <div className="col-span-12 lg:col-span-4 p-4 flex flex-col gap-4">
           <div className="gap-16 flex flex-col">
             <div className="flex flex-col gap-4">
-              <DashboardStats ownerId={currentUser.$id} />
+              <DashboardStats />
             </div>
             <div>
               <FileUploader />
@@ -38,7 +33,7 @@ export default async function Home() {
         <div className="col-span-12 lg:col-span-8 p-4 max-h-screen overflow-y-auto">
           {/* Right panel content */}
           <div className="flex flex-col">
-            <SearchAndFiles ownerId={currentUser.$id} />
+            <SearchAndFiles />
           </div>
         </div>
       </div>

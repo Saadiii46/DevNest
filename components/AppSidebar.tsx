@@ -7,12 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getCurrentUser } from "@/lib/actions/user.action";
 
-interface Prop {
-  fullName: string;
-  email: string;
-}
-
-export default function ModernSidebar({ fullName, email }: Prop) {
+export default function ModernSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathName = usePathname();
 
@@ -139,9 +134,9 @@ export default function ModernSidebar({ fullName, email }: Prop) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-gray-900 text-sm truncate">
-                    {fullName}
+                    {/* {fullName} */}
                   </p>
-                  <p className="text-xs text-gray-500 truncate">{email}</p>
+                  {/* <p className="text-xs text-gray-500 truncate">{email}</p> */}
                 </div>
                 <div className="flex gap-1"></div>
               </div>

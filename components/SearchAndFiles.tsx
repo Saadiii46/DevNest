@@ -35,11 +35,7 @@ import { Loader } from "./Loader";
 import { handleClientError } from "@/lib/handleClientError";
 import MobileDrawer from "./MobileDrawer";
 
-interface FileProp {
-  ownerId: string;
-}
-
-const SearchAndFiles = ({ ownerId }: FileProp) => {
+const SearchAndFiles = () => {
   // Use states
   const [showDialogue, setShowDialogue] = useState(false);
   const [mobileDrawer, setMobileDrawer] = useState(false);
@@ -47,102 +43,102 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
   const [viewMode, setViewMode] = useState<"grid" | "list" | null>("grid");
   const [search, setSearch] = useState("");
   const [Loading, setLoading] = useState(false);
-  const {
-    data: file = [],
-    isLoading,
-    refetch,
-  } = useQuery<FileType[]>({
-    queryKey: ["user-files"],
-    queryFn: () => getUserFiles({ ownerId }),
-    staleTime: 1000 * 60 * 2,
-    gcTime: 1000 * 60 * 5,
-  });
+  // const {
+  //   data: file = [],
+  //   isLoading,
+  //   refetch,
+  // } = useQuery<FileType[]>({
+  //   queryKey: ["user-files"],
+  //   queryFn: () => getUserFiles({ ownerId }),
+  //   staleTime: 1000 * 60 * 2,
+  //   gcTime: 1000 * 60 * 5,
+  // });
 
-  const recentUpload = file[0]?.$createdAt;
-  const lastUpload = formatTimeAgo(recentUpload);
+  // const recentUpload = file[0]?.$createdAt;
+  // const lastUpload = formatTimeAgo(recentUpload);
 
   // Filtered files
 
-  const filteredFiles = file.filter((item) =>
-    item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-  );
+  // const filteredFiles = file.filter((item) =>
+  //   item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+  // );
 
   // Delete user files
-  const handleDelete = useCallback(
-    async (file: FileType) => {
-      setLoading(true);
-      try {
-        const result = await deleteFile(file.$id, file.bucketField);
+  // const handleDelete = useCallback(
+  //   async (file: FileType) => {
+  //     setLoading(true);
+  //     try {
+  //       const result = await deleteFile(file.$id, file.bucketField);
 
-        if (result?.succes) {
-          toast("File deleted successfully", {
-            position: "top-center",
-          });
-        }
+  //       if (result?.succes) {
+  //         toast("File deleted successfully", {
+  //           position: "top-center",
+  //         });
+  //       }
 
-        refetch();
-      } catch (error) {
-        toast("Failed to delete file", {
-          position: "top-center",
-        });
-        handleClientError(error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [refetch]
-  );
+  //       // refetch();
+  //     } catch (error) {
+  //       toast("Failed to delete file", {
+  //         position: "top-center",
+  //       });
+  //       handleClientError(error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   },
+  //   [refetch]
+  // );
 
   // Share user files
-  const handleShare = useCallback(async (file: FileType) => {
-    setLoading(true);
-    try {
-      const result = await enableFileSharing(file.$id);
+  // const handleShare = useCallback(async (file: FileType) => {
+  //   setLoading(true);
+  //   try {
+  //     const result = await enableFileSharing(file.$id);
 
-      const publicUrl = `${(window.location, origin)}/share/${result?.shareId}`;
+  //     const publicUrl = `${(window.location, origin)}/share/${result?.shareId}`;
 
-      toast("Public link created", {
-        position: "top-center",
-      });
+  //     toast("Public link created", {
+  //       position: "top-center",
+  //     });
 
-      navigator.clipboard.writeText(publicUrl);
-    } catch (error) {
-      toast("Failed to share id", {
-        position: "top-center",
-      });
-      handleClientError(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  //     navigator.clipboard.writeText(publicUrl);
+  //   } catch (error) {
+  //     toast("Failed to share id", {
+  //       position: "top-center",
+  //     });
+  //     handleClientError(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, []);
 
   // Download user files
-  const handleDownload = useCallback(async (file: FileType) => {
-    setLoading(true);
-    try {
-      const downloadUrl = storage.getFileDownload(
-        appwriteConfig.bucketId,
-        file.bucketField
-      );
+  // const handleDownload = useCallback(async (file: FileType) => {
+  //   setLoading(true);
+  //   try {
+  //     const downloadUrl = storage.getFileDownload(
+  //       appwriteConfig.bucketId,
+  //       file.bucketField
+  //     );
 
-      const link = document.createElement("a");
+  //     const link = document.createElement("a");
 
-      link.href = downloadUrl.toString();
-      link.download = file.name;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+  //     link.href = downloadUrl.toString();
+  //     link.download = file.name;
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
 
-      console.log("File Info:", file);
-    } catch (error) {
-      toast("Failed to download file", {
-        position: "top-center",
-      });
-      handleClientError(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  //     console.log("File Info:", file);
+  //   } catch (error) {
+  //     toast("Failed to download file", {
+  //       position: "top-center",
+  //     });
+  //     handleClientError(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, []);
 
   const toggleView = (mode: "grid" | "list") => {
     setViewMode(mode);
@@ -206,7 +202,7 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
               Your Files
             </h3>
             <p className="text-sm text-slate-800 max-[483]:text-[12px] max-[357]:text-[10px]">
-              Last Upload: {lastUpload}
+              {/* Last Upload: {lastUpload} */}
             </p>
           </div>
         </div>
@@ -216,7 +212,7 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
           <div className="space-y-2 px-4 py-2">
             {viewMode === "grid" ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 p-4 h-full">
-                {isLoading
+                {/* {isLoading
                   ? [...Array(6)].map((_, i) => (
                       <div
                         key={i}
@@ -278,11 +274,11 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
                           <span>{item.size}</span>
                         </div>
                       </div>
-                    ))}
+                    ))} */}
               </div>
             ) : (
               <div className="h-full overflow-y-auto">
-                {isLoading
+                {/* {isLoading
                   ? [...Array(6)].map((_, i) => (
                       <div
                         key={i}
@@ -357,7 +353,7 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
                           </button>
                         </div>
                       </div>
-                    ))}
+                    ))} */}
               </div>
             )}
           </div>
@@ -383,7 +379,7 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
               <button
                 onClick={async () => {
                   if (selectedFile) {
-                    await handleDelete(selectedFile);
+                    // await handleDelete(selectedFile);
                     setShowDialogue(false);
                   }
                 }}
@@ -403,17 +399,17 @@ const SearchAndFiles = ({ ownerId }: FileProp) => {
           <MobileDrawer
             openDrawer={mobileDrawer}
             setOpenDrawer={setMobileDrawer}
-            handleDelete={handleDelete}
+            // handleDelete={handleDelete}
             selectedFile={selectedFile}
-            handleShare={handleShare}
-            handleDownload={handleDownload}
+            // handleShare={handleShare}
+            // handleDownload={handleDownload}
           />
         </div>
       )}
 
       {/** Loader */}
       {Loading && <Loader isLoading={Loading} />}
-      {isLoading && <Loader isLoading={isLoading} />}
+      {/* {isLoading && <Loader isLoading={isLoading} />} */}
     </div>
   );
 };

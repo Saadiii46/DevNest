@@ -1,18 +1,33 @@
+"use client";
+
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
 import { getCurrentUser } from "@/lib/actions/user.action";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase/firebase";
+import { useRouter } from "next/navigation";
 
-const layout = async ({ children }: { children: ReactNode }) => {
-  const currentUser = await getCurrentUser(); // Getting current user
+const layout = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.push("/sign-in");
+      }
+    });
+
+    return () => unsubscribe();
+  });
 
   return (
     <div className="flex">
       {/** App sidebar component */}
-      <AppSidebar {...currentUser} />
+      <AppSidebar />
       <main className="w-full">
         {/** Navbar component */}
-        <Navbar {...currentUser} />
+        <Navbar />
         <div className="">{children}</div>
       </main>
     </div>

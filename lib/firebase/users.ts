@@ -3,6 +3,7 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
@@ -75,6 +76,40 @@ export const signInUsers = async ({ email, password }: SignInUserProps) => {
       success: false,
       error: message,
       code: (error as { code: string }).code,
+    };
+  }
+};
+
+export const getCurrentUser = () => {
+  try {
+    const user = auth.currentUser;
+
+    if (!user) throw new Error("No user logged in");
+
+    return {
+      success: true,
+      id: user.uid,
+      email: user.email,
+      fullName: user.displayName,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: (error as { message: string }).message,
+      code: (error as { code: string }).code,
+    };
+  }
+};
+
+export const signOutUser = async () => {
+  try {
+    await signOut(auth);
+    console.log("user signed out");
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error: (error as { message: string }).message,
     };
   }
 };
