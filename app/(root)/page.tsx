@@ -4,9 +4,14 @@ import SearchAndFiles from "@/components/SearchAndFiles";
 import FileUploader from "@/components/FileUploader";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardStats from "@/components/dashboard/DashboardStats";
-import { auth } from "@/lib/firebase/firebase";
 
 export default async function Home() {
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) return null;
+
+  // Frontend
+
   return (
     <div className="main-header">
       {/** Header */}

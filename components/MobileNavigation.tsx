@@ -16,6 +16,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+interface Prop {
+  fullName: string;
+  email: string;
+}
+
 type SidebarItem = {
   id: string;
   label: string;
@@ -23,7 +28,7 @@ type SidebarItem = {
   badge?: null;
 };
 
-const MobileNavigation = () => {
+const MobileNavigation = ({ fullName, email }: Prop) => {
   const [isCollapsed] = useState(false);
   const [activeItem, setActiveItem] = useState("dashboard");
   const [isLoading, setIsloading] = useState(false);
@@ -199,9 +204,9 @@ const MobileNavigation = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-gray-900 text-sm truncate">
-                        {/* {fullName} */}
+                        {fullName}
                       </p>
-                      {/* <p className="text-xs text-gray-500 truncate">{email}</p> */}
+                      <p className="text-xs text-gray-500 truncate">{email}</p>
                     </div>
                     <div className="flex gap-1"></div>
                   </div>

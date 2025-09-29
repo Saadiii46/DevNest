@@ -3,13 +3,14 @@
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
 import { getCurrentUser } from "@/lib/actions/user.action";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebase";
-import { useRouter } from "next/navigation";
 
 const layout = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
+  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -17,9 +18,6 @@ const layout = ({ children }: { children: ReactNode }) => {
     });
     return () => unsubscribe();
   }, [router]); 
-
-
-
 
   return (
     <div className="flex">

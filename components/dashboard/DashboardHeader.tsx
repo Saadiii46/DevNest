@@ -14,6 +14,7 @@ import { getCurrentUser } from "@/lib/firebase/users";
 import { signOut } from "@firebase/auth";
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
+const [currentUser, setCurrentUser] = useState<{ fullName: string; email: string } | null>(null);
 
 const dummyData = [
   {
@@ -102,18 +103,33 @@ const DashboardHeader = () => {
     return () => unsub();
   }, []);
   
+  useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setCurrentUser({
+        fullName: user.displayName || "",
+        email: user.email || "",
+      });
+    } else {
+      setCurrentUser(null);
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
+
   return (
     <Protected>
     <div className="flex justify-between">
       <div className="header">
-        <h1 className="max-lg:text-[24px]">
-          Welcome Back,{" "}
-          {currentUser ? (
-            <span className="max-[864]:hidden">{currentUser.email}</span>
-          ) : (
-            <Skeleton className="h-6 w-[200px] inline-block loader" />
-          )}
-        </h1>
+      <h1 className="max-lg:text-[24px]">
+  Welcome Back,{" "}
+  {currentUser ? (
+    <span className="max-[864]:hidden">{currentUser.fullName}</span>
+  ) : (
+    <Skeleton className="h-6 w-[200px] inline-block loader" />
+  )}
+</h1>
         <p className="text-slate-600 text-sm font-light">
           Today is {new Date().toLocaleDateString()}
         </p>
