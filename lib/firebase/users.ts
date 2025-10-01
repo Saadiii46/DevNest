@@ -62,6 +62,12 @@ export const signInUsers = async ({ email, password }: SignInUserProps) => {
     const user = userCredential.user;
     const idToken = await user.getIdToken();
 
+    await fetch("/api/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken }),
+    });
+
     console.log("ID Token:", idToken);
 
     return { success: true, email: user.email, fullName: user.displayName };
@@ -107,6 +113,9 @@ export const getCurrentUser = () => {
 export const signOutUser = async () => {
   try {
     await signOut(auth);
+
+    await fetch("/api/session", { method: "DELETE" });
+
     console.log("user signed out");
 
     return { success: true };

@@ -1,24 +1,23 @@
-"use client";
-
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
-import { ReactNode, useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/lib/firebase/firebase";
-import { useRouter } from "next/navigation";
+import { ReactNode } from "react";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { adminAuth } from "@/lib/firebase/firebaseAdmin";
 
-const layout = ({ children }: { children: ReactNode }) => {
-  const router = useRouter();
+const layout = async ({ children }: { children: ReactNode }) => {
+  const sessionCookie = (await cookies()).get("session")?.value;
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.push("/sign-in");
-      }
-    });
+  if (!sessionCookie) {
+    redirect("/sign-in");
+  }
 
-    return () => unsubscribe();
-  });
+  try {
+    await adminAuth.verifySessionCookie(sessionCookie, true);
+  } catch (error) {
+    console.error("Invalid session", error);
+    redirect("/sign-in");
+  }
 
   return (
     <div className="flex">
