@@ -60,6 +60,15 @@ export const signInUsers = async ({ email, password }: SignInUserProps) => {
     );
 
     const user = userCredential.user;
+    const idToken = await user.getIdToken();
+
+    console.log("ID Token:", idToken);
+
+    await fetch("/api/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken }),
+    });
 
     return { success: true, email: user.email, fullName: user.displayName };
   } catch (error) {
@@ -103,8 +112,12 @@ export const getCurrentUser = () => {
 
 export const signOutUser = async () => {
   try {
+    await fetch("/api/logout", {
+      method: "POST",
+    });
     await signOut(auth);
     console.log("user signed out");
+
     return { success: true };
   } catch (error) {
     return {
