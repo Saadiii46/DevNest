@@ -1,7 +1,7 @@
 # 🚀 DevNest
 
 A modern SaaS platform where developers can **store projects, showcase portfolios, and collaborate** with clients through chat and video calls.  
-Built with **Next.js 14, Firebase, and TailwindCSS** for speed, security, and scalability.
+Built with **Next.js 15, Firebase, and TailwindCSS** for speed, security, and scalability.
 
 ---
 
