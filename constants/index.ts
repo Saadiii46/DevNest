@@ -1,12 +1,4 @@
-import { Models } from "appwrite";
-import {
-  Home,
-  Folder,
-  Users,
-  MessageSquare,
-  Upload,
-  Bell,
-} from "lucide-react";
+import { Home, Folder, Users, MessageSquare, Upload, Bell } from "lucide-react";
 
 export const menuItems = [
   { id: "dashboard", route: "/", icon: Home, label: "Dashboard", badge: null },
@@ -84,7 +76,7 @@ export const getFileColor = (type: string): string => {
   }
 };
 
-export type Files = Models.Document & {
+export type Files = {
   name: string;
   size: number;
   type: string;
@@ -99,7 +91,7 @@ export type Files = Models.Document & {
   shareId?: string;
 };
 
-export type FileType = Models.Document & {
+export type FileType = {
   $id: string;
   name: string;
   url: string;

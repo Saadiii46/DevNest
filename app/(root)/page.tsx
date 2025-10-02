@@ -1,17 +1,20 @@
-import { getCurrentUser } from "@/lib/firebase/users";
 import React from "react";
 import SearchAndFiles from "@/components/SearchAndFiles";
 import FileUploader from "@/components/FileUploader";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardStats from "@/components/dashboard/DashboardStats";
-import { auth } from "@/lib/firebase/firebase";
+import { getCurrentUser } from "@/lib/firebase/getCurrentUser";
 
 export default async function Home() {
+  const user = await getCurrentUser();
+
+  if (!user) return null;
+
   return (
     <div className="main-header">
       {/** Header */}
       <div className="">
-        <DashboardHeader />
+        <DashboardHeader user={user} />
       </div>
 
       {/** Grid Section */}

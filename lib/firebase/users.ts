@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
@@ -41,7 +42,11 @@ export const signUpUsers = async ({
       createdAt: serverTimestamp(),
     });
 
-    return { success: true, email: user.email, fullName: user.displayName };
+    await updateProfile(user, {
+      displayName: fullName,
+    });
+
+    return { success: true, email: user.email, fullName: fullName };
   } catch (error) {
     return {
       success: false,

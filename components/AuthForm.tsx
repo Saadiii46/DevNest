@@ -7,9 +7,7 @@ import { useState } from "react";
 import { FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import OtpModal from "./OtpModal";
 import { Mail, User, ArrowRight, Network, Lock } from "lucide-react";
-import { createUserAccount } from "@/app/server-actions/users";
 import Link from "next/link";
 import { AlertDialogue } from "@/components/auth-form/AlertDialogue";
 import { signInUsers } from "@/lib/firebase/users";
@@ -99,15 +97,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
       console.log("User:", user);
 
       router.push("/");
-
-      // if (!user?.accountId) {
-      //   setErrorDialogue(true);
-      //   setEmail(values.email);
-      // }
-
-      // setAccountId(user.accountId); // Setting account id with actual user id
-
-      // setAccountId(user.accountId);
     } catch (error) {
       console.log("Failed to sign in or create account", error);
     } finally {
@@ -279,11 +268,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
           </div>
         </div>
       </div>
-
-      {/* OTP Modal */}
-      {/* {accountId && (
-        <OtpModal email={form.getValues("email")} accountId={accountId} />
-      )} */}
 
       <div>
         <AlertDialogue

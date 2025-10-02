@@ -5,9 +5,16 @@ import { ChevronLeft, ChevronRight, User, Network } from "lucide-react";
 import { menuItems } from "@/constants";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { getCurrentUser } from "@/lib/actions/user.action";
 
-export default function ModernSidebar() {
+interface SidebarProps {
+  user: {
+    id: string;
+    email: string;
+    name: string;
+  };
+}
+
+export default function ModernSidebar({ user }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathName = usePathname();
 
@@ -134,9 +141,9 @@ export default function ModernSidebar() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-gray-900 text-sm truncate">
-                    {/* {fullName} */}
+                    {user.name ? user.name : "User"}
                   </p>
-                  {/* <p className="text-xs text-gray-500 truncate">{email}</p> */}
+                  <p className="text-xs text-gray-500 truncate">{user.email}</p>
                 </div>
                 <div className="flex gap-1"></div>
               </div>

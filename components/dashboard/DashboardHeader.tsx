@@ -61,7 +61,15 @@ const styles = {
     "mt-4 px-4 py-2 bg-red-500 text-white rounded-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm font-medium flex items-center justify-center gap-2 max-md:hidden",
 };
 
-const DashboardHeader = () => {
+interface DashboardHeaderProps {
+  user: {
+    id: string;
+    email: string;
+    name: string;
+  };
+}
+
+const DashboardHeader = ({ user }: DashboardHeaderProps) => {
   const router = useRouter();
   const [isLoading, setIsloading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -89,7 +97,7 @@ const DashboardHeader = () => {
         <h1 className="max-lg:text-[24px]">
           Welcome Back,{" "}
           {currentUser ? (
-            <span className="max-[864]:hidden">{currentUser.email}</span>
+            <span className="max-[864]:hidden">{user.name}</span>
           ) : (
             <Skeleton className="h-6 w-[200px] inline-block loader" />
           )}
