@@ -5,12 +5,13 @@ import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
 import { handleClientError } from "@/lib/handleClientError";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader } from "../Loader";
 import { LogOut } from "lucide-react";
 import { Bell } from "lucide-react";
 import { auth } from "@/lib/firebase/firebase";
 import { getCurrentUser } from "@/lib/firebase/users";
+
 //Dummy Data
 const dummyData = [
   {
@@ -65,9 +66,28 @@ const DashboardHeader = () => {
   const router = useRouter();
   const [isLoading, setIsloading] = useState(false);
   const [open, setOpen] = useState(false);
-
-  const currentUser = getCurrentUser();
-
+  const [currentUser, setCurrentUser] = useState<{
+    id: string;
+    email: string | null;
+    fullName: string | null;
+  } | null>(null);
+  
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getCurrentUser();
+      if (user.id) {
+        setCurrentUser({
+          id: user.id,
+          email: user.email ?? null,
+          fullName: user.fullName ?? "User",
+        });
+      }
+    };
+  
+    fetchUser();
+  }, []);
+  
+  
   const handleLogout = async () => {
     setIsloading(true);
     try {
@@ -86,14 +106,16 @@ const DashboardHeader = () => {
   return (
     <div className="flex justify-between">
       <div className="header">
-        <h1 className="max-lg:text-[24px]">
-          Welcome Back,{" "}
-          {currentUser ? (
-            <span className="max-[864]:hidden">{currentUser.email}</span>
-          ) : (
-            <Skeleton className="h-6 w-[200px] inline-block loader" />
-          )}
-        </h1>
+      <h1 className="max-lg:text-[24px]">
+  Welcome Back,{" "}
+  {currentUser ? (
+  <span className="max-[864]:hidden">{currentUser.fullName || "User"}</span>
+) : (
+  <Skeleton className="h-6 w-[200px] inline-block loader" />
+)}
+
+</h1>
+
         <p className="text-slate-600 text-sm font-light">
           Today is {new Date().toLocaleDateString()}
         </p>

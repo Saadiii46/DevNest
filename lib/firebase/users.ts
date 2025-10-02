@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile
 } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
@@ -25,14 +26,13 @@ export const signUpUsers = async ({
   password,
 }: SignUpUserProps) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
+    // Set displayName in Firebase Auth
+    await updateProfile(user, { displayName: fullName });
+
+    // Save user info in Firestore
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
       email: user.email,
@@ -89,26 +89,32 @@ export const signInUsers = async ({ email, password }: SignInUserProps) => {
   }
 };
 
-export const getCurrentUser = () => {
-  try {
-    const user = auth.currentUser;
-
-    if (!user) throw new Error("No user logged in");
-
-    return {
-      success: true,
-      id: user.uid,
-      email: user.email,
-      fullName: user.displayName,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: (error as { message: string }).message,
-      code: (error as { code: string }).code,
-    };
-  }
+// lib/firebase/users.ts
+export const getCurrentUser = (): Promise<{
+  id?: string;
+  email?: string | null;
+  fullName?: string | null;
+}> => {
+  return new Promise((resolve) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      unsubscribe(); // stop listening after first event
+      if (user) {
+        resolve({
+          id: user.uid,
+          email: user.email ?? null,
+          fullName: user.displayName ?? "User",
+        });
+      } else {
+        resolve({ email: null, fullName: null });
+      }
+    });
+  });
 };
+
+
+
+
+
 
 export const signOutUser = async () => {
   try {
