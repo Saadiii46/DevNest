@@ -24,3 +24,7 @@ Built with **Next.js 15, Firebase, and TailwindCSS** for speed, security, and sc
 ---
 
 ## 📂 Project Structure
+app/ # Next.js app router
+components/ # Reusable UI components
+lib/ # Firebase setup & helpers
+middleware.ts # Auth protection
