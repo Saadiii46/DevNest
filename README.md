@@ -24,28 +24,3 @@ Built with **Next.js 15, Firebase, and TailwindCSS** for speed, security, and sc
 ---
 
 ## 📂 Project Structure
-📦 devnest
-├── 📂 app/ # Next.js App Router
-│ ├── api/ # API routes (auth/session etc.)
-│ ├── (auth)/ # Sign-in / Sign-up pages
-│ ├── dashboard/ # Protected user dashboard
-│ └── layout.tsx # Global layout
-│
-├── 📂 components/ # Reusable UI components
-│ ├── Navbar.tsx
-│ ├── AppSidebar.tsx
-│ └── ...
-│
-├── 📂 lib/ # Core utilities
-│ ├── firebase/ # Firebase setup
-│ │ ├── firebase.ts # Client SDK
-│ │ └── firebaseAdmin.ts # Admin SDK
-│ ├── getCurrentUser.ts # Server-side user helper
-│ └── auth.ts # Auth helper functions
-│
-├── 📂 styles/ # Global styles
-├── 📂 public/ # Static assets (logos, icons)
-│
-├── middleware.ts # Protect routes
-├── package.json
-├── tsconfig.json
