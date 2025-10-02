@@ -15,7 +15,7 @@ Built with **Next.js 15, Firebase, and TailwindCSS** for speed, security, and sc
 ---
 
 ## 🏗️ Tech Stack
-- **Frontend**: Next.js 14 (App Router), React, TailwindCSS
+- **Frontend**: Next.js 15 (App Router), React, TailwindCSS
 - **Auth**: Firebase Auth + Firebase Admin
 - **Database**: Firestore
 - **Storage**: Firebase Storage
