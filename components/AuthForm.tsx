@@ -253,8 +253,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
       alt="Google"
       className="w-5 h-5"
     />
-    Login with Google
-  </button>
+  
+  {type === "sign-up" ? "Sign up with Google" : "Sign in with Google"}</button>
 
   {/* Microsoft Button */}
   <button
@@ -267,7 +267,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
       alt=""
       className="w-6 h-6 bg-white rounded-sm"
     />
-    Login with Microsoft
+ 
+ {type === "sign-up" ? "Sign up with Microsoft" : "Sign in with Microsoft"}
   </button>
 </div>
 
