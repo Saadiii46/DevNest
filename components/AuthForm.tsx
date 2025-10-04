@@ -104,6 +104,16 @@ const AuthForm = ({ type }: { type: FormType }) => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    console.log("Google Sign-In clicked");
+  
+  };
+  
+  const handleMicrosoftSignIn = async () => {
+    console.log("Microsoft Sign-In clicked");
+    
+  };
+  
   return (
     <div className="auth-main">
       {/* Soft blurry gradient circles */}
@@ -219,9 +229,48 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
             {/* Submit Button */}
             <Button type="submit" className="auth-submit-btn">
-              {type === "sign-up" ? "Create Account" : "Sign In"}
-              <ArrowRight size={18} />
-            </Button>
+  {type === "sign-up" ? "Create Account" : "Sign In"}
+  <ArrowRight size={18} />
+</Button>
+
+{/* Divider */}
+<div className="flex items-center my-6">
+  <div className="flex-grow h-px bg-gray-300"></div>
+  <span className="px-3 text-gray-500 text-sm">or continue with</span>
+  <div className="flex-grow h-px bg-gray-300"></div>
+</div>
+
+{/* Social Login Buttons */}
+<div className="flex flex-col gap-3">
+  {/* Google Button */}
+  <button
+    type="button"
+    onClick={handleGoogleSignIn}
+    className="flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 font-semibold py-2 rounded-xl shadow-md hover:shadow-lg hover:bg-gray-50 transition-all duration-300"
+  >
+    <img
+      src="https://www.svgrepo.com/show/355037/google.svg"
+      alt="Google"
+      className="w-5 h-5"
+    />
+    Login with Google
+  </button>
+
+  {/* Microsoft Button */}
+  <button
+    type="button"
+    onClick={handleMicrosoftSignIn}
+    className="flex items-center justify-center gap-3 bg-[#2F2F2F] text-white font-semibold py-2 rounded-xl shadow-md hover:shadow-lg hover:bg-[#1e1e1e] transition-all duration-300"
+  >
+    <img
+      src="https://cdn-icons-png.flaticon.com/512/732/732221.png"
+      alt=""
+      className="w-5 h-5 bg-white rounded-sm"
+    />
+    Login with Microsoft
+  </button>
+</div>
+
           </form>
         </Form>
 
