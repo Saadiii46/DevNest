@@ -263,9 +263,9 @@ const AuthForm = ({ type }: { type: FormType }) => {
     className="flex items-center justify-center gap-3 bg-[#2F2F2F] text-white font-semibold py-2 rounded-xl shadow-md hover:shadow-lg hover:bg-[#1e1e1e] transition-all duration-300"
   >
     <img
-      src="https://cdn-icons-png.flaticon.com/512/732/732221.png"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuaVQGRW9r25nmluZ98zoKhbSenGmM_8Zwow&s"
       alt=""
-      className="w-5 h-5 bg-white rounded-sm"
+      className="w-6 h-6 bg-white rounded-sm"
     />
     Login with Microsoft
   </button>
