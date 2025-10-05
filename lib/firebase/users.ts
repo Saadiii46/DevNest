@@ -3,11 +3,11 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { auth, db } from "./firebase";
-import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { auth, googlepProvider } from "./firebase";
 
 interface SignUpUserProps {
   fullName: string;
@@ -34,19 +34,15 @@ export const signUpUsers = async ({
 
     const user = userCredential.user;
 
-    await setDoc(doc(db, "users", user.uid), {
-      uid: user.uid,
-      email: user.email,
-      fullName: fullName,
-      role: "user",
-      createdAt: serverTimestamp(),
+    const idToken = await user.getIdToken();
+
+    await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fullName, email, idToken }),
     });
 
-    await updateProfile(user, {
-      displayName: fullName,
-    });
-
-    return { success: true, email: user.email, fullName: fullName };
+    return { success: true };
   } catch (error) {
     return {
       success: false,
@@ -72,8 +68,6 @@ export const signInUsers = async ({ email, password }: SignInUserProps) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ idToken }),
     });
-
-    console.log("ID Token:", idToken);
 
     return { success: true, email: user.email, fullName: user.displayName };
   } catch (error) {
@@ -129,5 +123,30 @@ export const signOutUser = async () => {
       success: false,
       error: (error as { message: string }).message,
     };
+  }
+};
+
+export const signInWithGoogle = async () => {
+  try {
+    const result = await signInWithPopup(auth, googlepProvider);
+
+    const user = result.user;
+    const idToken = await user.getIdToken();
+
+    await fetch("/api/auth/google", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken }),
+    });
+
+    const userData = {
+      id: user.uid,
+      email: user.email,
+      fullName: user.displayName,
+    };
+
+    return { success: true, userData };
+  } catch (error) {
+    return { success: false, error: (error as { message: string }).message };
   }
 };
