@@ -2,10 +2,10 @@
 
 import {
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  updateProfile,
 } from "firebase/auth";
 import { auth, googlepProvider } from "./firebase";
 
@@ -33,7 +33,7 @@ export const signUpUsers = async ({
     );
 
     const user = userCredential.user;
-
+    await sendEmailVerification(user);
     const idToken = await user.getIdToken();
 
     await fetch("/api/auth/signup", {
@@ -61,6 +61,7 @@ export const signInUsers = async ({ email, password }: SignInUserProps) => {
     );
 
     const user = userCredential.user;
+
     const idToken = await user.getIdToken();
 
     await fetch("/api/session", {

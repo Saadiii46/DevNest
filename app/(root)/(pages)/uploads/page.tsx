@@ -1,10 +1,7 @@
 import EmptyState from "@/components/uploads/EmptyState";
 // import HostingModal from "@/components/uploads/HostingModal";
-import ProjectCard from "@/components/uploads/ProjectCard";
 // import Notification from "@/components/uploads/Notification";
 import React from "react";
-import { getCurrentUser } from "@/lib/actions/user.action";
-import { getUserFiles } from "@/lib/actions/file.action";
 import Projects from "@/components/uploads/Projects";
 // import { FileType } from "@/constants";
 
@@ -13,9 +10,9 @@ const UploadsSection = async () => {
   // const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   // const [notification, setNotification] = useState<string | null>(null);
 
-  const currentUser = await getCurrentUser();
-  if (!currentUser) throw new Error("User not found");
-  const userProjects = await getUserFiles({ ownerId: currentUser.$id });
+  // const currentUser = await getCurrentUser();
+  // if (!currentUser) throw new Error("User not found");
+  // const userProjects = await getUserFiles({ ownerId: currentUser.$id });
 
   // const showNotification = (message: string): void => {
   //   setNotification(message);
@@ -92,20 +89,20 @@ const UploadsSection = async () => {
               </div>
             </div>
             <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-semibold">
-              {userProjects.length} Projects
+              {/* {userProjects.length} Projects */}
             </div>
           </div>
           <div className="w-full h-px bg-gray-200"></div>
         </div>
 
         {/* Projects Grid */}
-        <div className="">
+        {/* <div className="">
           {userProjects.length === 0 ? (
             <EmptyState />
           ) : (
             <Projects userProjects={userProjects} />
           )}
-        </div>
+        </div> */}
       </div>
 
       {/* Modal and Notification */}

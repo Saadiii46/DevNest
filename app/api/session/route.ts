@@ -1,4 +1,5 @@
 import { adminAuth } from "@/lib/firebase/firebaseAdmin";
+import { error } from "console";
 import { NextResponse } from "next/server";
 
 const EXPIRES_IN = 5 * 60 * 60 * 24 * 1000;
@@ -9,6 +10,17 @@ export async function POST(req: Request) {
 
     if (!idToken) {
       return NextResponse.json({ error: "Missing ID token" }, { status: 400 });
+    }
+
+    const decoded = await adminAuth.verifyIdToken(idToken);
+
+    if (!decoded.email_verified) {
+      return NextResponse.json(
+        {
+          error: "Email not verified",
+        },
+        { status: 403 }
+      );
     }
 
     const sessionCookie = await adminAuth.createSessionCookie(idToken, {
