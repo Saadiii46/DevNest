@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     if (!decoded.email_verified) {
       return NextResponse.json(
         {
-          error: "Email not verified",
+          error: "Please verify your email",
         },
         { status: 403 }
       );

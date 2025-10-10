@@ -8,6 +8,8 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth, googlepProvider } from "./firebase";
+import { success } from "zod";
+import { error } from "console";
 
 interface SignUpUserProps {
   fullName: string;
@@ -44,9 +46,15 @@ export const signUpUsers = async ({
 
     return { success: true };
   } catch (error) {
+    let message = "Something went wrong";
+
+    switch ((error as { code: string }).code) {
+      case "auth/email-already-in-use":
+        message = "The email you entered is alreadye exist try logging in";
+    }
     return {
       success: false,
-      error: (error as { message: string }).message,
+      error: message,
       code: (error as { code: string }).code,
     };
   }
@@ -64,11 +72,17 @@ export const signInUsers = async ({ email, password }: SignInUserProps) => {
 
     const idToken = await user.getIdToken();
 
-    await fetch("/api/session", {
+    const res = await fetch("/api/session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ idToken }),
     });
+
+    const data = await res.json();
+
+    if (!res.ok || res.status === 403) {
+      return { success: false, error: data.error };
+    }
 
     return { success: true, email: user.email, fullName: user.displayName };
   } catch (error) {
@@ -77,7 +91,7 @@ export const signInUsers = async ({ email, password }: SignInUserProps) => {
 
     switch ((error as { code: string }).code) {
       case "auth/invalid-credential":
-        message = "invalid email or password";
+        message = "Invalid email or password";
         break;
     }
 

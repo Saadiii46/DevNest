@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Mail, User, ArrowRight, Network, Lock } from "lucide-react";
 import Link from "next/link";
-import { AlertDialogue } from "@/components/auth-form/AlertDialogue";
 import { signInUsers, signInWithGoogle } from "@/lib/firebase/users";
 
 import {
@@ -22,6 +21,7 @@ import {
 import { Loader } from "./Loader";
 import { signUpUsers } from "@/lib/firebase/users";
 import { useRouter } from "next/navigation";
+import AppAlert from "./AppAlert";
 
 // ------ Form Type ------ //
 
@@ -54,9 +54,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
   // Use states
 
-  const [accountId, setAccountId] = useState<string | null>(null); // Use state to handle user's account Id
-  const [errorDialogue, setErrorDialogue] = useState(false);
-  const [email, setEmail] = useState("");
+  const [appAlert, setAppAlert] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -92,9 +90,9 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
       if (!user.success) {
         setErrorMessage(user.error || "");
+        setAppAlert(true);
+        return;
       }
-
-      console.log("User:", user);
 
       router.push("/");
     } catch (error) {
@@ -114,10 +112,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
     } catch (error) {
       console.log("Error: ", error);
     }
-  };
-
-  const handleMicrosoftSignIn = async () => {
-    console.log("Microsoft Sign-In clicked");
   };
 
   return (
@@ -224,9 +218,10 @@ const AuthForm = ({ type }: { type: FormType }) => {
                       />
                     </div>
                   </FormControl>
-                  {form.formState.errors.email && (
+
+                  {form.formState.errors.password && (
                     <FormMessage>
-                      {form.formState.errors.email.message as string}
+                      {form.formState.errors.password.message as string}
                     </FormMessage>
                   )}
                 </FormItem>
@@ -265,23 +260,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
                 {type === "sign-up"
                   ? "Sign up with Google"
                   : "Sign in with Google"}
-              </button>
-
-              {/* Microsoft Button */}
-              <button
-                type="button"
-                onClick={handleMicrosoftSignIn}
-                className="flex items-center justify-center gap-3 bg-[#2F2F2F] text-white font-semibold py-2 rounded-xl shadow-md hover:shadow-lg hover:bg-[#1e1e1e] transition-all duration-300"
-              >
-                <img
-                  src="data:image/jpeg;base64,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"
-                  alt=""
-                  className="w-6 h-6 bg-white rounded-sm"
-                />
-
-                {type === "sign-up"
-                  ? "Sign up with Microsoft"
-                  : "Sign in with Microsoft"}
               </button>
             </div>
           </form>
@@ -332,12 +310,14 @@ const AuthForm = ({ type }: { type: FormType }) => {
       </div>
 
       <div>
-        <AlertDialogue
-          errorDialogue={errorDialogue}
-          setErrorDialogue={setErrorDialogue}
-          userEmail={email}
+        <AppAlert
+          open={appAlert}
+          onOpenChange={setAppAlert}
+          title="Something went wrong"
+          description={errorMessage}
         />
       </div>
+
       {/** Loader */}
       {isLoading && <Loader isLoading={isLoading} />}
     </div>
