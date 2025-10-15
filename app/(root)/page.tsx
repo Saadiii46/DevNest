@@ -1,9 +1,10 @@
 import React from "react";
-import SearchAndFiles from "@/components/SearchAndFiles";
-import FileUploader from "@/components/FileUploader";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import { getCurrentUser } from "@/lib/firebase/getCurrentUser";
+import { ProjectList } from "@/components/dashboard/ProjectList";
+import ClientList from "@/components/dashboard/ClientList";
+import RecentActivity from "@/components/dashboard/RecentActivity";
 
 export default async function Home() {
   const user = await getCurrentUser();
@@ -11,35 +12,21 @@ export default async function Home() {
   if (!user) return null;
 
   return (
-    <div className="main-header">
-      {/** Header */}
-      <div className="">
-        <DashboardHeader user={user} />
-      </div>
+    <div>
+      <DashboardHeader />
 
-      {/** Grid Section */}
-
-      <div className="grid-main">
-        {/* Left Column */}
-        <div className="col-span-12 lg:col-span-4 p-4 flex flex-col gap-4">
-          <div className="gap-16 flex flex-col">
-            <div className="flex flex-col gap-4">
-              <DashboardStats />
-            </div>
-            <div>
-              <FileUploader />
-            </div>
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+        <DashboardStats />
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <ProjectList />
+          </div>
+          <div className="space-y-6">
+            <ClientList />
+            <RecentActivity />
           </div>
         </div>
-
-        {/* Right Column */}
-        <div className="col-span-12 lg:col-span-8 p-4 max-h-screen overflow-y-auto">
-          {/* Right panel content */}
-          <div className="flex flex-col">
-            <SearchAndFiles />
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
   );
 }

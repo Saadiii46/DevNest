@@ -1,0 +1,46 @@
+{
+  "placeholderImages": [
+    {
+      "id": "user-avatar-1",
+      "description": "User Avatar 1",
+      "imageUrl": "https://picsum.photos/seed/user1/100/100",
+      "imageHint": "person face"
+    },
+    {
+      "id": "user-avatar-2",
+      "description": "User Avatar 2",
+      "imageUrl": "https://picsum.photos/seed/user2/100/100",
+      "imageHint": "person face"
+    },
+    {
+      "id": "user-avatar-3",
+      "description": "User Avatar 3",
+      "imageUrl": "https://picsum.photos/seed/user3/100/100",
+      "imageHint": "person face"
+    },
+    {
+      "id": "client-avatar-1",
+      "description": "Client Avatar 1",
+      "imageUrl": "https://picsum.photos/seed/client1/100/100",
+      "imageHint": "business person"
+    },
+    {
+      "id": "client-avatar-2",
+      "description": "Client Avatar 2",
+      "imageUrl": "https://picsum.photos/seed/client2/100/100",
+      "imageHint": "business person"
+    },
+    {
+      "id": "client-avatar-3",
+      "description": "Client Avatar 3",
+      "imageUrl": "https://picsum.photos/seed/client3/100/100",
+      "imageHint": "business person"
+    },
+    {
+      "id": "client-avatar-4",
+      "description": "Client Avatar 4",
+      "imageUrl": "https://picsum.photos/seed/client4/100/100",
+      "imageHint": "business person"
+    }
+  ]
+}

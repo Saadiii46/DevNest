@@ -1,3 +1,5 @@
+import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { Activity, Client, Message, Project, User } from "@/lib/types";
 import { Home, Folder, Users, MessageSquare, Upload, Bell } from "lucide-react";
 
 export const menuItems = [
@@ -105,65 +107,183 @@ export type FileType = {
   users: string[];
 };
 
-export const projects = [
+const findImage = (id: string) => {
+  const image = PlaceHolderImages.find((img) => img.id === id);
+  if (!image) {
+    // Fallback image if not found
+    return {
+      id: "fallback",
+      description: "fallback",
+      imageUrl: "https://picsum.photos/seed/fallback/100/100",
+      imageHint: "abstract",
+    };
+  }
+  return image;
+};
+
+export const clients: Client[] = [
   {
-    id: 1,
-    name: "E-Commerce Dashboard",
-    type: "React App",
-    size: "2.4 MB",
-    uploadDate: "2 hours ago",
-    status: "ready",
-    files: 45,
-    icon: "M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10",
+    id: "cli1",
+    name: "Innovate Inc.",
+    avatar: findImage("client-avatar-1"),
+    online: true,
   },
   {
-    id: 2,
-    name: "Portfolio Website",
-    type: "HTML/CSS",
-    size: "1.8 MB",
-    uploadDate: "1 day ago",
-    status: "hosted",
-    files: 23,
-    icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z",
+    id: "cli2",
+    name: "Quantum Solutions",
+    avatar: findImage("client-avatar-2"),
+    online: false,
   },
   {
-    id: 3,
-    name: "Task Manager App",
-    type: "Vue.js",
-    size: "3.1 MB",
-    uploadDate: "3 days ago",
-    status: "ready",
-    files: 67,
-    icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4",
+    id: "cli3",
+    name: "Apex Designs",
+    avatar: findImage("client-avatar-3"),
+    online: true,
   },
   {
-    id: 4,
-    name: "Blog Platform",
-    type: "Next.js",
-    size: "4.2 MB",
-    uploadDate: "5 days ago",
-    status: "processing",
-    files: 89,
-    icon: "M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z",
+    id: "cli4",
+    name: "Stellar Corp.",
+    avatar: findImage("client-avatar-4"),
+    online: false,
+  },
+];
+
+export const currentUser: User = {
+  name: "Alex Reid",
+  email: "alex.reid@example.com",
+  avatar: findImage("user-avatar-1"),
+};
+
+export const activities: Activity[] = [
+  {
+    id: "act1",
+    user: { name: "Innovate Inc.", avatar: findImage("client-avatar-1") },
+    action: "sent a message in",
+    target: "E-commerce Platform",
+    timestamp: "2 hours ago",
   },
   {
-    id: 5,
-    name: "Weather App",
-    type: "Angular",
-    size: "1.6 MB",
-    uploadDate: "1 week ago",
-    status: "ready",
-    files: 34,
-    icon: "M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z",
+    id: "act2",
+    user: { name: "You", avatar: currentUser.avatar },
+    action: "updated the status of",
+    target: "Mobile App Redesign",
+    timestamp: "5 hours ago",
   },
   {
-    id: 6,
-    name: "Social Media Clone",
-    type: "React Native",
-    size: "5.7 MB",
-    uploadDate: "2 weeks ago",
-    status: "hosted",
-    files: 123,
-    icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20a3 3 0 01-3-3v-2a3 3 0 013-3h5a3 3 0 013 3v2a3 3 0 01-3 3z",
+    id: "act3",
+    user: { name: "Apex Designs", avatar: findImage("client-avatar-3") },
+    action: "approved the final design for",
+    target: "Marketing Website",
+    timestamp: "1 day ago",
+  },
+  {
+    id: "act4",
+    user: { name: "You", avatar: currentUser.avatar },
+    action: "added a new task to",
+    target: "Internal Dashboard",
+    timestamp: "2 days ago",
+  },
+  {
+    id: "act5",
+    user: { name: "Stellar Corp.", avatar: findImage("client-avatar-4") },
+    action: "requested a video call for",
+    target: "Internal Dashboard",
+    timestamp: "3 days ago",
+  },
+];
+
+export const messages: Message[] = [
+  {
+    id: "msg1",
+    sender: "client",
+    text: "Hey! Just wanted to check on the progress for the homepage redesign. Any updates?",
+    timestamp: "10:30 AM",
+  },
+  {
+    id: "msg2",
+    sender: "user",
+    text: "Hi there! We've just finished the wireframes. I'm sending them over now. Let me know what you think!",
+    timestamp: "10:31 AM",
+  },
+  {
+    id: "msg3",
+    sender: "client",
+    text: "Great, looking forward to seeing them.",
+    timestamp: "10:32 AM",
+  },
+  {
+    id: "msg4",
+    sender: "client",
+    text: "These look fantastic! The new layout is much cleaner. Just one question - can we move the CTA button a bit higher?",
+    timestamp: "10:45 AM",
+  },
+  {
+    id: "msg5",
+    sender: "user",
+    text: "Absolutely, that's an easy change. I'll adjust it and send a revised version shortly.",
+    timestamp: "10:46 AM",
+  },
+  {
+    id: "msg6",
+    sender: "client",
+    text: "Perfect, thanks! Also, can we schedule a quick video call tomorrow to discuss the next steps?",
+    timestamp: "10:47 AM",
+  },
+  {
+    id: "msg7",
+    sender: "user",
+    text: "Of course. How does 11 AM work for you?",
+    timestamp: "10:48 AM",
+  },
+];
+
+export const projects: Project[] = [
+  {
+    id: "proj1",
+    name: "E-commerce Platform",
+    client: clients[0],
+    dueDate: "2024-08-15",
+    progress: 75,
+    status: "In Progress",
+  },
+  {
+    id: "proj2",
+    name: "Mobile App Redesign",
+    client: clients[1],
+    dueDate: "2024-07-30",
+    progress: 45,
+    status: "In Progress",
+  },
+  {
+    id: "proj3",
+    name: "Marketing Website",
+    client: clients[2],
+    dueDate: "2024-06-20",
+    progress: 100,
+    status: "Completed",
+  },
+  {
+    id: "proj4",
+    name: "Internal Dashboard",
+    client: clients[3],
+    dueDate: "2024-09-01",
+    progress: 20,
+    status: "In Progress",
+  },
+  {
+    id: "proj5",
+    name: "Branding Guide",
+    client: clients[0],
+    dueDate: "2024-05-10",
+    progress: 100,
+    status: "Completed",
+  },
+  {
+    id: "proj6",
+    name: "Cloud Migration",
+    client: clients[2],
+    dueDate: "2024-10-10",
+    progress: 10,
+    status: "On Hold",
   },
 ];

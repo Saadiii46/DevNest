@@ -5,8 +5,11 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { adminAuth } from "@/lib/firebase/firebaseAdmin";
 import { getCurrentUser } from "@/lib/firebase/getCurrentUser";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 const layout = async ({ children }: { children: ReactNode }) => {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
   const sessionCookie = (await cookies()).get("session")?.value;
 
   if (!sessionCookie) {
@@ -24,15 +27,12 @@ const layout = async ({ children }: { children: ReactNode }) => {
 
   if (!user) throw new Error("User not found");
   return (
-    <div className="flex">
-      {/** App sidebar component */}
+    <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar user={user} />
-      <main className="w-full">
-        {/** Navbar component */}
-        <Navbar />
-        <div className="">{children}</div>
-      </main>
-    </div>
+      <div className="w-full">
+        <main>{children}</main>
+      </div>
+    </SidebarProvider>
   );
 };
 
