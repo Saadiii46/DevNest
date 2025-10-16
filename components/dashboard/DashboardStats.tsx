@@ -3,7 +3,6 @@
 import { useQuery } from "@tanstack/react-query";
 import InfoCard from "../InfoCard";
 import { FileType, formatFileSize } from "@/constants";
-import { getUserFiles } from "@/lib/actions/file.action";
 import {
   HardDrive,
   File,
