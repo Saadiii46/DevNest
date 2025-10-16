@@ -14,6 +14,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SidebarTrigger } from "../ui/sidebar";
+import AppTheme from "@/components/dashboard/AppTheme";
 
 const DashboardHeader = () => {
   return (
@@ -49,6 +50,9 @@ const DashboardHeader = () => {
           <Bell className="h-5 w-5" />
           <span className="sr-only">Toggle notifications</span>
         </Button>
+        <div>
+          <AppTheme />
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full">
