@@ -1,7 +1,6 @@
 "use client";
 
-import { Command, LogOut, Plus, Search, UserPlus } from "lucide-react";
-import { Bell } from "lucide-react";
+import { Command, LogOut, Plus, Search, UserPlus, Bell } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import {
@@ -15,14 +14,18 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SidebarTrigger } from "../ui/sidebar";
 import AppTheme from "@/components/dashboard/AppTheme";
+import ChatBot from "@/components/dashboard/Chatbot"; // ✅ Import chatbot here
 
 const DashboardHeader = () => {
   return (
-    <header className="flex h-16 items-center gap-4 border-b bg-card px-4 lg:px-8 shrink-0">
+    <header className="relative flex h-16 items-center gap-4 border-b bg-card px-4 lg:px-8 shrink-0">
+      {/* Left side */}
       <div className="flex items-center gap-4">
         <SidebarTrigger />
         <h1 className="text-xl font-headline font-semibold">Dashboard</h1>
       </div>
+
+      {/* Right side */}
       <div className="flex w-full items-center gap-2 md:ml-auto">
         <form className="ml-auto flex-1 sm:flex-initial">
           <div className="relative">
@@ -34,6 +37,7 @@ const DashboardHeader = () => {
             />
           </div>
         </form>
+
         <Button variant="outline" className="hidden sm:inline-flex">
           <Command className="mr-2" />
           Command
@@ -50,9 +54,12 @@ const DashboardHeader = () => {
           <Bell className="h-5 w-5" />
           <span className="sr-only">Toggle notifications</span>
         </Button>
+
         <div>
           <AppTheme />
         </div>
+
+        {/* Profile dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full">
@@ -73,6 +80,9 @@ const DashboardHeader = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      {/* ✅ Add ChatBot here */}
+      <ChatBot />
     </header>
   );
 };
