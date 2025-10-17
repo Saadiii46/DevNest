@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { getRelevantContext } from "./ragHelper";
-import { fetchFileFromGitHub } from "@/lib/actions/github"; // ✅ add this line
+import { fetchFileFromGitHub } from "@/lib/actions/github"; 
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,

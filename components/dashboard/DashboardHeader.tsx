@@ -14,7 +14,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SidebarTrigger } from "../ui/sidebar";
 import AppTheme from "@/components/dashboard/AppTheme";
-import ChatBot from "@/components/dashboard/Chatbot"; // ✅ Import chatbot here
+import ChatBot from "@/components/dashboard/Chatbot";
 
 const DashboardHeader = () => {
   return (

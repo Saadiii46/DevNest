@@ -216,3 +216,20 @@
 .loader {
   @apply bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-600 shadow-lg shadow-blue-500/25;
 }
+
+/* Always visible, rounded scrollbar like ChatGPT */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(59, 130, 246, 0.5); /* adjust color to match your theme */
+  border-radius: 9999px;
+}
+
+
+

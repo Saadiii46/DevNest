@@ -8,15 +8,21 @@ export default function ChatBot() {
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [autoScroll, setAutoScroll] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    if (autoScroll) {
+      scrollToBottom();
+    }
+  }, [messages, autoScroll]);
 
-  // ✅ Send message to API (real AI)
+  // Send message to API
   const handleSend = async () => {
     if (!input.trim()) return;
 
@@ -45,6 +51,13 @@ export default function ChatBot() {
     }
   };
 
+  
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    const isNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 50;
+    setAutoScroll(isNearBottom);
+  };
+
   return (
     <div className="fixed bottom-6 right-6 z-50 font-sans">
       {/* Toggle Button */}
@@ -61,13 +74,18 @@ export default function ChatBot() {
           {/* Header */}
           <div className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-6 py-5 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold">Chat Assistant</h2>
+              <h2 className="text-lg font-semibold">DevNest AI Assistant</h2>
               <p className="text-sm text-primary-foreground/80">Always here to help</p>
             </div>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto h-96 p-4 space-y-4 bg-card">
+          <div
+  ref={containerRef}
+  onScroll={handleScroll}
+  className="h-[240px] w-[384px] p-4 space-y-4 bg-card overflow-y-auto scrollbar-thin scrollbar-thumb-primary/60 scrollbar-track-muted/20 hover:scrollbar-thumb-primary/80 transition-colors duration-200"
+>
+
             {messages.length === 0 ? (
               <div className="flex items-center justify-center h-full text-center">
                 <div>
