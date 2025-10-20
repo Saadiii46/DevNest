@@ -9,7 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { MobileMenuItems } from "@/constants";
-import { signOutUser } from "@/lib/actions/user.action";
+import { signOutUser } from "@/lib/firebase/users";
 import { handleClientError } from "@/lib/handleClientError";
 import { LucideIcon, Menu, Network, User } from "lucide-react";
 import { useRouter } from "next/navigation";
