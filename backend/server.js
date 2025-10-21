@@ -16,7 +16,7 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-  console.log("🟢 User connected:", socket.id);
+  console.log("🟢 User connected successfully:", socket.id);
 
   socket.on("sendMessage", (data) => {
     console.log("Message recieved: ", data);
