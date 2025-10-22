@@ -18,12 +18,18 @@ const io = new Server(httpServer, {
 io.on("connection", (socket) => {
   console.log("🟢 User connected successfully:", socket.id);
 
-  socket.on("sendMessage", (data) => {
-    console.log("Message recieved: ", data);
+  socket.on("joinRoom", (roomId) => {
+    socket.join(roomId);
+    console.log(`User ${socket.id} joined room: ${roomId}`);
+  });
 
-    io.emit("recieveMessage", {
+  socket.on("sendMessage", (data) => {
+    console.log(`Message in room ${data.roomId}`, data.message);
+
+    io.to(data.roomId).emit("recieveMessage", {
       message: data.message,
       sender: data.sender,
+      roomId: data.roomId,
       time: new Date().toISOString(),
     });
   });
