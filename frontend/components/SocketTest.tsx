@@ -1,73 +1,91 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
-
-let socket: Socket;
+import { useSocket } from "./SocketProvider";
+import { generateRoomId } from "@/lib/utils";
+import { getCurrentUser } from "@/lib/firebase/getCurrentUser";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase/firebase";
 
 export default function SocketTest() {
   const [messages, setMessages] = useState("");
   const [chat, setChat] = useState<
     { message: string; sender: string; time: string }[]
   >([]);
-  const { id } = useParams();
-  const roomId = id as string;
+
+  const [status, setStatus] = useState("Disconnected");
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const friendId = "friend_123";
+  const socket = useSocket();
 
   useEffect(() => {
-    socket = io("http://localhost:4000", { transports: ["websocket"] });
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
+      }
+    });
+  });
 
-    socket.on("connect", () => {
+  useEffect(() => {
+    if (!currentUser) return console.log("No current user found");
+
+    const roomId = generateRoomId(currentUser.uid, friendId);
+
+    socket?.on("connect", () => {
       console.log("✅ Connected to socket:", socket?.id);
+      setStatus("Connected");
 
-      socket.emit("joinRoom", roomId);
+      socket?.emit("joinRoom", roomId);
       console.log("Joined room:", roomId);
     });
 
-    socket.on("recieveMessage", (data) => {
-      console.log("New message from server:", data);
+    socket?.on("recieveMessage", (data) => {
+      console.log("📩 New message:", data);
       setChat((prev) => [...prev, data]);
     });
 
-    socket.on("connect_error", (err) => {
-      console.error("⚠️ Connection error:", err);
+    socket?.on("connect_error", (err) => {
+      console.error("⚠️ Connection error:", err.message);
     });
 
     return () => {
-      socket.off("recieveMessage");
-      socket.disconnect();
+      socket?.off("recieveMessage");
+      socket?.off("connect");
+      socket?.off("connect_error");
     };
-  }, [roomId]);
+  }, [socket, currentUser]);
 
   const handleSend = () => {
     if (!messages.trim()) return;
-
-    const msgData = {
-      message: messages,
-      sender: "Saad",
-      roomId: roomId,
-    };
-
-    socket?.emit("sendMessage", msgData);
+    const roomId = generateRoomId(currentUser.uid, friendId);
+    socket?.emit("sendMessage", { message: messages, roomId: roomId });
     setMessages("");
   };
 
   return (
-    <div className="p-8 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">💬 Real-time Chat Test</h1>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">💬 Chat Room:</h1>
+      <p className="text-gray-600 mb-2">Status: {status}</p>
 
-      <div className="border rounded p-4 h-64 overflow-y-auto bg-gray-50 mb-4">
+      {/* Chat window */}
+      <div className="border rounded bg-gray-50 p-3 h-64 overflow-y-auto mb-4">
         {chat.map((c, i) => (
-          <div key={i} className="mb-2 text-gray-500">
-            <strong>{c.sender}</strong>: {c.message}{" "}
-            <span className="text-gray-500 text-sm">({c.time})</span>
+          <div key={i}>
+            <strong className="text-gray-500">{c.sender}</strong>:{" "}
+            <span className="text-gray-500">{c.message}</span>
+            <span className="text-sm text-gray-500">
+              {" "}
+              ({new Date(c.time).toLocaleTimeString()})
+            </span>
           </div>
         ))}
       </div>
 
+      {/* Input + button */}
       <div className="flex gap-2">
         <input
-          type="text"
           value={messages}
           onChange={(e) => setMessages(e.target.value)}
           placeholder="Type your message..."

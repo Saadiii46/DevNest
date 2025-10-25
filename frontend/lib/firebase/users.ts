@@ -8,8 +8,6 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth, googlepProvider } from "./firebase";
-import { success } from "zod";
-import { error } from "console";
 
 interface SignUpUserProps {
   fullName: string;

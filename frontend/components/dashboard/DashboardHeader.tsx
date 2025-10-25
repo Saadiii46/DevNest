@@ -1,6 +1,6 @@
 "use client";
 
-import { Command, LogOut, Plus, Search, UserPlus, Bell } from "lucide-react";
+import { Command, Plus, Search, UserPlus, Bell } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import {
@@ -15,8 +15,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SidebarTrigger } from "../ui/sidebar";
 import AppTheme from "@/components/dashboard/AppTheme";
 import ChatBot from "@/components/dashboard/Chatbot";
+import { signOutUser } from "@/lib/firebase/users";
+import { useRouter } from "next/navigation";
 
 const DashboardHeader = () => {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    signOutUser();
+
+    router.push("/sign-in");
+  };
+
   return (
     <header className="relative flex h-16 items-center gap-4 border-b bg-card px-4 lg:px-8 shrink-0">
       {/* Left side */}
@@ -76,7 +86,7 @@ const DashboardHeader = () => {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

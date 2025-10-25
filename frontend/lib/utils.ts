@@ -32,3 +32,7 @@ export const slugify = (projectName: string): string => {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 };
+
+export const generateRoomId = (userA: string, userB: string) => {
+  return [userA, userB].sort().join("_");
+};
