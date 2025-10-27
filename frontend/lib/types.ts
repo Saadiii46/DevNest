@@ -39,3 +39,18 @@ export type User = {
   avatar: ImagePlaceholder;
   email: string;
 };
+
+export interface SendFriendRequestProps {
+  requesterId: string;
+  recieverId: string;
+}
+
+export interface SearchUsersByNameProps {
+  name: string;
+  currentUserId: string;
+}
+
+export interface SearchUsersByEmailProps {
+  email: string;
+  currentUserId: string;
+}
