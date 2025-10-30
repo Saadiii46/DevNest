@@ -1,85 +1,85 @@
 "use client";
 
-import { sendFriendRequest } from "@/lib/firebase/friends";
-import { searchUsersByName } from "@/lib/firebase/searchUsers";
-import { getCurrentUser } from "@/lib/firebase/users";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { auth } from "@/lib/firebase/firebase";
+import { searchUsers } from "@/lib/firebase/searchUsers";
+import { user } from "@/lib/types";
 
 const SearchUsers = () => {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [users, setUsers] = useState<user[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [noResults, setNoResults] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  const handleSearch = async () => {
-    setIsLoading(true);
-    const currentUser = getCurrentUser();
-
-    if (!currentUser || !currentUser.id) return console.log("No current user");
-
-    const users = await searchUsersByName({
-      name: query,
-      currentUserId: currentUser.id,
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setCurrentUserId(user ? user.uid : null);
     });
+    return unsubscribe;
+  }, []);
 
-    setResults(users);
-    setIsLoading(false);
-  };
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setUsers([]);
+      setNoResults(false);
+      return;
+    }
 
-  const handleAddFriend = async (recieverId: string) => {
-    const currentUser = await getCurrentUser();
+    const delay = setTimeout(async () => {
+      if (!currentUserId) {
+        setUsers([]);
+        setNoResults(false);
+        setLoading(false);
+        return;
+      }
 
-    if (!currentUser || !currentUser.id) return console.log("No current user");
+      setLoading(true);
+      try {
+        const found = await searchUsers({
+          name: searchTerm,
+          currentUserId: currentUserId,
+        });
 
-    await sendFriendRequest({
-      requesterId: currentUser.id,
-      recieverId: recieverId,
-    });
+        setUsers(found);
+        setNoResults(found?.length === 0);
+      } catch (err) {
+        console.error("Search Error:", err);
+        setUsers([]);
+        setNoResults(true);
+      } finally {
+        setLoading(false);
+      }
+    }, 500); // 500ms debounce
 
-    alert("Friend request sent!");
-  };
+    return () => clearTimeout(delay);
+  }, [searchTerm, currentUserId]);
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">🔍 Search Users</h1>
-      <div className="flex gap-2 mb-4">
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by name..."
-          className="border p-2 rounded flex-1"
-        />
-        <button
-          onClick={handleSearch}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-          disabled={isLoading}
-        >
-          {isLoading ? "Searching..." : "Search"}
-        </button>
-      </div>
+    <div className="p-4 max-w-md mx-auto">
+      <input
+        type="text"
+        placeholder="Search users..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full border p-2 rounded-lg"
+      />
 
-      {results.length > 0 ? (
-        <ul className="space-y-2">
-          {results.map((user) => (
-            <li
-              key={user.id}
-              className="border p-3 rounded flex justify-between items-center"
-            >
-              <div>
-                <p className="font-semibold">{user.fullName}</p>
-                <p className="text-sm text-gray-500">{user.email}</p>
-              </div>
-              <button
-                onClick={() => handleAddFriend(user.id)}
-                className="bg-green-500 text-white px-3 py-1 rounded"
-              >
-                Add Friend
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-gray-500">No users found</p>
+      {loading && <p className="mt-2 text-gray-500">Searching...</p>}
+      {noResults && !loading && (
+        <p className="mt-2 text-gray-500">No users found</p>
       )}
+
+      <ul className="mt-3 space-y-2">
+        {users.map((u) => (
+          <li
+            key={u.id}
+            className="border p-2 rounded-md bg-gray-50 hover:bg-gray-100 transition"
+          >
+            <p className="font-semibold text-black">{u.fullName}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

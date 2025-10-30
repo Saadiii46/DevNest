@@ -19,6 +19,8 @@ export async function POST(req: Request) {
           id: decodeUser.uid,
           email: email,
           fullName: fullName || decodeUser.name || null,
+          username:
+            fullName.toLowerCase() || decodeUser.name.toLowerCase() || null,
           role: "user",
           createdAt: new Date(),
         },

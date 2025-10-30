@@ -54,3 +54,9 @@ export interface SearchUsersByEmailProps {
   email: string;
   currentUserId: string;
 }
+
+export interface user {
+  id: string;
+  fullName: string;
+  avatarUrl?: string;
+}

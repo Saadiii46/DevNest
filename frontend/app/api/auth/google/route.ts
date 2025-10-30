@@ -15,6 +15,7 @@ export async function POST(req: Request) {
     const id = decodedUser.uid;
     const email = decodedUser.email;
     const fullName = decodedUser.name || null;
+    const username = fullName.toLowerCase() || null;
 
     const userIdFromDb = adminDb.collection("users").doc(id);
     const checkUserInDb = await userIdFromDb.get();
@@ -24,6 +25,7 @@ export async function POST(req: Request) {
         id,
         email,
         fullName,
+        username,
         role: "user",
         createdAt: new Date(),
       });

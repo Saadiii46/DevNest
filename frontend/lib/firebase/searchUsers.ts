@@ -8,33 +8,42 @@ import {
   startAt,
   where,
 } from "firebase/firestore";
-import { SearchUsersByEmailProps, SearchUsersByNameProps } from "../types";
+import {
+  SearchUsersByEmailProps,
+  SearchUsersByNameProps,
+  user,
+} from "../types";
 import { db } from "./firebase";
 
-export const searchUsersByName = async ({
+export async function searchUsers({
   name,
   currentUserId,
-}: SearchUsersByNameProps) => {
+}: SearchUsersByNameProps): Promise<user[]> {
   if (!name.trim()) return [];
+  try {
+    const username = name.toLowerCase();
+    const userRef = collection(db, "users");
 
-  const userRef = collection(db, "users");
+    const q = query(
+      userRef,
+      where("username", ">=", username),
+      where("username", "<=", username + "\uf8ff"),
+      limit(10)
+    );
 
-  const q = query(
-    userRef,
-    orderBy("fullName"),
-    startAt(name),
-    endAt(name + "/uf8ff"),
-    limit(10)
-  );
+    const snapshot = await getDocs(q);
 
-  const snapshot = await getDocs(q);
+    let users: user[] = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      fullName: doc.data().fullName,
+    }));
 
-  const result = snapshot.docs
-    .map((doc) => doc.data())
-    .filter((user) => user.id !== currentUserId);
-
-  return result;
-};
+    return users.filter((user) => user.id !== currentUserId);
+  } catch (error) {
+    console.error("Error fetching users");
+    return [];
+  }
+}
 
 export const searchUsersByEmail = async ({
   email,
