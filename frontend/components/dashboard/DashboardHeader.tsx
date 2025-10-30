@@ -11,20 +11,65 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SidebarTrigger } from "../ui/sidebar";
 import AppTheme from "@/components/dashboard/AppTheme";
 import ChatBot from "@/components/dashboard/Chatbot";
-import { signOutUser } from "@/lib/firebase/users";
+import { getCurrentUser, signOutUser } from "@/lib/firebase/users";
 import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 
 const DashboardHeader = () => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [url, setUrl] = useState<string>("");
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const router = useRouter();
 
   const handleLogout = () => {
     signOutUser();
 
     router.push("/sign-in");
+  };
+
+  const handleOpenFilePicker = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setOpen(true);
+    }
+  };
+
+  const handleNewProjectUpload = async (e: React.FormEvent) => {
+    const currentUser = getCurrentUser();
+    if (!currentUser || !currentUser.id) return alert("no user found");
+    if (!selectedFile) return alert("Please select your file ");
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("userID", currentUser.id);
+    const res = await fetch("/api/upload", { method: "POST", body: formData });
+    const data = await res.json();
+    if (!res.ok) return alert(`Failed to upload: error ${data.error}`);
+    alert("File upload successfully");
+    setSelectedFile(null);
+    setIsLoading(false);
   };
 
   return (
@@ -56,10 +101,22 @@ const DashboardHeader = () => {
           <UserPlus />
           <span className="sr-only">Add Client</span>
         </Button>
-        <Button className="hidden sm:inline-flex">
-          <Plus className="mr-2" />
-          New Project
-        </Button>
+        <div>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+          />
+          <Button
+            className="hidden sm:inline-flex"
+            onClick={handleOpenFilePicker}
+          >
+            <Plus className="mr-2" />
+            New Project
+          </Button>
+          {url && <p className="text-white font-bold">File Uplaoded: {url}</p>}
+        </div>
         <Button variant="ghost" size="icon" className="rounded-full">
           <Bell className="h-5 w-5" />
           <span className="sr-only">Toggle notifications</span>
@@ -91,8 +148,27 @@ const DashboardHeader = () => {
         </DropdownMenu>
       </div>
 
-      {/* ✅ Add ChatBot here */}
+      {/*  Add ChatBot here */}
       <ChatBot />
+
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{selectedFile?.name}</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to uplaod this project?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleNewProjectUpload}>
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </header>
   );
 };
