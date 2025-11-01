@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { getRelevantContext } from "./ragHelper";
-import { fetchFileFromGitHub } from "@/lib/actions/github"; 
+import { fetchFileFromGitHub } from "@/lib/actions/github";
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -48,6 +48,6 @@ Dashboard with project stats
     ],
   });
 
-  return res.choices[0].message.content || "⚠️ No response from AI.";
+  return res.choices[0].message.content || " No response from AI.";
 }
 
