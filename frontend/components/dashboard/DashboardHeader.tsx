@@ -58,12 +58,12 @@ const DashboardHeader = () => {
 
   const handleNewProjectUpload = async (e: React.FormEvent) => {
     const currentUser = getCurrentUser();
-    if (!currentUser || !currentUser.id) return alert("no user found");
+    if (!currentUser || !currentUser.id) return console.log("no user found");
     if (!selectedFile) return alert("Please select your file ");
     setIsLoading(true);
     const formData = new FormData();
     formData.append("file", selectedFile);
-    formData.append("userID", currentUser.id);
+    formData.append("userId", currentUser.id);
     const res = await fetch("/api/upload", { method: "POST", body: formData });
     const data = await res.json();
     if (!res.ok) return alert(`Failed to upload: error ${data.error}`);

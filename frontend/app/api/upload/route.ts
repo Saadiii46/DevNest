@@ -1,8 +1,8 @@
 import { R2 } from "@/lib/cloudfare/r2";
-import { db } from "@/lib/firebase/firebase";
+import { adminDb } from "@/lib/firebase/firebaseAdmin";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { NextResponse } from "next/server";
+import admin from "firebase-admin";
 
 export async function POST(req: Request) {
   try {
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
     // Extract the file and userId from the form data
     const file = formData.get("file") as File;
-    const userID = formData.get("userID") as string;
+    const userId = formData.get("userId") as string;
 
     // If no file provided return the error response
     if (!file)
@@ -38,13 +38,13 @@ export async function POST(req: Request) {
     const fileUrl = `https://${process.env.CLOUDFLARE_BUCKET_PUBLIC_URL}/${fileName}`;
 
     // Saving file metadata to the database
-    await addDoc(collection(db, "files"), {
-      userID,
+    await adminDb.collection("files").add({
+      userId,
       fileName,
       fileUrl,
       contentType: file.type,
       size: file.size,
-      createdAt: serverTimestamp(),
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
     // Returning success response
