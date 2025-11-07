@@ -106,7 +106,7 @@ export default function ChatLayout() {
 
   return (
     <div className="flex h-[calc(100vh-4rem)] bg-[#F3F5F7] overflow-hidden">
-      {/*  Clients */}
+      {/*  clients */}
       <div
         className={`transition-all duration-300 overflow-y-auto border-r
           ${selectedClient ? "w-1/4 md:w-1/4" : "w-full"}
@@ -136,7 +136,7 @@ export default function ChatLayout() {
             />
           </div>
 
-          {/* Task Panel */}
+          {/* Task Panelll */}
           <div className="w-1/4 min-w-[300px] flex-shrink-0 border-l overflow-y-auto">
             <TaskPanel
               tasks={tasks}
@@ -147,7 +147,7 @@ export default function ChatLayout() {
         </>
       )}
 
-      {/* Modal */}
+      {/* Modall */}
       <AddTaskModal
         open={modalOpen}
         onOpenChange={setModalOpen}

@@ -32,7 +32,7 @@ export default function ClientsList({
 
   return (
     <div className="h-full flex flex-col bg-white border-r">
-      {/* Header */}
+      {/* Headerrr */}
       <div className="p-4 border-b">
         <div className="text-lg font-semibold mb-3">Clients</div>
         <div className="relative">
@@ -59,7 +59,7 @@ export default function ClientsList({
                   : "hover:bg-gray-50"
               }`}
           >
-            {/*  Avatar + Info */}
+            {/*  Avatar +info */}
             <div className="flex items-center gap-3 min-w-0">
               <Avatar className="w-10 h-10">
                 <AvatarImage src={c.avatar} alt={c.name} />
@@ -74,14 +74,14 @@ export default function ClientsList({
               </div>
             </div>
 
-            {/*  Right side */}
+            {/*  Right Side */}
             <div className="flex items-center ml-auto">
               {/* Fixed-width time */}
               <div className="w-14 text-right text-xs text-gray-400 flex-shrink-0">
                 {c.lastTime ?? ""}
               </div>
 
-              {/* Fixed-width dot (always same vertical line) */}
+              {/* Fixed-width Dot (always same vertical line) */}
               <div className="w-6 flex justify-end flex-shrink-0">
                 <div
                   className={`w-3.5 h-3.5 rounded-full ${

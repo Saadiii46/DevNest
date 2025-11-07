@@ -32,7 +32,7 @@ const TaskPanel: React.FC<TaskPanelProps> = ({ tasks, activities, onDelete }) =>
 
   return (
     <div className="h-full flex flex-col bg-white shadow-sm">
-      {/* Header */}
+      {/* Headerrr */}
       <div className="flex items-center justify-between px-4 py-3 border-b">
         <h2 className="text-lg font-semibold">
           {viewMode === "tasks" ? "Tasks" : "Client Activity"}
@@ -100,7 +100,7 @@ const TaskPanel: React.FC<TaskPanelProps> = ({ tasks, activities, onDelete }) =>
           )}
         </div>
       ) : (
-        // Activity View
+        // Activity ViewSSS
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {activities.length === 0 ? (
             <p className="text-gray-400 text-center mt-8">No recent activity</p>

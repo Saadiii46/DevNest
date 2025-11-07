@@ -275,7 +275,7 @@ export default function ChatWindow({
         </div>
       </div>
 
-      {/*  local modal (used only when parent not handling it) */}
+      {/*  local modal s using when parent not handle  */}
       {!onAddToTask && (
         <AddTaskModal
           open={taskModalOpen}

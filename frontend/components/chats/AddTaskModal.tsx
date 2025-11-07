@@ -20,7 +20,7 @@ export default function AddTaskModal({
   onCreate,
 }: AddTaskModalProps) {
   const [title, setTitle] = useState("");
-
+// Handle Add Task
   const handleAdd = () => {
     if (!title.trim()) return;
     onCreate({ title, messageId: message?.id, client: clientName });
@@ -31,10 +31,10 @@ export default function AddTaskModal({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        {/* Overlay */}
+        {/* overlay */}
         <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" />
 
-        {/* Modal Content */}
+        {/* modal Content */}
         <Dialog.Content
           className="
             fixed top-1/2 left-1/2 z-50 w-[90%] max-w-md -translate-x-1/2 -translate-y-1/2 
@@ -42,7 +42,7 @@ export default function AddTaskModal({
             focus:outline-none
           "
         >
-          {/* Header */}
+          {/* header*/}
           <div className="flex justify-between items-center mb-4">
             <Dialog.Title className="text-lg font-semibold">Add New Task</Dialog.Title>
             <Dialog.Close asChild>
