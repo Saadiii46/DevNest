@@ -19,8 +19,4 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: ["/((?!_next|api|favicon.ico).*)"],
-  // This matches all routes except:
-  // - /api/* (your backend API routes)
-  // - /_next/* (Next.js internals)
-  // - /favicon.ico
 };

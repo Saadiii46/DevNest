@@ -72,6 +72,10 @@ const DashboardHeader = () => {
     setIsLoading(false);
   };
 
+  const handleGithubLogin = () => {
+    window.location.href = "api/github/login";
+  };
+
   return (
     <header className="relative flex h-16 items-center gap-4 border-b bg-card px-4 lg:px-8 shrink-0">
       {/* Left side */}
@@ -101,7 +105,7 @@ const DashboardHeader = () => {
           <UserPlus />
           <span className="sr-only">Add Client</span>
         </Button>
-        <div>
+        {/* <div>
           <input
             type="file"
             ref={fileInputRef}
@@ -116,7 +120,11 @@ const DashboardHeader = () => {
             New Project
           </Button>
           {url && <p className="text-white font-bold">File Uplaoded: {url}</p>}
-        </div>
+        </div> */}
+        <Button className="hidden sm:inline-flex" onClick={handleGithubLogin}>
+          <Plus className="mr-2" />
+          Connect Github
+        </Button>
         <Button variant="ghost" size="icon" className="rounded-full">
           <Bell className="h-5 w-5" />
           <span className="sr-only">Toggle notifications</span>
