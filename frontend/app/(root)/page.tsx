@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/firebase/getCurrentUser";
 import { ProjectList } from "@/components/dashboard/ProjectList";
 import ClientList from "@/components/dashboard/ClientList";
 import RecentActivity from "@/components/dashboard/RecentActivity";
+import GenerateButton from "@/components/dashboard/GenerateWebsiteSection";
 
 export default async function Home() {
   const user = await getCurrentUser();
@@ -20,6 +21,7 @@ export default async function Home() {
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <ProjectList />
+            <GenerateButton />
           </div>
           <div className="space-y-6">
             <ClientList />

@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { getRelevantContext } from "./ragHelper";
-import { fetchFileFromGitHub } from "@/lib/actions/github"; 
+import { fetchFileFromGitHub } from "@/lib/actions/github";
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -12,7 +12,10 @@ export async function getChatbotResponse(message: string) {
 
   //  Step 2: Optional GitHub context (if user asks about repo/files)
   let githubContext = "";
-  if (message.toLowerCase().includes("github") || message.toLowerCase().includes("code")) {
+  if (
+    message.toLowerCase().includes("github") ||
+    message.toLowerCase().includes("code")
+  ) {
     githubContext = await fetchFileFromGitHub("README.md");
   }
 
@@ -48,6 +51,5 @@ Dashboard with project stats
     ],
   });
 
-  return res.choices[0].message.content || "⚠️ No response from AI.";
+  return res.choices[0].message.content || " No response from AI.";
 }
-
