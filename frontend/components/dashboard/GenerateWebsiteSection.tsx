@@ -2,6 +2,15 @@
 
 import { useState, useEffect } from "react";
 import WebsitePreview from "./WebsitePreview";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface GenerateButtonProps {
   folder?: string;
@@ -18,6 +27,7 @@ export default function GenerateButton({
   const [availableFolders, setAvailableFolders] = useState<string[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<string>("");
   const [isLoadingFolders, setIsLoadingFolders] = useState(true);
+  const [showReadyAlert, setShowReadyAlert] = useState(false);
 
   // Fetch available folders on mount
   useEffect(() => {
@@ -66,7 +76,8 @@ export default function GenerateButton({
 
       setHtmlCode(data.htmlCode || "");
       setPreviewUrl(data.redirectUrl || "");
-      setShowPreview(true);
+      // First show a confirmation alert, then open the preview
+      setShowReadyAlert(true);
     } catch (err: any) {
       setError(err.message || "Failed to generate website. Please try again.");
       console.error("Generation error:", err);
@@ -128,6 +139,29 @@ export default function GenerateButton({
           </div>
         )}
       </div>
+
+      {/* Template ready alert */}
+      <AlertDialog open={showReadyAlert} onOpenChange={setShowReadyAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Template is ready</AlertDialogTitle>
+            <AlertDialogDescription>
+              Your website template has been generated successfully. Click
+              continue to open the live preview.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => {
+                setShowReadyAlert(false);
+                setShowPreview(true);
+              }}
+            >
+              Continue to preview
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {showPreview && htmlCode && previewUrl && (
         <WebsitePreview

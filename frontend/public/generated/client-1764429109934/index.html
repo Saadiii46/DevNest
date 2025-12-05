@@ -1,63 +1,214 @@
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 Here's a complete HTML document that incorporates the project summary information into a responsive blog layout using Tailwind CSS. This design features a NASA-inspired color scheme, a grid layout for blog posts, and includes the necessary features discussed in the project summary.
 
 =======
 >>>>>>> Stashed changes
 <!DOCTYPE html>
+=======
+>>>>>>> 75c5436649c31240367558ddf0bf99be786d5690
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     <title>Alpha Blog</title>
 =======
     <title>Alpha - A Space Blog</title>
 >>>>>>> Stashed changes
+=======
+    <title>Alpha - Space Blog</title>
+>>>>>>> 75c5436649c31240367558ddf0bf99be786d5690
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class"
+        }
+    </script>
     <style>
-        /* Custom Tailwind CSS configuration can be added here if needed */
+        /* Custom styles can go here */
     </style>
 </head>
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+>>>>>>> 75c5436649c31240367558ddf0bf99be786d5690
 
-<body class="bg-gray-900 text-white font-sans flex flex-col min-h-screen">
-    <header class="bg-gray-800 p-6">
-        <div class="container mx-auto text-center">
-            <h1 class="text-4xl font-bold">Alpha</h1>
-            <p class="mt-2 text-gray-400">A Blog About Space</p>
+    <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold">Alpha</div>
+            <nav class="hidden md:flex space-x-4">
+                <a href="#features" class="hover:text-indigo-600">Home</a>
+                <a href="#features" class="hover:text-indigo-600">Features</a>
+                <a href="#pricing" class="hover:text-indigo-600">Pricing</a>
+                <a href="#testimonials" class="hover:text-indigo-600">Testimonials</a>
+                <a href="#faq" class="hover:text-indigo-600">FAQ</a>
+                <a href="#contact" class="hover:text-indigo-600">Contact</a>
+                <button id="theme-toggle" aria-label="Toggle dark mode" title="Switch to dark mode" class="relative w-14 h-7 rounded-full transition-all duration-300 ease-in-out shadow-sm ml-4">
+                    <span class="bg-gray-300 dark:bg-indigo-600 absolute top-0 left-0 right-0 bottom-0 rounded-full transition-all duration-300 ease-in-out"></span>
+                    <span class="absolute top-1 left-1 w-5 h-5 bg-white dark:bg-gray-900 rounded-full shadow-md transition-all duration-300 ease-in-out flex items-center justify-center">
+                        <svg class="w-3 h-3 text-amber-500 dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3a7 7 0 100 14 7 7 0 000-14zM10 1a9 9 0 100 18 9 9 0 000-18z"/></svg>
+                        <svg class="w-3 h-3 text-indigo-600 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path d="M10 1a9 9 0 100 18 9 9 0 000-18z"/></svg>
+                    </span>
+                </button>
+            </nav>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-600 hover:text-indigo-600 focus:outline-none">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M2 4h16a2 2 0 110 4H2a2 2 0 110-4zm0 6h16a2 2 0 110 4H2a2 2 0 110-4zm0 6h16a2 2 0 110 4H2a2 2 0 110-4z"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <a href="#features" class="block px-4 py-2 hover:bg-gray-200">Home</a>
+            <a href="#features" class="block px-4 py-2 hover:bg-gray-200">Features</a>
+            <a href="#pricing" class="block px-4 py-2 hover:bg-gray-200">Pricing</a>
+            <a href="#testimonials" class="block px-4 py-2 hover:bg-gray-200">Testimonials</a>
+            <a href="#faq" class="block px-4 py-2 hover:bg-gray-200">FAQ</a>
+            <a href="#contact" class="block px-4 py-2 hover:bg-gray-200">Contact</a>
         </div>
     </header>
 
-    <main class="flex-grow container mx-auto p-6">
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Blog Post Example -->
-            <article class="bg-gray-700 rounded-md p-4">
-                <h2 class="text-2xl font-semibold">Exploring the Cosmos</h2>
-                <p class="mt-2 text-gray-300">Discover the mysteries of the universe, from black holes to the Big Bang.</p>
-                <a href="#" class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white rounded py-2 px-4">Read More</a>
-            </article>
+    <main>
+        <section class="relative bg-gradient-to-r from-blue-600 to-purple-700 text-white py-20">
+            <div class="max-w-7xl mx-auto text-center">
+                <h1 class="text-5xl font-bold mb-4">Welcome to Alpha</h1>
+                <p class="text-lg mb-8">Exploring the wonders of space, one post at a time.</p>
+                <a href="#features" class="bg-white text-blue-600 font-bold py-2 px-4 rounded shadow hover:bg-gray-200">Get Started</a>
+                <a href="#contact" class="text-white underline ml-4">Learn More</a>
+            </div>
+            <img src="https://images.unsplash.com/photo-1523902029208-4c0d5c333f52" alt="Space" class="absolute inset-0 object-cover w-full h-full opacity-20" />
+        </section>
 
-            <article class="bg-gray-700 rounded-md p-4">
-                <h2 class="text-2xl font-semibold">The Future of Space Travel</h2>
-                <p class="mt-2 text-gray-300">What does the future hold for humanity among the stars?</p>
-                <a href="#" class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white rounded py-2 px-4">Read More</a>
-            </article>
+        <section id="features" class="py-20 bg-gray-100 dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-10">Features</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                        <img src="https://images.unsplash.com/photo-1574169208504-1a1c4d0abc8f" alt="Feature 1" class="rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold mb-2">In-depth Articles</h3>
+                        <p>Explore detailed articles about various space topics, from black holes to the latest discoveries.</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                        <img src="https://images.unsplash.com/photo-1588477697168-3a6c9ffb6cd3" alt="Feature 2" class="rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold mb-2">Latest News</h3>
+                        <p>Stay updated with the latest news and research in the field of astronomy and space exploration.</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                        <img src="https://images.unsplash.com/photo-1589824774007-9a450d0b39dd" alt="Feature 3" class="rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold mb-2">Community Insights</h3>
+                        <p>Join discussions with fellow space enthusiasts and share your thoughts on various topics.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            <article class="bg-gray-700 rounded-md p-4">
-                <h2 class="text-2xl font-semibold">Life on Other Planets</h2>
-                <p class="mt-2 text-gray-300">Could we ever find life beyond Earth? Explore the possibilities.</p>
-                <a href="#" class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white rounded py-2 px-4">Read More</a>
-            </article>
+        <section class="py-20">
+            <div class="max-w-7xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-10">Stats & Highlights</h2>
+                <div class="flex justify-around">
+                    <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold">100+</h3>
+                        <p>Articles</p>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold">5000+</h3>
+                        <p>Readers</p>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold">50+</h3>
+                        <p>Topics Covered</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            <!-- Repeat the article block for more posts -->
+        <section id="pricing" class="py-20 bg-gray-100 dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-10">Pricing Plans</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-semibold mb-2">Free</h3>
+                        <p class="mb-4">Access to all articles and basic features.</p>
+                        <span class="block text-2xl font-bold">$0</span>
+                    </div>
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-semibold mb-2">Pro</h3>
+                        <p class="mb-4">Exclusive content and features.</p>
+                        <span class="block text-2xl font-bold">$5/month</span>
+                    </div>
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-semibold mb-2">Premium</h3>
+                        <p class="mb-4">All features + personalized content.</p>
+                        <span class="block text-2xl font-bold">$10/month</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="py-20">
+            <div class="max-w-7xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-10">What Our Readers Say</h2>
+                <div class="flex flex-wrap justify-center">
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg max-w-xs mx-4 mb-6">
+                        <p class="italic">"An amazing resource for anyone interested in space!"</p>
+                        <p class="font-bold mt-2">- John Doe</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg max-w-xs mx-4 mb-6">
+                        <p class="italic">"The articles are well-researched and engaging!"</p>
+                        <p class="font-bold mt-2">- Jane Smith</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg max-w-xs mx-4 mb-6">
+                        <p class="italic">"I love the community discussions!"</p>
+                        <p class="font-bold mt-2">- Mike Johnson</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="py-20 bg-gray-100 dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-10">Frequently Asked Questions</h2>
+                <div class="accordion">
+                    <div class="border-b border-gray-300 dark:border-gray-600">
+                        <button class="w-full text-left py-4" onclick="toggleAccordion(this)">What topics are covered on Alpha?</button>
+                        <div class="hidden px-4 pb-4">We cover a wide range of topics related to space, including astronomy, astrophysics, and space exploration.</div>
+                    </div>
+                    <div class="border-b border-gray-300 dark:border-gray-600">
+                        <button class="w-full text-left py-4" onclick="toggleAccordion(this)">How often are new articles posted?</button>
+                        <div class="hidden px-4 pb-4">Articles are posted whenever there's new content available.</div>
+                    </div>
+                    <div class="border-b border-gray-300 dark:border-gray-600">
+                        <button class="w-full text-left py-4" onclick="toggleAccordion(this)">Is it free to read?</button>
+                        <div class="hidden px-4 pb-4">Yes, we have a free plan that gives access to all articles.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-20">
+            <div class="max-w-7xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-10">Stay Updated</h2>
+                <form action="#" method="POST" class="flex flex-col items-center">
+                    <input type="email" placeholder="Enter your email" class="border-2 border-gray-300 dark:border-gray-600 rounded-lg p-2 mb-4 w-64" required>
+                    <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded">Subscribe</button>
+                </form>
+            </div>
         </section>
     </main>
 
-    <footer class="bg-gray-800 p-6 text-center">
-        <p class="text-gray-400">© 2025 Alpha Blog. All rights reserved.</p>
-        <p class="text-gray-400">Track visitors to improve your experience.</p>
+    <footer class="bg-gray-100 dark:bg-gray-800 py-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <p>&copy; 2023 Alpha. All Rights Reserved.</p>
+            <div class="mt-2 text-sm">
+                <a href="#features" class="text-gray-600 dark:text-gray-300 hover:underline">Privacy Policy</a>
+                <span class="mx-2">|</span>
+                <a href="#features" class="text-gray-600 dark:text-gray-300 hover:underline">Terms of Service</a>
+            </div>
+        </div>
     </footer>
+<<<<<<< HEAD
 =======
 <body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300">
     <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow">
@@ -305,15 +456,43 @@ Here's a complete HTML document that incorporates the project summary informatio
         });
     </script>
 >>>>>>> Stashed changes
+=======
+
+    <script>
+        // Toggle mobile menu
+        document.getElementById('mobile-menu-button').addEventListener('click', function () {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scroll for in-page navigation links
+        const links = document.querySelectorAll('nav a, footer a');
+        links.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const target = document.getElementById(targetId);
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // FAQ accordion
+        function toggleAccordion(button) {
+            const answer = button.nextElementSibling;
+            answer.classList.toggle('hidden');
+        }
+
+        // Dark/Light Mode Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.classList.toggle('dark', currentTheme === 'dark');
+        themeToggle.addEventListener('click', function () {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggle.querySelector('span').classList.toggle('left-1', !isDark);
+            themeToggle.querySelector('span').classList.toggle('left-8', isDark);
+        });
+    </script>
+>>>>>>> 75c5436649c31240367558ddf0bf99be786d5690
 </body>
-
 </html>
-
-### Features Implemented:
-- **Header:** Displays the blog name "Alpha" and a brief description of the blog.
-- **Grid Layout:** The main area uses a responsive grid layout to showcase blog posts.
-- **Blog Posts:** Sample blog post entries are included with titles, excerpts, and “Read More” buttons.
-- **Footer:** Contains copyright information and a note regarding visitor tracking.
-- **Responsive Design:** The layout adjusts according to screen size, ensuring a good user experience on various devices.
-
-You can replace the sample blog posts and links with actual content as needed. The design adheres to a NASA-inspired aesthetic with dark colors and a clean layout.
